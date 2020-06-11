@@ -10,7 +10,7 @@ class RdvController extends AbstractController
 {
     /**
      * @Route("/")
-     */
+     */              
     public function number()
     {
         $number = random_int(0, 100);
