@@ -1,8 +1,9 @@
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" >
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/core/main.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/daygrid/main.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/list/main.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/timegrid/main.css') }}" >
 {% endblock %}
 
 
@@ -39,41 +40,55 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
-
+    <script src="{{ asset('js/jquery.js') }}">   </script>
+    <script src="{{ asset('js/popper.js') }}">   </script>
+    <script src="{{ asset('js/bootstrap.js') }}">   </script>
+    <script src="{{ asset('fullcalendar/core/main.js') }}">       </script>
+    <script src="{{ asset('fullcalendar/daygrid/main.js') }}">    </script>
+    <script src="{{ asset('fullcalendar/interaction/main.js') }}"></script>
+    <script src="{{ asset('fullcalendar/list/main.js') }}">       </script>
+    <script src="{{ asset('fullcalendar/timegrid/main.js') }}">   </script>
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', () => {
+        
+        document.addEventListener('DOMContentLoaded', () => 
+        {
             var calendarEl = document.getElementById('calendar-holder');
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                height: 400,
-                width: 400, 
+            var calendar = new FullCalendar.Calendar(calendarEl, 
+            {
+                height: 600,
+                width: 600, 
                 defaultView: 'dayGridMonth',
                 locale: 'fr',
                 editable: true,
                 nowIndicator: true,
                 events: "{{ path('rdv_index') }}",
-                eventDrop: (infos) => {
-                    console.log(infos);
-                    console.log("NOUVELLE DATE",infos.event.start)
-                    console.log("NOUVELLE FIN",infos.event.end)
-                    console.log("DESCR",infos.event.extendedProps.description);
-                    if(!confirm("Etes vous sûr.e de vouloir déplacer cet évènement")){
-                        infos.revert();
+                eventDrop: (infos) => 
+                {
+                    if(!confirm("Etes vous sûr.e de vouloir déplacer cet évènement"))
+                    {
+                      infos.revert();
                     }
+                    else
+                    {
+                      console.log(infos);
+                      console.log("NOUVELLE DATE",infos.event.start)
+                      console.log("NOUVELLE FIN",infos.event.end)
+                      console.log("DESCR",infos.event.extendedProps.description);
+                    }
+                      
                 },
-                eventResize: (infos) => {
+                eventResize: (infos) => 
+                {
                     console.log(infos.event.end)
                 },
-                header: {
+                header: 
+                {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay,list',
                 },
-                    buttonText: {
+                    buttonText: 
+                    {
                         today: 'Aujourd\'hui',
                         month: 'Mois',
                         week: 'Semaine',
