@@ -12,22 +12,26 @@
             </tr>
             <tr>
                 <th>Titre</th>
-                <td>{{ booking.titre }}</td>
+                <td>{{ booking.title }}</td>
             </tr>
             <tr>
                 <th>DateDebut</th>
-                <td>{{ booking.dateDebut ? booking.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ booking.start ? booking.start|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
                 <th>DateFin</th>
-                <td>{{ booking.dateFin ? booking.dateFin|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ booking.end ? booking.end|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ booking.description }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('booking_index') }}">back to list</a>
+    <a href="{{ path('booking_index') }}">Retour</a>
 
-    <a href="{{ path('booking_edit', {'id': booking.id}) }}">edit</a>
+    <a href="{{ path('booking_edit', {'id': booking.id}) }}">Modifier</a>
 
     {{ include('booking/_delete_form.html.twig') }}
 {% endblock %}

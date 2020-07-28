@@ -4,15 +4,16 @@
 
     <h1>Booking index</h1>
 
-    <div id="calendar-holder"></div>
+    <div style="width:30%; height:50%; color:#ffffff" id="calendar-holder"></div>
     
-    <table class="table">
+      <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Titre</th>
                 <th>DateDebut</th>
                 <th>DateFin</th>
+                <th>Description</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -20,12 +21,13 @@
         {% for booking in bookings %}
             <tr>
                 <td>{{ booking.id }}</td>
-                <td>{{ booking.titre }}</td>
-                <td>{{ booking.dateDebut ? booking.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ booking.dateFin ? booking.dateFin|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ booking.title }}</td>
+                <td>{{ booking.start ? booking.start|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ booking.end ? booking.end|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ booking.description}}</td>
                 <td>
-                    <a href="{{ path('booking_show', {'id': booking.id}) }}">show</a>
-                    <a href="{{ path('booking_edit', {'id': booking.id}) }}">edit</a>
+                    <a href="{{ path('booking_show', {'id': booking.id}) }}">Afficher</a>
+                    <a href="{{ path('booking_edit', {'id': booking.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
@@ -36,5 +38,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('booking_new') }}">Create new</a>
+    <a href="{{ path('booking_new') }}">Nouveau rdv</a>
 {% endblock %}

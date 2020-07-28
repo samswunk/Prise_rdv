@@ -20,55 +20,89 @@ class Booking
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $titre;
+    private $title;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date")
      */
-    private $dateDebut;
+    private $start;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date")
      */
-    private $dateFin;
+    private $end;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="string", length=8, nullable=true)
+     */
+    private $backgroundColor;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitre(): ?string
+    public function getTitle(): ?string
     {
-        return $this->titre;
+        return $this->title;
     }
 
-    public function setTitre(string $titre): self
+    public function setTitle(string $title): self
     {
-        $this->titre = $titre;
+        $this->title = $title;
 
         return $this;
     }
 
-    public function getDateDebut(): ?\DateTimeInterface
+    public function getStart(): ?\DateTimeInterface
     {
-        return $this->dateDebut;
+        return $this->start;
     }
 
-    public function setDateDebut(?\DateTimeInterface $dateDebut): self
+    public function setStart(\DateTimeInterface $start): self
     {
-        $this->dateDebut = $dateDebut;
+        $this->start = $start;
 
         return $this;
     }
 
-    public function getDateFin(): ?\DateTimeInterface
+    public function getEnd(): ?\DateTimeInterface
     {
-        return $this->dateFin;
+        return $this->end;
     }
 
-    public function setDateFin(?\DateTimeInterface $dateFin): self
+    public function setEnd(\DateTimeInterface $end): self
     {
-        $this->dateFin = $dateFin;
+        $this->end = $end;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getBackgroundColor(): ?string
+    {
+        return $this->backgroundColor;
+    }
+
+    public function setBackgroundColor(?string $backgroundColor): self
+    {
+        $this->backgroundColor = $backgroundColor;
 
         return $this;
     }

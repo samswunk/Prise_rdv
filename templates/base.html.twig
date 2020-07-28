@@ -1,8 +1,10 @@
 {% block stylesheets %}
-    {{ encore_entry_link_tags('app') }}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
 {% endblock %}
 
-{% block body %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#">Prise de RDV</a>
@@ -33,37 +35,52 @@
   </div>
 </nav>
 
+{% block body %}
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('app') }}
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
 
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
             var calendarEl = document.getElementById('calendar-holder');
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
+                height: 400,
+                width: 400, 
                 defaultView: 'dayGridMonth',
+                locale: 'fr',
                 editable: true,
-                eventSources: [
-                    {
-                        url: "{{ path('fc_load_events') }}",
-                        method: "POST",
-                        extraParams: {
-                            filters: JSON.stringify({})
-                        },
-                        failure: () => {
-                            alert("There was an error while fetching FullCalendar!");
-                        },
-                    },
-                ],
+                nowIndicator: true,
+                events: "{{ path('rdv_index') }}",
+                eventDrop: (infos) => {
+                    console.log(infos);
+                    console.log("NOUVELLE DATE",infos.event.start)
+                    console.log("NOUVELLE FIN",infos.event.end)
+                    console.log("DESCR",infos.event.extendedProps.description);
+                    if(!confirm("Etes vous sûr.e de vouloir déplacer cet évènement")){
+                        infos.revert();
+                    }
+                },
+                eventResize: (infos) => {
+                    console.log(infos.event.end)
+                },
                 header: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,list',
                 },
-                plugins: [ 'interaction', 'dayGrid', 'timeGrid' ], // https://fullcalendar.io/docs/plugin-index
-                timeZone: 'UTC',
+                    buttonText: {
+                        today: 'Aujourd\'hui',
+                        month: 'Mois',
+                        week: 'Semaine',
+                        day: 'Jour',
+                        list: 'Liste'
+                    },
+                plugins: ['dayGrid','timeGrid','list','interaction']
             });
             calendar.render();
         });
