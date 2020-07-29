@@ -3,7 +3,7 @@
 {% block body %}
     <title>Booking</title>
     <h1>Booking</h1>
-
+    {{ dump(booking) }}
     <table class="table">
         <tbody>
             <tr>
@@ -16,11 +16,11 @@
             </tr>
             <tr>
                 <th>DateDebut</th>
-                <td>{{ booking.start ? booking.start|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ booking.start ? booking.start|date('d/m/Y H:i') : '' }}</td>
             </tr>
             <tr>
                 <th>DateFin</th>
-                <td>{{ booking.end ? booking.end|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ booking.end ? booking.end|date('d/m/Y H:i') : '' }}</td>
             </tr>
             <tr>
                 <th>Description</th>

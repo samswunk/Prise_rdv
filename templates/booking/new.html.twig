@@ -2,11 +2,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <title>Modifier< Booking</title>
-    <h1>Create new Booking</h1>
-
-    {{ include('booking/_form.html.twig') }}
-
-    <a href="{{ path('booking_index') }}">Retour</a>
-    <a href="{{ path('booking_new') }}">Create new booking</a>
+    {# SHOW PRISE RDV #}
+    <div class="bg-light" id="ShowRdv">
+      <div class="header">
+        <title>Prendre Rdv</title>
+      </div> 
+      <div class="body" >
+        <div id="rdv-holder">
+          {{ include('./booking/_form.html.twig') }}
+        </div>
+      </div>
+        <div class="center text-center">
+          <a class="btn btn-secondary"  href="{{ path('booking_index') }}">Retour</a>
+          <a class="btn btn-primary"    href="{{ path('booking_new') }}">Prendre rdv</a>
+        </div>
+    </div>
 {% endblock %}

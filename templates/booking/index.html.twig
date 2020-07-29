@@ -1,12 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
-    <h1>Booking index</h1>
-
-    <div style="width:30%; height:50%; color:#ffffff" id="calendar-holder"></div>
-        <div class="datetimepicker" style="bord:solid 1px"></div>
-
+<div class="container">
+    <h1>Liste des rdv</h1>
+    <div class="col-6 border-red">
+        <div class='input-group date' id='datetimepicker1' >
+            <input class="datepicker"       type="text" placeholder="saisissez une date" >
+            <input class="datetimepicker"   type='text' placeholder="saisissez une date" >
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
       <table class="table">
         <thead>
             <tr>
@@ -23,8 +28,8 @@
             <tr>
                 <td>{{ booking.id }}</td>
                 <td>{{ booking.title }}</td>
-                <td>{{ booking.start ? booking.start|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ booking.end ? booking.end|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ booking.start ? booking.start|date('d/m/Y H:i') : '' }}</td>
+                <td>{{ booking.end ? booking.end|date('d/m/Y H:i') : '' }}</td>
                 <td>{{ booking.description}}</td>
                 <td>
                     <a href="{{ path('booking_show', {'id': booking.id}) }}">Afficher</a>
@@ -38,6 +43,8 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('booking_new') }}">Nouveau rdv</a>
+    <div class="center text-center">
+        <a class="btn btn-primary" href="{{ path('booking_new') }}">Prendre rdv</a>
+    </div>
+</div>    
 {% endblock %}
