@@ -32,8 +32,8 @@
                 <td>{{ booking.end ? booking.end|date('d/m/Y H:i') : '' }}</td>
                 <td>{{ booking.description}}</td>
                 <td>
-                    <a href="{{ path('booking_show', {'id': booking.id}) }}">Afficher</a>
-                    <a href="{{ path('booking_edit', {'id': booking.id}) }}">Modifier</a>
+                    <a href="{{ path('booking_show', {'id': booking.id}) }}" class="btn btn-primary">Afficher</a>
+                    <a href="{{ path('booking_edit', {'id': booking.id}) }}" class="btn btn-danger">Modifier</a>
                 </td>
             </tr>
         {% else %}

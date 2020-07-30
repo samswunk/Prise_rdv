@@ -65,8 +65,16 @@ class BookingController extends AbstractController
     {
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // echo '<pre style="border:1px solid red;">
+            // ';
+            // echo print_r($request);
+            // // echo ($request->get('start'));
+            // echo "
+            // </pre>";
+            // die();
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('booking_index');
