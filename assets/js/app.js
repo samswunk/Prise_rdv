@@ -5,18 +5,22 @@
  * (and its CSS file) in your base layout (base.html.twig).
  */
 
+// Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
+import $ from 'jquery';
+
 // any CSS you import will output into a single css file (app.css in this case)
 import '../css/app.css';
 import '../css/bootstrap.min.css';
-import 'https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css';
-import 'https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css';
-import 'https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css';
+require ('../fullcalendar/core/main.css');
+require ('../fullcalendar/daygrid/main.css');
+require ('../fullcalendar/list/main.css');
+require ('../fullcalendar/timegrid/main.css');
+require ('../fullcalendar/core/main.js');
+require ('../fullcalendar/daygrid/main.js');
+require ('../fullcalendar/interaction/main.js');
+require ('../fullcalendar/list/main.js');
+require ('../fullcalendar/timegrid/main.js');
 
-import 'https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js';
-import 'https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js';
-import 'https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js';
-import 'https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js';
-// Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
-// import $ from 'jquery';
+$(".datetimepicker").datetimepicker();
 
 console.log('Hello Webpack Encore! Edit me in assets/js/app.js');

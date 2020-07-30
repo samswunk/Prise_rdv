@@ -1,79 +1,114 @@
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" >
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/core/main.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/daygrid/main.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/list/main.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/timegrid/main.css') }}" >
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.css') }}" >
+    <link rel="stylesheet" href="{{ asset('jquery-ui/jquery-ui.css') }}" >
+    <link rel="stylesheet" href="{{ asset('datetimepicker/datetimepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('datepicker/css/bootstrap-datepicker.css') }}">
 {% endblock %}
 
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <a class="navbar-brand" href="#">Prise de RDV</a>
-  <button   class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" 
-            aria-expanded="false" aria-label="Toggle navigation">
-    <span   class="navbar-toggler-icon"></span>
-  </button>
+<div class="container">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Prise de RDV</a>
+    <button   class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" 
+              aria-expanded="false" aria-label="Toggle navigation">
+      <span   class="navbar-toggler-icon"></span>
+    </button>
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('booking_index') }}">Interventions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Tarifs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">À propos</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search">
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
+        </form>
+      </div>
+    </nav>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#ShowCalendar" class="btn btn-primary">Afficher le calendrier</button>
+    {# SHOW CALENDAR MODAL #}
+    <div class="modal fade bg-light" id="ShowCalendar" role="dialog">
+      <div class="modal-body" >
+        <div id="calendar-holder">
+        </div>
+      </div>
+      <div class="center text-center">
+        <button class="btn btn-alert" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
 
-  <div class="collapse navbar-collapse" id="navbarColor01">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ path('booking_index') }}">Interventions</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Tarifs</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">À propos</a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
-    </form>
-  </div>
-</nav>
-
+</div>
 {% block body %}
 {% endblock %}
 
 {% block javascripts %}
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
-
+    <script src="{{ asset('js/jquery.js') }}">   </script>
+    <script src="{{ asset('jquery-ui/jquery-ui.js') }}">   </script>
+    <script src="{{ asset('bootstrap/js/bootstrap.js') }}">   </script>
+    <script src="{{ asset('datetimepicker/moment.js') }}">   </script>
+    <script src="{{ asset('fullcalendar/core/main.js') }}">       </script>
+    <script src="{{ asset('fullcalendar/daygrid/main.js') }}">    </script>
+    <script src="{{ asset('fullcalendar/interaction/main.js') }}"></script>
+    <script src="{{ asset('fullcalendar/list/main.js') }}">       </script>
+    <script src="{{ asset('fullcalendar/timegrid/main.js') }}">   </script>
+    {# <script src="{{ asset('js/popper.js') }}">   </script> #}
+    <script src="{{ asset('datetimepicker/datetimepicker.js') }}">   </script>
+    <script src="{{ asset('datepicker/js/bootstrap-datepicker.js') }}">   </script>
+    <script src="{{ asset('datepicker/locales/bootstrap-datepicker.fr.min.js') }}">   </script>
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-            var calendarEl = document.getElementById('calendar-holder');
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                height: 400,
-                width: 400, 
+      function Calendrier()
+      {
+        var calendarEl = document.getElementById('calendar-holder');
+            var calendar = new FullCalendar.Calendar(calendarEl, 
+            {
+                height: 600,
+                width: 600, 
                 defaultView: 'dayGridMonth',
                 locale: 'fr',
                 editable: true,
                 nowIndicator: true,
                 events: "{{ path('rdv_index') }}",
-                eventDrop: (infos) => {
-                    console.log(infos);
-                    console.log("NOUVELLE DATE",infos.event.start)
-                    console.log("NOUVELLE FIN",infos.event.end)
-                    console.log("DESCR",infos.event.extendedProps.description);
-                    if(!confirm("Etes vous sûr.e de vouloir déplacer cet évènement")){
-                        infos.revert();
+                eventDrop: (infos) => 
+                {
+                    if(!confirm("Etes vous sûr.e de vouloir déplacer cet évènement"))
+                    {
+                      infos.revert();
                     }
+                    else
+                    {
+                      console.log(infos);
+                      console.log("NOUVELLE DATE",infos.event.start)
+                      console.log("NOUVELLE FIN",infos.event.end)
+                      console.log("DESCR",infos.event.extendedProps.description);
+                    }
+                      
                 },
-                eventResize: (infos) => {
+                eventResize: (infos) => 
+                {
                     console.log(infos.event.end)
                 },
-                header: {
+                header: 
+                {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay,list',
                 },
-                    buttonText: {
+                    buttonText: 
+                    {
                         today: 'Aujourd\'hui',
                         month: 'Mois',
                         week: 'Semaine',
@@ -83,6 +118,23 @@
                 plugins: ['dayGrid','timeGrid','list','interaction']
             });
             calendar.render();
+      }
+      document.addEventListener('DOMContentLoaded', () => 
+      {
+          Calendrier();
+      });
+      window.onload = () => 
+      {
+        $.datetimepicker.setLocale('fr');
+        $.datetimepicker.setDateFormatter('moment');
+        $('.datetimepicker').datetimepicker({
+          format:"DD/MM/YYYY HH:mm",
+          stepping: 10
         });
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            startDate: '-3d'
+        });
+      };
     </script>
 {% endblock %}

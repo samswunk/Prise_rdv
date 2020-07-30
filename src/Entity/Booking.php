@@ -23,7 +23,7 @@ class Booking
     private $title;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     private $start;
 
