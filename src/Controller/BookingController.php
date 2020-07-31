@@ -15,6 +15,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BookingController extends AbstractController
 {
+    
+    /**
+     * @Route("/calendar", name="booking_calendar", methods={"GET"})
+     */
+    public function calendar(): Response
+    {
+        return $this->render('booking/calendar.html.twig');
+    }
+
     /**
      * @Route("/", name="booking_index", methods={"GET"})
      */
@@ -24,7 +33,48 @@ class BookingController extends AbstractController
             'bookings' => $bookingRepository->findAll(),
         ]);
     }
-
+    
+    /**
+     * @Route("/new_rdv", name="rdv_new", methods={"GET","POST"})
+     */
+    public function new_rdv(Request $request): Response
+    {
+        $booking = new Booking();
+        $form = $this->createForm(BookingType::class, $booking);
+        $form->handleRequest($request);
+        // $data = json_encode($request->request->all(), true);
+            // $form->submit(array_merge(['url' => null], $request->request->all()), false);
+            if ($form->isSubmitted()) 
+            {
+                /*$txt = "<pre>";
+                $txt .= $request->request->get('title');
+                $txt .= $request->request->get('start');
+                $txt .= $request->request->get('end');
+                $txt .= $request->request->get('description');
+                $txt .= $request->request->get('background_color');
+                $txt .= "</pre>";
+                dd($txt);
+                /*    $txt = "<pre>";
+                return $this->redirectToRoute('booking_index'); 
+                $booking->setTitle($request->request->get('title'));
+                
+                // $date = date_create_from_format('d/m/Y H:i:s',$request->request->get('start'));
+                // $date = date('d/m/Y H:i:s',$request->request->get('start'));
+                // $date = date_create($request->request->get('start'));
+                // $date = $request->request->get('start');
+                $booking->setStart(date_create($request->request->get('start')));
+                $booking->setEnd(date_create($request->request->get('end')));
+                $booking->setDescription($request->request->get('description'));
+                $booking->setBackgroundColor($request->request->get('background_color'));
+                /**/
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($booking);
+                $entityManager->flush();
+                // return $this->redirectToRoute('booking_index'); 
+                /**/
+            }
+        return $this->redirectToRoute('booking_index'); 
+    }
     /**
      * @Route("/new", name="booking_new", methods={"GET","POST"})
      */
@@ -33,7 +83,6 @@ class BookingController extends AbstractController
         $booking = new Booking();
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($booking);
@@ -68,13 +117,6 @@ class BookingController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // echo '<pre style="border:1px solid red;">
-            // ';
-            // echo print_r($request);
-            // // echo ($request->get('start'));
-            // echo "
-            // </pre>";
-            // die();
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('booking_index');

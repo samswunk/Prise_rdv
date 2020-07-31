@@ -28,7 +28,7 @@ class Booking
     private $start;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     private $end;
 

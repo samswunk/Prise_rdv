@@ -3,12 +3,12 @@
 
 {% block body %}
     {# SHOW PRISE RDV #}
-    <div class="bg-light" id="ShowRdv">
+    <div class="bg-light container" id="ShowRdv">
       <div class="header">
-        <title>Prendre Rdv</title>
+        <title>Ouvrir un rdv</title>
       </div> 
-      <div class="body" >
-        <div id="rdv-holder">
+      <div class="body row" >
+        <div id="rdv-holder" class="col-12">
           {{ include('./booking/_form.html.twig') }}
         </div>
       </div>

@@ -13,11 +13,11 @@
 
 <div class="container">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">Prise de RDV</a>
-    <button   class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" 
-              aria-expanded="false" aria-label="Toggle navigation">
-      <span   class="navbar-toggler-icon"></span>
-    </button>
+    <a class="navbar-brand" href="#">Ouverture de RDV</a>
+      <button   class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" 
+                aria-expanded="false" aria-label="Toggle navigation">
+        <span   class="navbar-toggler-icon"></span>
+      </button>
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
@@ -27,6 +27,9 @@
             <a class="nav-link" href="{{ path('booking_index') }}">Interventions</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link btn btn-success" href="#" data-toggle="modal" data-target="#ShowRdv"><strong class="color-white">Ouvrir un rdv</strong></a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="#">Tarifs</a>
           </li>
           <li class="nav-item">
@@ -34,23 +37,82 @@
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search">
+          <input class="form-control mr-sm-2" type="text" placeholder="Rechercher">
           <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
         </form>
       </div>
-    </nav>
-    <button class="btn btn-primary" data-toggle="modal" data-target="#ShowCalendar" class="btn btn-primary">Afficher le calendrier</button>
-    {# SHOW CALENDAR MODAL #}
-    <div class="modal fade bg-light" id="ShowCalendar" role="dialog">
-      <div class="modal-body" >
-        <div id="calendar-holder">
+  </nav>
+  <div class="col-12"></div>
+  <div id="calendar-holder2" class="calendar col-12"></div>
+  {# SHOW CALENDAR MODAL #}
+    <div  class="modal fade bg-light" 
+          style="min-width: 80%;"
+          id="ShowCalendar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" 
+          aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">      
+        <div class="modal-content col-12">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body" >
+            <h4 class="modal-title">Calendrier</h4>
+            <div id="calendar-holder" class="col-12"></div>
+          </div>
+          <div class="modal-footer center text-center">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+          </div>
         </div>
       </div>
-      <div class="center text-center">
-        <button class="btn btn-alert" data-dismiss="modal">Fermer</button>
+    </div>
+    {# SHOW RDV MODAL #}
+    <div  class="modal fade bg-light" 
+          style="height: 90%; min-width: 80%;"
+          id="ShowRdv" tabindex="-1" role="dialog" aria-labelledby="ModalRdv" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">      
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <h4 class="modal-title">Ouvrir un Rdv</h4>
+                <form class="col-12 row" action="{{ path('rdv_new') }}" method="POST">
+                <div class="row col-12">
+                  <label class="col-4" for="title">Titre</label>
+                  <input  type="text" class="form-control col-8" 
+                          name="booking[title]" id="booking_title" placeholder="Entrez un titre" 
+                          required="required" maxlength="255">
+                </div>
+                <div class="row col-12">
+                  <label class="col-4" for="start">Date de début</label>
+                  <input  type="text" class="form-control input-inline datetimepicker col-8" 
+                          id="booking_start" name="booking[start]" required="required" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
+                </div>
+                <div class="row col-12">
+                  <label class="col-4" for="end">Date de fin</label>
+                  <input  type="text" class="form-control input-inline datetimepicker col-8" 
+                          id="booking_end" name="booking[end]" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
+                </div>
+                <div class="row col-12">
+                  <label class="col-4" for="background_color">Couleur</label>
+                  <input  type="color" class="form-control col-8" 
+                          id="booking_background_color" name="booking[background_color]" placeholder="Selectionnez une couleur">
+                </div>
+                <div class="row col-12">
+                  <label    class="col-4" for="booking_description">Description</label>
+                  <textarea class="form-control col-8" id="booking_description" name="booking[description]"></textarea>
+                </div>
+              </div>
+              <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
+              <div class="modal-footer center text-center">
+                <button class="btn btn-success">Sauvegarder</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-
+    
 </div>
 {% block body %}
 {% endblock %}
@@ -70,9 +132,19 @@
     <script src="{{ asset('datepicker/js/bootstrap-datepicker.js') }}">   </script>
     <script src="{{ asset('datepicker/locales/bootstrap-datepicker.fr.min.js') }}">   </script>
     <script type="text/javascript">
+      function getFormattedDate(date) 
+      {
+          let year = date.getFullYear();
+          let month = (1 + date.getMonth()).toString().padStart(2, '0');
+          let day = date.getDate().toString().padStart(2, '0');
+          let hour = date.getHours().toString().padStart(2, '0');
+          let min = date.getMinutes().toString().padStart(2, '0');
+          return day + '/' + month + '/' + year+' '+hour+':'+min;
+      }
+      
       function Calendrier()
       {
-        var calendarEl = document.getElementById('calendar-holder');
+        var calendarEl = document.getElementById('calendar-holder2');
             var calendar = new FullCalendar.Calendar(calendarEl, 
             {
                 height: 600,
@@ -80,8 +152,44 @@
                 defaultView: 'dayGridMonth',
                 locale: 'fr',
                 editable: true,
+                selectable: true,
+                selectHelper: true,
                 nowIndicator: true,
                 events: "{{ path('rdv_index') }}",
+                select: function(infos) 
+                {
+                  console.log(infos.start+"\n"+infos.end);
+                  $('#ShowRdv').modal('show');
+                  var vstart = new Date(infos.start);
+                  var vend = new Date(infos.end);
+                  console.log(vstart+"\n"+vend);
+                  $('#ShowRdv').on('shown.bs.modal', function (event) 
+                  {
+                    $(".modal-body #booking_start").val(getFormattedDate(vstart));
+                    $(".modal-body #booking_end").val(getFormattedDate(vend));
+
+                  /*$.getScript('/event/new',function(){
+                    $("#event_date_range").val(moment(start).format("DD/MM/YYYY HH:mm") +' - '+moment(end).format("DD/MM/YYYY HH:mm"));
+                    date_range_picker();
+                    $(".start_hidden").val(moment(start).format("DD/MM/YYYY HH:mm"));
+                    $(".end_hidden").val(moment(end).format("DD/MM/YYYY HH:mm"));/**/
+                  })
+                },
+                dateClick: function(info) 
+                {
+                  $('#ShowRdv').modal('show');
+                  var d = new Date(info.dateStr);
+                  $('#ShowRdv').on('shown.bs.modal', function (event) 
+                  {
+                    $(".modal-body #booking_start").val(getFormattedDate(d));
+                    $(".modal-body #booking_end").val(getFormattedDate(d));
+                  })
+                  //alert('Clicked on: ' + d);
+                  /*alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+                  alert('Current view: ' + info.view.type);
+                  // change the day's background color just for fun
+                  info.dayEl.style.backgroundColor = 'red';*/
+                },
                 eventDrop: (infos) => 
                 {
                     if(!confirm("Etes vous sûr.e de vouloir déplacer cet évènement"))
@@ -91,6 +199,7 @@
                     else
                     {
                       console.log(infos);
+                      console.log("NOUVELLE DATE",infos.event.id)
                       console.log("NOUVELLE DATE",infos.event.start)
                       console.log("NOUVELLE FIN",infos.event.end)
                       console.log("DESCR",infos.event.extendedProps.description);
@@ -131,10 +240,13 @@
           format:"DD/MM/YYYY HH:mm",
           stepping: 10
         });
-        $('.datepicker').datepicker({
-            format: 'dd/mm/yyyy',
-            startDate: '-3d'
-        });
+        $("#booking_start").on("change", function(ee) 
+        {
+          console.log("on change : "+$(this).val());
+          var dateStart = new Date($(this).val(), "d/M/Y H:i:s");
+          console.log("dateStart : "+dateStart);
+          $('#booking_end').datetimepicker('setDate', $(this).val());
+        });/**/
       };
     </script>
 {% endblock %}

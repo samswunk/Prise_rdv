@@ -1,9 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <title>Booking</title>
-    <h1>Booking</h1>
-    {{ dump(booking) }}
+    <title>Rdv {{ booking.title }}</title>
+    <h1>Rdv {{ booking.title }}</h1>
     <table class="table">
         <tbody>
             <tr>
@@ -16,11 +15,11 @@
             </tr>
             <tr>
                 <th>DateDebut</th>
-                <td>{{ booking.start ? booking.start|date('d/m/Y H:i') : '' }}</td>
+                <td>{{ booking.start    ? booking.start|date('d/m/Y H:i') : '' }}</td>
             </tr>
             <tr>
                 <th>DateFin</th>
-                <td>{{ booking.end ? booking.end|date('d/m/Y H:i') : '' }}</td>
+                <td>{{ booking.end      ? booking.end|date('d/m/Y H:i') : '' }}</td>
             </tr>
             <tr>
                 <th>Description</th>
@@ -28,10 +27,11 @@
             </tr>
         </tbody>
     </table>
-
-    <a href="{{ path('booking_index') }}" class="btn btn-secondary">Retour</a>
-
-    <a href="{{ path('booking_edit', {'id': booking.id}) }}" class="btn btn-danger">Modifier</a>
-
-    {{ include('booking/_delete_form.html.twig') }}
+    <div class="col-12 row border border-dark text-center">
+        <a href="{{ path('booking_index') }}"                       class="btn btn-secondary col-xs-3">Retour</a>
+        <a href="{{ path('booking_edit', {'id': booking.id}) }}"    class="btn btn-success col-xs-3">Modifier</a>
+        <div class="col-xs-3">
+            {{ include('booking/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

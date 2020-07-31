@@ -1,5 +1,4 @@
-<form   class="col-xs-3 border-red"
-        method="post" 
+<form   method="post" 
         action="{{ path('booking_delete', {'id': booking.id}) }}" 
         onsubmit="return confirm('Êtes vous sûrs de vouloir supprimer ce rdv ?');">
     <input type="hidden" name="_method" value="DELETE">
