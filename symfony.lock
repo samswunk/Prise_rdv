@@ -534,6 +534,9 @@
             "./config/routes/calendar.yaml"
         ]
     },
+    "twbs/bootstrap": {
+        "version": "v4.5.0"
+    },
     "twig/extra-bundle": {
         "version": "v3.0.3"
     },

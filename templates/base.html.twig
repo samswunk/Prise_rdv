@@ -1,79 +1,279 @@
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" >
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/core/main.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/daygrid/main.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/list/main.css') }}" >
+    <link rel="stylesheet" href="{{ asset('fullcalendar/timegrid/main.css') }}" >
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.css') }}" >
+    <link rel="stylesheet" href="{{ asset('jquery-ui/jquery-ui.css') }}" >
+    <link rel="stylesheet" href="{{ asset('datetimepicker/datetimepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('datepicker/css/bootstrap-datepicker.css') }}">
 {% endblock %}
 
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <a class="navbar-brand" href="#">Prise de RDV</a>
-  <button   class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" 
-            aria-expanded="false" aria-label="Toggle navigation">
-    <span   class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarColor01">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ path('booking_index') }}">Interventions</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Tarifs</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">À propos</a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
-    </form>
-  </div>
-</nav>
-
+<div class="container">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Ouverture de RDV</a>
+      <button   class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" 
+                aria-expanded="false" aria-label="Toggle navigation">
+        <span   class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('booking_index') }}">Interventions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-success" href="#" data-toggle="modal" data-target="#ShowRdv"><strong class="color-white">Ouvrir un rdv</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Tarifs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">À propos</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Rechercher">
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
+        </form>
+      </div>
+  </nav>
+  <div class="col-12"></div>
+  <div id="calendar-holder2" class="calendar col-12"></div>
+  {# SHOW CALENDAR MODAL #}
+    <div  class="modal fade bg-light" 
+          style="min-width: 80%;"
+          id="ShowCalendar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" 
+          aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">      
+        <div class="modal-content col-12">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body" >
+            <h4 class="modal-title">Calendrier</h4>
+            <div id="calendar-holder" class="col-12"></div>
+          </div>
+          <div class="modal-footer center text-center">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {# SHOW RDV MODAL #}
+    <div  class="modal fade bg-light" 
+          style="height: 90%; min-width: 80%;"
+          id="ShowRdv" tabindex="-1" role="dialog" aria-labelledby="ModalRdv" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">      
+          <div class="modal-content">
+            <div class="modal-header alert alert-danger">
+              <h4 id="booking_titreShowRdv" class="modal-titlecenter">Ouvrir un Rdv</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="booking" class="col-12 row" action="{{ path('rdv_new') }}" method="POST">
+                <input type="hidden" name="booking[id]" id="booking_id">
+                <div class="row col-12">
+                  <label class="col-4" for="booking_title">Titre</label>
+                  <input  type="text" class="form-control col-8" 
+                          name="booking[title]" id="booking_title" placeholder="Entrez un titre" 
+                          required="required" maxlength="255">
+                </div>
+                <div class="row col-12">
+                  <label class="col-4" for="booking_start">Date de début</label>
+                  <input  type="text" class="form-control input-inline datetimepicker col-8" 
+                          id="booking_start" name="booking[start]" required="required" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
+                </div>
+                <div class="row col-12">
+                  <label class="col-4" for="booking_end">Date de fin</label>
+                  <input  type="text" class="form-control input-inline datetimepicker col-8" 
+                          id="booking_end" name="booking[end]" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
+                </div>
+                <div class="row col-12">
+                  <label class="col-4" for="booking_background_color">Couleur</label>
+                  <input  type="color" class="form-control col-8" 
+                          id="booking_background_color" name="booking[background_color]" placeholder="Selectionnez une couleur">
+                </div>
+                <div class="row col-12">
+                  <label    class="col-4" for="booking_description">Description</label>
+                  <textarea class="form-control col-8" id="booking_description" name="booking[description]"></textarea>
+                </div>
+              </div>
+              <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
+              <div class="modal-footer justify-content-between">
+                <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</div>
 {% block body %}
 {% endblock %}
 
 {% block javascripts %}
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
-
+    <script src="{{ asset('js/jquery.js') }}">   </script>
+    <script src="{{ asset('jquery-ui/jquery-ui.js') }}">   </script>
+    <script src="{{ asset('bootstrap/js/bootstrap.js') }}">   </script>
+    <script src="{{ asset('datetimepicker/moment.js') }}">   </script>
+    <script src="{{ asset('fullcalendar/core/main.js') }}">       </script>
+    <script src="{{ asset('fullcalendar/daygrid/main.js') }}">    </script>
+    <script src="{{ asset('fullcalendar/interaction/main.js') }}"></script>
+    <script src="{{ asset('fullcalendar/list/main.js') }}">       </script>
+    <script src="{{ asset('fullcalendar/timegrid/main.js') }}">   </script>
+    {# <script src="{{ asset('js/popper.js') }}">   </script> #}
+    <script src="{{ asset('datetimepicker/datetimepicker.js') }}">   </script>
+    <script src="{{ asset('datepicker/js/bootstrap-datepicker.js') }}">   </script>
+    <script src="{{ asset('datepicker/locales/bootstrap-datepicker.fr.min.js') }}">   </script>
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-            var calendarEl = document.getElementById('calendar-holder');
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                height: 400,
-                width: 400, 
+      function getFormattedDate(date) 
+      {
+          let year = date.getFullYear();
+          let month = (1 + date.getMonth()).toString().padStart(2, '0');
+          let day = date.getDate().toString().padStart(2, '0');
+          let hour = date.getHours().toString().padStart(2, '0');
+          let min = date.getMinutes().toString().padStart(2, '0');
+          return day + '/' + month + '/' + year+' '+hour+':'+min;
+      }
+      
+      function Calendrier()
+      {
+        var calendarEl = document.getElementById('calendar-holder2');
+            var calendar = new FullCalendar.Calendar(calendarEl, 
+            {
+                height: 600,
+                width: 600, 
                 defaultView: 'dayGridMonth',
+                timeZone: 'Europe/Paris',
                 locale: 'fr',
                 editable: true,
+                selectable: true,
+                selectHelper: true,
                 nowIndicator: true,
                 events: "{{ path('rdv_index') }}",
-                eventDrop: (infos) => {
-                    console.log(infos);
-                    console.log("NOUVELLE DATE",infos.event.start)
-                    console.log("NOUVELLE FIN",infos.event.end)
-                    console.log("DESCR",infos.event.extendedProps.description);
-                    if(!confirm("Etes vous sûr.e de vouloir déplacer cet évènement")){
-                        infos.revert();
-                    }
+                eventRender: function(info) 
+                {
+                  console.log(info.view.type);
+                  if (info.view.type == 'dayGridMonth') 
+                  {
+                    var new_description =   
+                         '<br/>'
+                        + info.event.title + '<br/>'
+                        // + '<strong>Address: </strong><br/>' + infos.address + '<br/>'
+                        + info.event.extendedProps.description + '<br/>'
+                    info.el.querySelector('.fc-time').innerHTML = moment(info.event.start).format("HH:mm") + '-' + moment(info.event.end).format("HH:mm");
+                    info.el.querySelector('.fc-title').innerHTML = "" + new_description + "";
+                        //+ '<strong>Place: </strong>' + event.place + '<br/>'
+                    ;
+                  }
                 },
-                eventResize: (infos) => {
+                /*function(info,event,element,view) 
+                {
+                  var tooltip = new Tooltip(info.el, {
+                    title: info.event.extendedProps.description,
+                    placement: 'top',
+                    trigger: 'hover',
+                    container: 'body'
+                  });
+                },/**/
+                select: function(infos) 
+                {
+                  console.log(infos.start+"\n"+infos.end);
+                  $('#ShowRdv').modal('show');
+                  var vstart = new Date(infos.start);
+                  var vend = new Date(infos.end);
+                  console.log(vstart+"\n"+vend);
+                  $('#ShowRdv').on('shown.bs.modal', function (event) 
+                  {
+                    $(".modal-body #booking_start").val(getFormattedDate(vstart));
+                    $(".modal-body #booking_end").val(getFormattedDate(vend));
+
+                  /*$.getScript('/event/new',function(){
+                    $("#event_date_range").val(moment(start).format("DD/MM/YYYY HH:mm") +' - '+moment(end).format("DD/MM/YYYY HH:mm"));
+                    date_range_picker();
+                    $(".start_hidden").val(moment(start).format("DD/MM/YYYY HH:mm"));
+                    $(".end_hidden").val(moment(end).format("DD/MM/YYYY HH:mm"));/**/
+                  })
+                },
+                dateClick: function(info) 
+                {
+                  $('#ShowRdv').modal('show');
+                  var d = new Date(info.dateStr);
+                  $('#ShowRdv').on('shown.bs.modal', function (event) 
+                  {
+                    $(".modal-body #booking_start").val(getFormattedDate(d));
+                    $(".modal-body #booking_end").val(getFormattedDate(d));
+                  })
+                  //alert('Clicked on: ' + d);
+                  /*alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+                  alert('Current view: ' + info.view.type);
+                  // change the day's background color just for fun
+                  info.dayEl.style.backgroundColor = 'red';*/
+                },
+                eventDrop: (infos) => 
+                {
+                    // console.log(infos.event);
+                    $('#ShowRdv').modal('show');
+                    var vstart = new Date(infos.event.start);
+                    var vend = new Date(infos.event.end);
+                    
+                    $('#ShowRdv').on('shown.bs.modal', function (event) 
+                    {
+                      $(".before").remove();
+                      $("#booking_titreShowRdv").html("Etes vous sûr.e de vouloir déplacer cet évènement ?");
+                      $("#booking_submit_button").html("OUI");
+                      $("#booking_close_button").html("NON");
+                      $(".modal-body #booking_id").val(infos.event.id);
+                      $(".modal-body #booking_title").val(infos.event.title);
+                      $("#booking_start").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.start)+' => </small></div>');
+                      $("#booking_start").removeClass("col-8");
+                      $("#booking_start").addClass("col-5");
+                      $(".modal-body #booking_start").val(getFormattedDate(vstart));
+                      $(".modal-body #booking_start").val(getFormattedDate(vstart));
+                      $("#booking_end").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.end)+' => </small></div>');
+                      $("#booking_end").removeClass("col-8");
+                      $("#booking_end").addClass("col-5");
+                      $(".modal-body #booking_end").val(getFormattedDate(vend));
+                      $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
+                      $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
+                    })
+                    $('#ShowRdv').on('hidden.bs.modal', function () 
+                    {
+                      $(".before").remove();
+                      infos.revert();
+                      // $(this).find('form')[0].reset();
+                    })
+/*                    if(!confirm("Etes vous sûr.e de vouloir déplacer cet évènement"))
+                    {
+                      
+                    }
+                    else
+                    {
+                      console.log("NOUVELLE DATE",infos.event.id)
+                      console.log("NOUVELLE DATE",infos.event.start)
+                      console.log("NOUVELLE FIN",infos.event.end)
+                      console.log("DESCR",infos.event.extendedProps.description);
+                    }*/
+                },
+                eventResize: (infos) => 
+                {
                     console.log(infos.event.end)
                 },
-                header: {
+                header: 
+                {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay,list',
                 },
-                    buttonText: {
+                    buttonText: 
+                    {
                         today: 'Aujourd\'hui',
                         month: 'Mois',
                         week: 'Semaine',
@@ -83,6 +283,26 @@
                 plugins: ['dayGrid','timeGrid','list','interaction']
             });
             calendar.render();
+      }
+      document.addEventListener('DOMContentLoaded', () => 
+      {
+          Calendrier();
+      });/**/
+      window.onload = () => 
+      {
+        $.datetimepicker.setLocale('fr');
+        $.datetimepicker.setDateFormatter('moment');
+        $('.datetimepicker').datetimepicker({
+          format:"DD/MM/YYYY HH:mm",
+          stepping: 10
         });
+        $("#booking_start").on("change", function(ee) 
+        {
+          console.log("on change : "+$(this).val());
+          var dateStart = new Date($(this).val(), "d/M/Y H:i:s");
+          console.log("dateStart : "+dateStart);
+          $('#booking_end').datetimepicker('setDate', $(this).val());
+        });/**/
+      };
     </script>
 {% endblock %}

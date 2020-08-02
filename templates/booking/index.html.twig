@@ -1,11 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
-    <h1>Booking index</h1>
-
-    <div style="width:30%; height:50%; color:#ffffff" id="calendar-holder"></div>
-    
+<div class="container">
+    <h1>Liste des rdv</h1>
       <table class="table">
         <thead>
             <tr>
@@ -22,12 +19,15 @@
             <tr>
                 <td>{{ booking.id }}</td>
                 <td>{{ booking.title }}</td>
-                <td>{{ booking.start ? booking.start|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ booking.end ? booking.end|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ booking.start ? booking.start|date('d/m/Y H:i') : '' }}</td>
+                <td>{{ booking.end ? booking.end|date('d/m/Y H:i') : '' }}</td>
                 <td>{{ booking.description}}</td>
                 <td>
-                    <a href="{{ path('booking_show', {'id': booking.id}) }}">Afficher</a>
-                    <a href="{{ path('booking_edit', {'id': booking.id}) }}">Modifier</a>
+                    <div class="form-group row">
+                        <a href="{{ path('booking_show', {'id': booking.id}) }}" class="btn btn-primary col-4">Afficher</a>
+                        <a href="{{ path('booking_edit', {'id': booking.id}) }}" class="btn btn-success col-4">Modifier</a>
+                        {{ include('booking/_delete_form.html.twig') }}
+                    </div>
                 </td>
             </tr>
         {% else %}
@@ -37,6 +37,8 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('booking_new') }}">Nouveau rdv</a>
+    <div class="center text-center">
+        <a class="btn btn-primary" href="{{ path('booking_new') }}">Prendre rdv</a>
+    </div>
+</div>    
 {% endblock %}
