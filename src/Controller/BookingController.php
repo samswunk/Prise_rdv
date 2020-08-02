@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
+use DateTimeInterface;
 use App\Entity\Booking;
 use App\Form\BookingType;
 use App\Repository\BookingRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/booking")
@@ -30,7 +31,9 @@ class BookingController extends AbstractController
     public function index(BookingRepository $bookingRepository): Response
     {
         return $this->render('booking/index.html.twig', [
-            'bookings' => $bookingRepository->findAll(),
+            'bookings' => $bookingRepository
+            ->findBy(array(), array('start' => 'DESC')),
+            // ->findAll(),
         ]);
     }
     
@@ -40,12 +43,37 @@ class BookingController extends AbstractController
     public function new_rdv(Request $request): Response
     {
         $booking = new Booking();
+        $id = $request->request->get('booking')['id'];
+        $entityManager = $this->getDoctrine()->getManager();
+        
+        if ($id) 
+            {
+                $bookingRepository = $this->getDoctrine()
+                    ->getRepository(Booking::class, 'default')
+                    ->find($id);
+                if ($bookingRepository) 
+                {   //date_format ( DateTimeInterface $object , string $format )
+                    echo("OLD DATE : ". date_format($bookingRepository->getStart(),"Y-m-d H:i:s"));
+                    echo("NEW DATE : ". date("Y-m-d H:i:s",strtotime(str_replace('/', '-', $request->request->get('booking')['start']))));
+                    // die();
+                    $start = new \DateTime(date("Y-m-d H:i:s",strtotime(str_replace('/', '-', $request->request->get('booking')['start']))));
+                    $end = new \DateTime(date("Y-m-d H:i:s",strtotime(str_replace('/', '-', $request->request->get('booking')['end']).":00")));
+                    // echo("date : " . $start);
+                    // echo("convert : ".date(strtotime($start)));
+                    $bookingRepository->setStart($start);
+                    $bookingRepository->setEnd($end);
+                    $entityManager->flush();
+                    return $this->redirectToRoute('booking_index');
+                }
+            }
+
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
         // $data = json_encode($request->request->all(), true);
             // $form->submit(array_merge(['url' => null], $request->request->all()), false);
             if ($form->isSubmitted()) 
             {
+                
                 /*$txt = "<pre>";
                 $txt .= $request->request->get('title');
                 $txt .= $request->request->get('start');
@@ -67,7 +95,6 @@ class BookingController extends AbstractController
                 $booking->setDescription($request->request->get('description'));
                 $booking->setBackgroundColor($request->request->get('background_color'));
                 /**/
-                $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($booking);
                 $entityManager->flush();
                 // return $this->redirectToRoute('booking_index'); 

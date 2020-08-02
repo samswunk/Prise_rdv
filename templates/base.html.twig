@@ -70,30 +70,31 @@
           id="ShowRdv" tabindex="-1" role="dialog" aria-labelledby="ModalRdv" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">      
           <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header alert alert-danger">
+              <h4 id="booking_titreShowRdv" class="modal-titlecenter">Ouvrir un Rdv</h4>
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-              <h4 class="modal-title">Ouvrir un Rdv</h4>
-                <form class="col-12 row" action="{{ path('rdv_new') }}" method="POST">
+                <form id="booking" class="col-12 row" action="{{ path('rdv_new') }}" method="POST">
+                <input type="hidden" name="booking[id]" id="booking_id">
                 <div class="row col-12">
-                  <label class="col-4" for="title">Titre</label>
+                  <label class="col-4" for="booking_title">Titre</label>
                   <input  type="text" class="form-control col-8" 
                           name="booking[title]" id="booking_title" placeholder="Entrez un titre" 
                           required="required" maxlength="255">
                 </div>
                 <div class="row col-12">
-                  <label class="col-4" for="start">Date de début</label>
+                  <label class="col-4" for="booking_start">Date de début</label>
                   <input  type="text" class="form-control input-inline datetimepicker col-8" 
                           id="booking_start" name="booking[start]" required="required" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
                 </div>
                 <div class="row col-12">
-                  <label class="col-4" for="end">Date de fin</label>
+                  <label class="col-4" for="booking_end">Date de fin</label>
                   <input  type="text" class="form-control input-inline datetimepicker col-8" 
                           id="booking_end" name="booking[end]" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
                 </div>
                 <div class="row col-12">
-                  <label class="col-4" for="background_color">Couleur</label>
+                  <label class="col-4" for="booking_background_color">Couleur</label>
                   <input  type="color" class="form-control col-8" 
                           id="booking_background_color" name="booking[background_color]" placeholder="Selectionnez une couleur">
                 </div>
@@ -103,9 +104,9 @@
                 </div>
               </div>
               <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
-              <div class="modal-footer center text-center">
-                <button class="btn btn-success">Sauvegarder</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+              <div class="modal-footer justify-content-between">
+                <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
               </div>
             </form>
           </div>
@@ -150,12 +151,38 @@
                 height: 600,
                 width: 600, 
                 defaultView: 'dayGridMonth',
+                timeZone: 'Europe/Paris',
                 locale: 'fr',
                 editable: true,
                 selectable: true,
                 selectHelper: true,
                 nowIndicator: true,
                 events: "{{ path('rdv_index') }}",
+                eventRender: function(info) 
+                {
+                  console.log(info.view.type);
+                  if (info.view.type == 'dayGridMonth') 
+                  {
+                    var new_description =   
+                         '<br/>'
+                        + info.event.title + '<br/>'
+                        // + '<strong>Address: </strong><br/>' + infos.address + '<br/>'
+                        + info.event.extendedProps.description + '<br/>'
+                    info.el.querySelector('.fc-time').innerHTML = moment(info.event.start).format("HH:mm") + '-' + moment(info.event.end).format("HH:mm");
+                    info.el.querySelector('.fc-title').innerHTML = "" + new_description + "";
+                        //+ '<strong>Place: </strong>' + event.place + '<br/>'
+                    ;
+                  }
+                },
+                /*function(info,event,element,view) 
+                {
+                  var tooltip = new Tooltip(info.el, {
+                    title: info.event.extendedProps.description,
+                    placement: 'top',
+                    trigger: 'hover',
+                    container: 'body'
+                  });
+                },/**/
                 select: function(infos) 
                 {
                   console.log(infos.start+"\n"+infos.end);
@@ -192,19 +219,48 @@
                 },
                 eventDrop: (infos) => 
                 {
-                    if(!confirm("Etes vous sûr.e de vouloir déplacer cet évènement"))
+                    // console.log(infos.event);
+                    $('#ShowRdv').modal('show');
+                    var vstart = new Date(infos.event.start);
+                    var vend = new Date(infos.event.end);
+                    
+                    $('#ShowRdv').on('shown.bs.modal', function (event) 
                     {
+                      $(".before").remove();
+                      $("#booking_titreShowRdv").html("Etes vous sûr.e de vouloir déplacer cet évènement ?");
+                      $("#booking_submit_button").html("OUI");
+                      $("#booking_close_button").html("NON");
+                      $(".modal-body #booking_id").val(infos.event.id);
+                      $(".modal-body #booking_title").val(infos.event.title);
+                      $("#booking_start").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.start)+' => </small></div>');
+                      $("#booking_start").removeClass("col-8");
+                      $("#booking_start").addClass("col-5");
+                      $(".modal-body #booking_start").val(getFormattedDate(vstart));
+                      $(".modal-body #booking_start").val(getFormattedDate(vstart));
+                      $("#booking_end").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.end)+' => </small></div>');
+                      $("#booking_end").removeClass("col-8");
+                      $("#booking_end").addClass("col-5");
+                      $(".modal-body #booking_end").val(getFormattedDate(vend));
+                      $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
+                      $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
+                    })
+                    $('#ShowRdv').on('hidden.bs.modal', function () 
+                    {
+                      $(".before").remove();
                       infos.revert();
+                      // $(this).find('form')[0].reset();
+                    })
+/*                    if(!confirm("Etes vous sûr.e de vouloir déplacer cet évènement"))
+                    {
+                      
                     }
                     else
                     {
-                      console.log(infos);
                       console.log("NOUVELLE DATE",infos.event.id)
                       console.log("NOUVELLE DATE",infos.event.start)
                       console.log("NOUVELLE FIN",infos.event.end)
                       console.log("DESCR",infos.event.extendedProps.description);
-                    }
-                      
+                    }*/
                 },
                 eventResize: (infos) => 
                 {
@@ -231,7 +287,7 @@
       document.addEventListener('DOMContentLoaded', () => 
       {
           Calendrier();
-      });
+      });/**/
       window.onload = () => 
       {
         $.datetimepicker.setLocale('fr');
