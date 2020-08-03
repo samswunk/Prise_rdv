@@ -15,28 +15,12 @@ class RdvController extends AbstractController
      */
     public function index(BookingRepository $bookingRepository): Response
     {
-        /*return $this->render('booking/index.html.twig', [
-            'bookings' => $bookingRepository->findAll(),
-        ]);*/
         $repos=$bookingRepository->findAll();
-        
         $repos = $this->get('serializer')->serialize($repos, 'json');
-
+        $repos=str_replace(":00+00:00","",$repos);
         $response = new Response($repos);
-
         $response->headers->set('Content-Type', 'application/json');
         return $response;        
-    }
-    /**
-     * @Route("/")
-     */              
-    public function number()
-    {
-        $number = random_int(0, 100);
-
-        return $this->render('base.html.twig', [
-            'number' => $number,
-        ]);
     }
 }
 

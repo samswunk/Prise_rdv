@@ -122,57 +122,94 @@
     <script src="{{ asset('js/jquery.js') }}">   </script>
     <script src="{{ asset('jquery-ui/jquery-ui.js') }}">   </script>
     <script src="{{ asset('bootstrap/js/bootstrap.js') }}">   </script>
-    <script src="{{ asset('datetimepicker/moment.js') }}">   </script>
+    <script src="{{ asset('moment/moment.js') }}">   </script>
+    <script src="{{ asset('moment/moment-with-locales.js') }}">   </script>
+    <script src="{{ asset('moment/moment-timezone.js') }}">   </script>
+    
+    <script src="{{ asset('datetimepicker/datetimepicker.js') }}">   </script>
+    {# <script src="{{ asset('datetimepicker/moment.js') }}">   </script> #}
+    
     <script src="{{ asset('fullcalendar/core/main.js') }}">       </script>
+    <script src="{{ asset('fullcalendar/core/locales-all.js') }}">       </script>
     <script src="{{ asset('fullcalendar/daygrid/main.js') }}">    </script>
     <script src="{{ asset('fullcalendar/interaction/main.js') }}"></script>
     <script src="{{ asset('fullcalendar/list/main.js') }}">       </script>
     <script src="{{ asset('fullcalendar/timegrid/main.js') }}">   </script>
+    <script src="{{ asset('fullcalendar/moment/main.global.min.js') }}">   </script>
     {# <script src="{{ asset('js/popper.js') }}">   </script> #}
-    <script src="{{ asset('datetimepicker/datetimepicker.js') }}">   </script>
-    <script src="{{ asset('datepicker/js/bootstrap-datepicker.js') }}">   </script>
-    <script src="{{ asset('datepicker/locales/bootstrap-datepicker.fr.min.js') }}">   </script>
     <script type="text/javascript">
+      
+      moment.tz.add("Europe/Paris|PMT WET WEST CEST CET WEMT|-9.l 0 -10 -20 -10 -20|0121212121212121212121212121212121212121212121212123434352543434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434|-2nco8.l cNb8.l HA0 19A0 1iM0 11c0 1oo0 Wo0 1rc0 QM0 1EM0 UM0 1u00 10o0 1io0 1wo0 Rc0 1a00 1fA0 1cM0 1cM0 1io0 17c0 1fA0 1a00 1io0 1a00 1io0 17c0 1fA0 1a00 1io0 17c0 1cM0 1cM0 1a00 1io0 1cM0 1cM0 1a00 1fA0 1io0 17c0 1cM0 1cM0 1a00 1fA0 1io0 1qM0 Df0 Ik0 5M30 WM0 1fA0 1cM0 Vx0 hB0 1aq0 16M0 1ekn0 1cL0 1fC0 1a00 1fA0 1cM0 1cM0 1cM0 1fA0 1a00 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|11e6")
+      
       function getFormattedDate(date) 
       {
-          let year = date.getFullYear();
-          let month = (1 + date.getMonth()).toString().padStart(2, '0');
-          let day = date.getDate().toString().padStart(2, '0');
-          let hour = date.getHours().toString().padStart(2, '0');
-          let min = date.getMinutes().toString().padStart(2, '0');
-          return day + '/' + month + '/' + year+' '+hour+':'+min;
+        let year = date.getFullYear();
+        let month = (1 + date.getMonth()).toString().padStart(2, '0');
+        let day = date.getDate().toString().padStart(2, '0');
+        let hour = date.getHours().toString().padStart(2, '0');
+        let min = date.getMinutes().toString().padStart(2, '0');
+        return day + '/' + month + '/' + year+' '+hour+':'+min;
       }
       
       function Calendrier()
       {
         var calendarEl = document.getElementById('calendar-holder2');
-            var calendar = new FullCalendar.Calendar(calendarEl, 
-            {
-                height: 600,
+        var calendar = new FullCalendar.Calendar(calendarEl, 
+        {
+          height: 600,
                 width: 600, 
-                defaultView: 'dayGridMonth',
-                timeZone: 'Europe/Paris',
+                defaultView: 'timeGridWeek',
+                timezone: 'Europe/Paris',
+                //ignoreTimezone: true,
                 locale: 'fr',
                 editable: true,
                 selectable: true,
                 selectHelper: true,
                 nowIndicator: true,
-                events: "{{ path('rdv_index') }}",
-                eventRender: function(info) 
+                buttonText: 
                 {
-                  console.log(info.view.type);
-                  if (info.view.type == 'dayGridMonth') 
+                  today: 'Aujourd\'hui',
+                  month: 'Mois',
+                  week: 'Semaine',
+                  day: 'Jour',
+                  list: 'Liste'
+                },
+                header: 
+                {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,list',
+                  },
+                  plugins: ['dayGrid','timeGrid','list','interaction'],
+                  // timeZone: 'Europe/Paris',
+                  events: "{{ path('rdv_index') }}",
+                  eventRender: function(info) 
                   {
-                    var new_description =   
-                         '<br/>'
-                        + info.event.title + '<br/>'
-                        // + '<strong>Address: </strong><br/>' + infos.address + '<br/>'
-                        + info.event.extendedProps.description + '<br/>'
-                    info.el.querySelector('.fc-time').innerHTML = moment(info.event.start).format("HH:mm") + '-' + moment(info.event.end).format("HH:mm");
-                    info.el.querySelector('.fc-title').innerHTML = "" + new_description + "";
-                        //+ '<strong>Place: </strong>' + event.place + '<br/>'
-                    ;
-                  }
+                    console.log("eventRender: function(info)");
+                    console.log("------------ "+ info.event.title+" ------------ ");
+                    var start = info.event.start;
+                    var end = info.event.end;
+                    // console.log(info.view.type);
+                    var affichage3 = moment(start).format("HH:mm") + '-' + moment(end).format("HH:mm");
+                    console.log(affichage3);
+                    var affichage4 = (new Date(start)) + '-' + (new Date(end));
+                    console.log(affichage4);
+                    var affichage5 = start.toISOString() + '-' +end.toISOString();
+                    console.log(affichage5);
+
+                    if (info.view.type == 'dayGridMonth') 
+                    {
+                      console.log(info.event);
+                      var new_description =   
+                          '<br/><small>'
+                          + info.event.title + '</small><br/>'
+                          // + '<strong>Address: </strong><br/>' + infos.address + '<br/>'
+                          + info.event.extendedProps.description + '<br/>';
+                      info.el.querySelector('.fc-time').innerHTML = affichage3;
+                      info.el.querySelector('.fc-title').innerHTML = new_description;
+                          //+ '<strong>Place: </strong>' + event.place + '<br/>'
+                      ;
+                    }
                 },
                 /*function(info,event,element,view) 
                 {
@@ -185,15 +222,19 @@
                 },/**/
                 select: function(infos) 
                 {
-                  console.log(infos.start+"\n"+infos.end);
+                  console.log("select: function(infos) ");
+                  console.log("START : "+infos.start+"\n"+"END : "+infos.end);
                   $('#ShowRdv').modal('show');
-                  var vstart = new Date(infos.start);
-                  var vend = new Date(infos.end);
-                  console.log(vstart+"\n"+vend);
+                  var vtitre = moment(infos.start).tz("Europe/Paris").format("DD MMMM");
+                  var vstart = moment(infos.start).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
+                  var vstart2 = getFormattedDate(new Date(infos.start));
+                  var vend = moment(infos.end).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
+                  console.log("START "+vstart+"\nSTART2 "+vstart+"\n END"+vend);
                   $('#ShowRdv').on('shown.bs.modal', function (event) 
                   {
-                    $(".modal-body #booking_start").val(getFormattedDate(vstart));
-                    $(".modal-body #booking_end").val(getFormattedDate(vend));
+                    $(".modal-body #booking_title").val((vtitre));
+                    $(".modal-body #booking_start").val((vstart));
+                    $(".modal-body #booking_end").val((vend));
 
                   /*$.getScript('/event/new',function(){
                     $("#event_date_range").val(moment(start).format("DD/MM/YYYY HH:mm") +' - '+moment(end).format("DD/MM/YYYY HH:mm"));
@@ -201,15 +242,20 @@
                     $(".start_hidden").val(moment(start).format("DD/MM/YYYY HH:mm"));
                     $(".end_hidden").val(moment(end).format("DD/MM/YYYY HH:mm"));/**/
                   })
+                  $('#ShowRdv').on('hidden.bs.modal', function () 
+                    {
+                      calendar.render();
+                      // $(this).find('form')[0].reset();
+                    })
                 },
                 dateClick: function(info) 
                 {
                   $('#ShowRdv').modal('show');
-                  var d = new Date(info.dateStr);
+                  var d = getFormattedDate(new Date(info.dateStr));
                   $('#ShowRdv').on('shown.bs.modal', function (event) 
                   {
-                    $(".modal-body #booking_start").val(getFormattedDate(d));
-                    $(".modal-body #booking_end").val(getFormattedDate(d));
+                    $(".modal-body #booking_start").val((d));
+                    $(".modal-body #booking_end").val((d));
                   })
                   //alert('Clicked on: ' + d);
                   /*alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
@@ -248,6 +294,7 @@
                     {
                       $(".before").remove();
                       infos.revert();
+                      calendar.render();
                       // $(this).find('form')[0].reset();
                     })
 /*                    if(!confirm("Etes vous sûr.e de vouloir déplacer cet évènement"))
@@ -266,37 +313,23 @@
                 {
                     console.log(infos.event.end)
                 },
-                header: 
-                {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay,list',
-                },
-                    buttonText: 
-                    {
-                        today: 'Aujourd\'hui',
-                        month: 'Mois',
-                        week: 'Semaine',
-                        day: 'Jour',
-                        list: 'Liste'
-                    },
-                plugins: ['dayGrid','timeGrid','list','interaction']
             });
             calendar.render();
       }
-      document.addEventListener('DOMContentLoaded', () => 
+      /*document.addEventListener('DOMContentLoaded', () => 
       {
           Calendrier();
-      });/**/
-      window.onload = () => 
-      {
+        });/**/
+        window.onload = () => 
+        {
+          Calendrier();
         $.datetimepicker.setLocale('fr');
         $.datetimepicker.setDateFormatter('moment');
         $('.datetimepicker').datetimepicker({
           format:"DD/MM/YYYY HH:mm",
           stepping: 10
         });
-        $("#booking_start").on("change", function(ee) 
+        /*$("#booking_start").on("change", function(ee) 
         {
           console.log("on change : "+$(this).val());
           var dateStart = new Date($(this).val(), "d/M/Y H:i:s");
