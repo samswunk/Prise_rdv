@@ -19,6 +19,17 @@ class BookingRepository extends ServiceEntityRepository
         parent::__construct($registry, Booking::class);
     }
 
+    public function findByRange($start,$end)
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.start >= :pstart')
+            ->andWhere('b.end <= :pend')
+            ->setParameter('pstart', $start)
+            ->setParameter('pend', $end)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     // /**
     //  * @return Booking[] Returns an array of Booking objects
     //  */

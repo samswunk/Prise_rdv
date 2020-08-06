@@ -1,44 +1,44 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container">
-    <h1>Liste des rdv</h1>
-      <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>DateDebut</th>
-                <th>DateFin</th>
-                <th>Description</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for booking in bookings %}
-            <tr>
-                <td>{{ booking.id }}</td>
-                <td>{{ booking.title }}</td>
-                <td>{{ booking.start ? booking.start|date('d/m/Y H:i') : '' }}</td>
-                <td>{{ booking.end ? booking.end|date('d/m/Y H:i') : '' }}</td>
-                <td>{{ booking.description}}</td>
-                <td>
-                    <div class="form-group row">
-                        <a href="{{ path('booking_show', {'id': booking.id}) }}" class="btn btn-primary col-4">Afficher</a>
-                        <a href="{{ path('booking_edit', {'id': booking.id}) }}" class="btn btn-success col-4">Modifier</a>
-                        {{ include('booking/_delete_form.html.twig') }}
-                    </div>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div class="center text-center">
-        <a class="btn btn-primary" href="{{ path('booking_new') }}">Prendre rdv</a>
-    </div>
-</div>    
+    <div class="container">
+        <h1>Liste des rdv</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Titre</th>
+                    <th>DateDebut</th>
+                    <th>DateFin</th>
+                    <th>Description</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.id }}</td>
+                    <td>{{ booking.title }}</td>
+                    <td>{{ booking.start ? booking.start|date('d/m/Y H:i') : '' }}</td>
+                    <td>{{ booking.end ? booking.end|date('d/m/Y H:i') : '' }}</td>
+                    <td>{{ booking.description}}</td>
+                    <td>
+                        <div class="form-group row">
+                            <a href="{{ path('booking_show', {'id': booking.id}) }}" class="btn btn-primary col-4">Afficher</a>
+                            <a href="{{ path('booking_edit', {'id': booking.id}) }}" class="btn btn-success col-4">Modifier</a>
+                            {{ include('booking/_delete_form.html.twig') }}
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="center text-center">
+            <a class="btn btn-primary" href="{{ path('booking_new') }}">Prendre rdv</a>
+        </div>
+    </div>    
 {% endblock %}
