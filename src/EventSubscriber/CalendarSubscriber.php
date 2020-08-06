@@ -1,5 +1,5 @@
 <?php
-
+/*
 namespace App\EventSubscriber;
 
 use App\Entity\Booking;
@@ -62,7 +62,7 @@ class CalendarSubscriber implements EventSubscriberInterface
              *
              * For more information see: https://fullcalendar.io/docs/event-object
              * and: https://github.com/fullcalendar/fullcalendar/blob/master/src/core/options.ts
-             */
+             *
 
             $bookingEvent->setOptions([
                 'backgroundColor' => 'red',
@@ -79,4 +79,4 @@ class CalendarSubscriber implements EventSubscriberInterface
             $calendar->addEvent($bookingEvent);
         }
     }
-}
+}*/
