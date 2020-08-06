@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Clients index{% endblock %}
+{% block title %}Liste des clients{% endblock %}
 
 {% block body %}
-    <h1>Clients index</h1>
-
+<div class="container">
+    <h1>Liste des clients</h1>
     <table class="table">
         <thead>
             <tr>
@@ -29,8 +29,8 @@
                 <td>{{ client.ville }}</td>
                 <td>{{ client.codePostal }}</td>
                 <td>
-                    <a href="{{ path('clients_show', {'id': client.id}) }}">show</a>
-                    <a href="{{ path('clients_edit', {'id': client.id}) }}">edit</a>
+                    <a href="{{ path('clients_show', {'id': client.id}) }}" class="btn btn-secondary"   >Visualiser</a>
+                    <a href="{{ path('clients_edit', {'id': client.id}) }}" class="btn btn-success"     >Modifier</a>
                 </td>
             </tr>
         {% else %}
@@ -40,6 +40,8 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('clients_new') }}">Create new</a>
+    <div class="col-12 row border border-dark text-center">
+        <a href="{{ path('clients_new') }}">Créer un client</a>
+    </div>
+</div>    
 {% endblock %}

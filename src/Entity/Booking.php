@@ -42,6 +42,11 @@ class Booking
      */
     private $backgroundColor;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Clients::class, inversedBy="rdv")
+     */
+    private $clients;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +108,18 @@ class Booking
     public function setBackgroundColor(?string $backgroundColor): self
     {
         $this->backgroundColor = $backgroundColor;
+
+        return $this;
+    }
+
+    public function getClients(): ?Clients
+    {
+        return $this->clients;
+    }
+
+    public function setClients(?Clients $clients): self
+    {
+        $this->clients = $clients;
 
         return $this;
     }

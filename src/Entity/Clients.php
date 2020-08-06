@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ClientsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,6 +48,16 @@ class Clients
      * @ORM\Column(type="integer")
      */
     private $codePostal;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="clients")
+     */
+    private $rdv;
+
+    public function __construct()
+    {
+        $this->rdv = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +132,37 @@ class Clients
     public function setCodePostal(int $codePostal): self
     {
         $this->codePostal = $codePostal;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Booking[]
+     */
+    public function getRdv(): Collection
+    {
+        return $this->rdv;
+    }
+
+    public function addRdv(Booking $rdv): self
+    {
+        if (!$this->rdv->contains($rdv)) {
+            $this->rdv[] = $rdv;
+            $rdv->setClients($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRdv(Booking $rdv): self
+    {
+        if ($this->rdv->contains($rdv)) {
+            $this->rdv->removeElement($rdv);
+            // set the owning side to null (unless already changed)
+            if ($rdv->getClients() === $this) {
+                $rdv->setClients(null);
+            }
+        }
 
         return $this;
     }

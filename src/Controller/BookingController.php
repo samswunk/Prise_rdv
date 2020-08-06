@@ -12,21 +12,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/booking")
+ * @Route("/")
  */
 class BookingController extends AbstractController
 {
     
     /**
-     * @Route("/calendar", name="booking_calendar", methods={"GET"})
-     */
-    public function calendar(): Response
-    {
-        return $this->render('booking/calendar.html.twig');
-    }
-
-    /**
-     * @Route("/", name="booking_index", methods={"GET"})
+     * @Route("booking/", name="booking_index", methods={"GET"})
      */
     public function index(BookingRepository $bookingRepository): Response
     {
@@ -38,7 +30,7 @@ class BookingController extends AbstractController
     }
     
     /**
-     * @Route("/new_rdv", name="rdv_new", methods={"GET","POST"})
+     * @Route("booking/new_rdv", name="rdv_new", methods={"GET","POST"})
      */
     public function new_rdv(Request $request): Response
     {
@@ -63,7 +55,7 @@ class BookingController extends AbstractController
                     $bookingRepository->setStart($start);
                     $bookingRepository->setEnd($end);
                     $entityManager->flush();
-                    return $this->redirectToRoute('booking_index');
+                    return $this->redirectToRoute('app_index');
                 }
             }
 
@@ -100,10 +92,10 @@ class BookingController extends AbstractController
                 // return $this->redirectToRoute('booking_index'); 
                 /**/
             }
-        return $this->redirectToRoute('booking_index'); 
+        return $this->redirectToRoute('app_index'); 
     }
     /**
-     * @Route("/new", name="booking_new", methods={"GET","POST"})
+     * @Route("booking/new", name="booking_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -125,7 +117,7 @@ class BookingController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="booking_show", methods={"GET"})
+     * @Route("booking/{id}", name="booking_show", methods={"GET"})
      */
     public function show(Booking $booking): Response
     {
@@ -135,7 +127,7 @@ class BookingController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="booking_edit", methods={"GET","POST"})
+     * @Route("booking/{id}/edit", name="booking_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Booking $booking): Response
     {
@@ -156,7 +148,7 @@ class BookingController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="booking_delete", methods={"DELETE"})
+     * @Route("booking/{id}", name="booking_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Booking $booking): Response
     {

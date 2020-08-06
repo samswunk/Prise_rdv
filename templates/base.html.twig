@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.css') }}" >
     <link rel="stylesheet" href="{{ asset('jquery-ui/jquery-ui.css') }}" >
     <link rel="stylesheet" href="{{ asset('datetimepicker/datetimepicker.css') }}">
-    <link rel="stylesheet" href="{{ asset('datepicker/css/bootstrap-datepicker.css') }}">
 {% endblock %}
 
 
@@ -21,13 +20,16 @@
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{{ path('app_index') }}">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ path('booking_index') }}">Interventions</a>
+            <a class="nav-link"                 href="{{ path('booking_index') }}">Interventions</a>
           </li>
           <li class="nav-item">
             <a class="nav-link btn btn-success" href="#" data-toggle="modal" data-target="#ShowRdv"><strong class="color-white">Ouvrir un rdv</strong></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-success" href="{{ path('clients_index') }}"><strong class="color-white">Voir les clients</strong></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Tarifs</a>
@@ -43,77 +45,74 @@
       </div>
   </nav>
   <div class="col-12"></div>
-  <div id="calendar-holder2" class="calendar col-12"></div>
-  {# SHOW CALENDAR MODAL #}
-    <div  class="modal fade bg-light" 
-          style="min-width: 80%;"
-          id="ShowCalendar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" 
-          aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">      
-        <div class="modal-content col-12">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body" >
-            <h4 class="modal-title">Calendrier</h4>
-            <div id="calendar-holder" class="col-12"></div>
-          </div>
-          <div class="modal-footer center text-center">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
-          </div>
-        </div>
+{# SHOW CALENDAR MODAL #}
+<div  class="modal fade bg-light" 
+style="min-width: 80%;"
+id="ShowCalendar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" 
+aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document">      
+<div class="modal-content col-12">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+<div class="modal-body" >
+<h4 class="modal-title">Calendrier</h4>
+<div id="calendar-holder" class="col-12"></div>
+</div>
+<div class="modal-footer center text-center">
+<button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+</div>
+</div>
+</div>
+</div>
+{# SHOW RDV MODAL #}
+<div  class="modal fade bg-light" 
+      style="height: 90%; min-width: 80%;"
+      id="ShowRdv" tabindex="-1" role="dialog" aria-labelledby="ModalRdv" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">      
+    <div class="modal-content">
+      <div class="modal-header alert alert-danger">
+          <h4 id="booking_titreShowRdv" class="modal-titlecenter">Ouvrir un Rdv</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
-    </div>
-    {# SHOW RDV MODAL #}
-    <div  class="modal fade bg-light" 
-          style="height: 90%; min-width: 80%;"
-          id="ShowRdv" tabindex="-1" role="dialog" aria-labelledby="ModalRdv" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">      
-          <div class="modal-content">
-            <div class="modal-header alert alert-danger">
-              <h4 id="booking_titreShowRdv" class="modal-titlecenter">Ouvrir un Rdv</h4>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="booking" class="col-12 row" action="{{ path('rdv_new') }}" method="POST">
-                <input type="hidden" name="booking[id]" id="booking_id">
-                <div class="row col-12">
-                  <label class="col-4" for="booking_title">Titre</label>
-                  <input  type="text" class="form-control col-8" 
-                          name="booking[title]" id="booking_title" placeholder="Entrez un titre" 
-                          required="required" maxlength="255">
-                </div>
-                <div class="row col-12">
-                  <label class="col-4" for="booking_start">Date de début</label>
-                  <input  type="text" class="form-control input-inline datetimepicker col-8" 
-                          id="booking_start" name="booking[start]" required="required" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
-                </div>
-                <div class="row col-12">
-                  <label class="col-4" for="booking_end">Date de fin</label>
-                  <input  type="text" class="form-control input-inline datetimepicker col-8" 
-                          id="booking_end" name="booking[end]" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
-                </div>
-                <div class="row col-12">
-                  <label class="col-4" for="booking_background_color">Couleur</label>
-                  <input  type="color" class="form-control col-8" 
-                          id="booking_background_color" name="booking[background_color]" placeholder="Selectionnez une couleur">
-                </div>
-                <div class="row col-12">
-                  <label    class="col-4" for="booking_description">Description</label>
-                  <textarea class="form-control col-8" id="booking_description" name="booking[description]"></textarea>
-                </div>
-              </div>
-              <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
-              <div class="modal-footer justify-content-between">
-                <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
-              </div>
-            </form>
+      <div class="modal-body">
+        <form id="booking" class="col-12 row" action="{{ path('rdv_new') }}" method="POST">
+          <input type="hidden" name="booking[id]" id="booking_id">
+          <div class="row col-12">
+              <label class="col-4" for="booking_title">Titre</label>
+              <input  type="text" class="form-control col-8" 
+                      name="booking[title]" id="booking_title" placeholder="Entrez un titre" 
+                      required="required" maxlength="255">
           </div>
-        </div>
+          <div class="row col-12">
+              <label class="col-4" for="booking_start">Date de début</label>
+              <input  type="text" class="form-control input-inline datetimepicker col-8" 
+                      id="booking_start" name="booking[start]" required="required" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
+          </div>
+          <div class="row col-12">
+              <label class="col-4" for="booking_end">Date de fin</label>
+              <input  type="text" class="form-control input-inline datetimepicker col-8" 
+                      id="booking_end" name="booking[end]" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
+          </div>
+          <div class="row col-12">
+              <label class="col-4" for="booking_background_color">Couleur</label>
+              <input  type="color" class="form-control col-8" 
+                      id="booking_background_color" name="booking[background_color]" placeholder="Selectionnez une couleur">
+          </div>
+          <div class="row col-12">
+              <label    class="col-4" for="booking_description">Description</label>
+              <textarea class="form-control col-8" id="booking_description" name="booking[description]"></textarea>
+          </div>
+          <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
+          <div class="modal-footer justify-content-between">
+            <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
+          </div>
+        </form>
       </div>
-    </div>
-    
+  </div>
+  </div>
+  </div>
 </div>
 {% block body %}
 {% endblock %}
@@ -135,7 +134,7 @@
     <script src="{{ asset('fullcalendar/interaction/main.js') }}"></script>
     <script src="{{ asset('fullcalendar/list/main.js') }}">       </script>
     <script src="{{ asset('fullcalendar/timegrid/main.js') }}">   </script>
-    <script src="{{ asset('fullcalendar/moment/main.global.min.js') }}">   </script>
+    {# <script src="{{ asset('fullcalendar/moment/main.global.min.js') }}">   </script> #}
     {# <script src="{{ asset('js/popper.js') }}">   </script> #}
     <script type="text/javascript">
       
@@ -185,6 +184,7 @@
                   events: "{{ path('rdv_index') }}",
                   eventRender: function(info) 
                   {
+                    // console.log(moment(calendar.view.activeEnd).format("YYYY-MM-DD"));
                     var start = info.event.start;
                     var end = info.event.end;
                     var affichage3 = moment(start).format("HH:mm") + '-' + moment(end).format("HH:mm");
@@ -258,6 +258,7 @@
                     $('#ShowRdv').on('shown.bs.modal', function (event) 
                     {
                       $(".before").remove();
+                      $("#booking_submit_button").show();
                       $("#booking_titreShowRdv").html("Etes vous sûr.e de vouloir déplacer cet évènement ?");
                       $("#booking_submit_button").html("OUI");
                       $("#booking_close_button").html("NON");
@@ -309,10 +310,7 @@
                   })
                   $('#ShowRdv').on('hidden.bs.modal', function () 
                   {
-                    $(".before").remove();
-                    infos.revert();
                     calendar.render();
-                    // $(this).find('form')[0].reset();
                   })/**/
                 },
                 eventResize: (infos) => 
@@ -329,9 +327,9 @@
         window.onload = () => 
         {
           Calendrier();
-        $.datetimepicker.setLocale('fr');
-        $.datetimepicker.setDateFormatter('moment');
-        $('.datetimepicker').datetimepicker({
+          $.datetimepicker.setLocale('fr');
+          $.datetimepicker.setDateFormatter('moment');
+          $('.datetimepicker').datetimepicker({
           format:"DD/MM/YYYY HH:mm",
           stepping: 10
         });
