@@ -6,9 +6,9 @@
 <div class="container mt-3">
     <h1 class="text-center mb-2"><span>JE CONSULTE LES RENDEZ-VOUS DISPONIBLES</span></h1>
     <div class="row">
-        <div class="col-md-5 ml-5 text-center" style="background-color: lightcoral;">
+        <div class="col-md-8 ml-5 text-center" style="background-color: lightcoral;">
             {% for flashError in app.flashes('verify_email_error') %}
-                <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+                <div class="alert alert-danger" role="alert"><h2><strong>{{ flashError }}</strong></h2></div>
             {% endfor %}
 
             <h1 class="h3 mb-3 font-weight-normal">Je crée mon compte</h1>
@@ -25,8 +25,8 @@
                 <button type="submit" class="text-center btn btn-lg btn-primary">S'inscrire</button>
                 {{ form_end(registrationForm) }}
         </div>
-        <div class="col-md-5 ml-5 center text-center justify-content-between" style="background-color:#d4ebf2;">
-            <h1 class="h3 mb-3 font-weight-normal">J'ai déjà un compte</h1>
+        <div class="col-md-2 ml-3 center text-center justify-content-between" style="background-color:#d4ebf2;">
+            <p class="mb-3 font-weight-normal">J'ai déjà un compte</p>
             <div class="mt-3 center text-center justify-content-between">
                 <a  class="text-center btn btn-lg btn-primary" title="S'inscrire" aria-label="S'inscrire" 
                     href="{{ path('app_login') }}"><strong>Se connecter</strong></a>

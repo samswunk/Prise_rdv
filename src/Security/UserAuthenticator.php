@@ -78,8 +78,7 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
         if (!$user) 
         {
             // fail authentication with a custom error
-            // throw new CustomUserMessageAuthenticationException("L'Email n'a pas pu être identifié.");
-            return new RedirectResponse('http://your.location.com');
+            throw new CustomUserMessageAuthenticationException("L'email n'a pas pu être identifié.");
             // throw new RedirectResponse($this->urlGenerator->generate('app_register'));
         }
 
