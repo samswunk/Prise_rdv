@@ -1,9 +1,83 @@
-{{ form_start(form) }}
-    {{ form_row(form.email) }}
-    {{ form_row(form.password) }}
-    {{ form_row(form.Telephone) }}
-    {{ form_row(form.Nom) }}
-    {# {{ form_row(form.roles) }} #}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+
+<div class="tab-content" id="v-pills-tabContent">
+    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+            <h5 class="card-header info-color white-text text-center py-4">
+                <strong>{{ app.user.prenom }} {{ app.user.nom }}</strong>
+            </h5>
+            <div class="card-body px-lg-5 pt-0">
+                <div class="text-center " style="color: #757575;">
+                    {{ form_start(form, {'attr': {'class': 'text-center','style':'color: #757575;'}}) }}
+                    <div class="form-group row">
+                        <!-- First name -->
+                        <div class="md-form col-6">        
+                            {{ form_row(form.Nom, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="md-form col-6">        
+                            {{ form_row(form.Prenom, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <!-- First name -->
+                        <div class="md-form col-12">        
+                            {{ form_row(form.Adresse, {'attr': {'class': 'form-control col-12'}}) }}
+                        </div>
+                        <div class="md-form col-6">        
+                            {{ form_row(form.CodePostal, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="md-form col-6">        
+                            {{ form_row(form.Ville, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="md-form col-8">        
+                            {{ form_row(form.email, {'attr': {'class': 'form-control'}}) }}
+                            <small id="emailHelp" class="form-text text-muted">Nous ne partageons votre email avec personne.</small>
+                        </div>
+                        <div class="md-form col-4">        
+                            {{ form_row(form.Telephone, {'attr': {'class': 'form-control','type':'password'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group col-12">
+                        <!-- First name -->
+                        <div class="md-form">        
+                            {{ form_row(form.password, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group col-12">
+                        <!-- First name -->
+                        <div class="md-form">        
+                            {{ form_row(form.Telephone, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+                    {{ form_end(form, {'render_rest': false}) }}
+                </div> 
+                {% set VarBookings = form.vars.value.bookings %}
+                {% if UserRole=="Administrateur" %}
+                <a href="{{ path('user_index') }}" class="btn btn-secondary">Retour</a>
+                {{ include('user/_delete_form.html.twig') }}
+                {% endif %}
+            </div>
+    </div>
+    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+        <h5 class="card-header info-color white-text text-center py-4">
+            <strong>{{ app.user.prenom }} {{ app.user.nom }}</strong>
+        </h5>
+        <div class="card-body px-lg-5 pt-0">
+            <div class="form-group row">
+                <div class="md-form col-12">        
+                    Vous avez {{VarBookings|length}} rendez-vous
+                </div>
+            </div>
+            {% for booking in VarBookings %}
+            <div class="form-group row">
+                <div class="md-form col-12 border border-light bg-light">        
+                    <p style="font-family: Roboto, sans-serif;"><i class="fas fa-calendar-alt"></i>Le <strong>{{ booking.start|date('d/m/Y') }}</strong> à <strong>{{ booking.start|date('H:i') }}</strong>
+                    <i>(Fin estimée à {{ booking.end|date('H:i') }})</i>
+                    <p><small>Descriptif : {{ booking.description }}</small></p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

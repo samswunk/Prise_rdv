@@ -34,7 +34,7 @@ class BookingController extends AbstractController
      */
     public function new_rdv(Request $request): Response
     {
-        dd($request->request->all());   
+        // dd($request->request->all());   
         $booking = new Booking();
         $id = $request->request->get('booking')['id'];
         $entityManager = $this->getDoctrine()->getManager();
@@ -136,10 +136,7 @@ class BookingController extends AbstractController
     {
         $user = $this->getUser();
         $booking->setIdUser($user);
-        var_dump($request);
-        var_dump($booking);
-        die();
-
+        
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

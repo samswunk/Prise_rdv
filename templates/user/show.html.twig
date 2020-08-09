@@ -3,8 +3,8 @@
 {% block title %}User{% endblock %}
 
 {% block body %}
+<div class="card">
     <h1>User</h1>
-
     <table class="table">
         <tbody>
             <tr>
@@ -53,10 +53,10 @@
             </tr>
         </tbody>
     </table>
-
-    <a href="{{ path('user_index') }}">back to list</a>
-
-    <a href="{{ path('user_edit', {'id': user.id}) }}">edit</a>
-
-    {{ include('user/_delete_form.html.twig') }}
+    <div class="card-footer row">
+        <a class="btn btn-secondary"    href="{{ path('user_index') }}">Retour</a>
+        <a class="btn btn-success"      href="{{ path('user_edit', {'id': user.id}) }}">Modifier</a>
+        {{ include('user/_delete_form.html.twig') }}
+    </div>
+</div>    
 {% endblock %}
