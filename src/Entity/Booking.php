@@ -52,6 +52,11 @@ class Booking
      */
     private $IdUser;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isFree;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -140,4 +145,43 @@ class Booking
 
         return $this;
     }
+
+    public function getIsFree(): ?bool
+    {
+        return $this->isFree;
+    }
+
+    public function setIsFree(?bool $isFree): self
+    {
+        $this->isFree = $isFree;
+        if ($this->isFree) 
+        {
+            $this->setIdUser = null;
+        }
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function prePersist()
+    {
+        $this->isFree = (bool) $this->isFree; //Force using boolean value of $this->active
+        if ($this->isFree) {
+            $this->setIdUser = null;
+        }
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        $this->isFree = (bool) $this->isFree;
+        if ($this->IsFree) 
+        {
+            dd("preUpdate this->IsFree id ".$this->IsFree);
+            $this->setIdUser = null;
+        }
+    }    
 }

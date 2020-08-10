@@ -56,6 +56,7 @@
             <div class="dropdown-menu">
               <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ShowRdv">Ouvrir un rdv</a>
               <a class="dropdown-item" href="{{ path('booking_index') }}">Calendrier</a>
+              <a class="dropdown-item" href="{{ path('booking_list') }}">Liste des rendez-vous</a>
               <a class="dropdown-item" href="{{ path('user_index') }}">Liste des clients</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">Separated link</a>
@@ -117,7 +118,7 @@
       <div class="modal-body">
         <form id="booking" class="col-12 row" action="{{ path('rdv_new') }}" method="POST">
           <input type="hidden" name="booking[id]" id="booking_id">
-          <input type="text" name="booking[iduser]" id="booking_iduser" 
+          <input type="hidden" name="booking[iduser]" id="booking_iduser" 
           {% if UserRole != 'Administrateur' %}
             value="{{ UserId }}" 
           {% endif %}
@@ -148,9 +149,9 @@
               <textarea class="form-control col-8" id="booking_description" name="booking[description]"></textarea>
           </div>
           <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
-          <div class="modal-footer justify-content-between">
-            <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
+          <div class="modal-footer row col-12">
+              <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
           </div>
         </form>
       </div>
@@ -266,7 +267,7 @@
                     custom_param2: 'somethingelse'
                   },/**/
                   failure: function() {
-                    alert('Impossible de charger les événements du calendrier !');
+                    // alert('Impossible de charger les événements du calendrier !');
                   }
                 },
                 eventRender: function(info) 
@@ -308,7 +309,7 @@
                       // console.log("START "+vstart+"\nSTART2 "+vstart+"\n END"+vend);
                       $('#ShowRdv').on('shown.bs.modal', function (event) 
                       {
-                        $(".modal-body #booking_title").val((vtitre));
+                        $(".modal-body #booking_title").val('RDV DISPONIBLE '+vstart);
                         $(".modal-body #booking_start").val((vstart));
                         $(".modal-body #booking_end").val((vend));
                         
@@ -351,18 +352,19 @@
                         $(".before").remove();
                         $("#booking_submit_button").show();
                         $("#booking_titreShowRdv").html("Etes vous sûr.e de vouloir déplacer cet évènement ?");
-                        $("#booking_submit_button").html("OUI");
-                        $("#booking_close_button").html("NON");
+                        $(".modal-body #booking_submit_button").html("OUI");
+                        $(".modal-body #booking_close_button").html("NON");
+
                         $(".modal-body #booking_id").val(infos.event.id);
                         $(".modal-body #booking_title").val(infos.event.title);
-                        $("#booking_start").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.start)+' => </small></div>');
-                        $("#booking_start").removeClass("col-8");
-                        $("#booking_start").addClass("col-5");
+                        $(".modal-body #booking_start").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.start)+' => </small></div>');
+                        $(".modal-body #booking_start").removeClass("col-8");
+                        $(".modal-body #booking_start").addClass("col-5");
                         $(".modal-body #booking_start").val(getFormattedDate(vstart));
-                        $(".modal-body #booking_start").val(getFormattedDate(vstart));
-                        $("#booking_end").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.end)+' => </small></div>');
-                        $("#booking_end").removeClass("col-8");
-                        $("#booking_end").addClass("col-5");
+                        // $("#booking_start").val(getFormattedDate(vstart));
+                        $(".modal-body #booking_end").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.end)+' => </small></div>');
+                        $(".modal-body #booking_end").removeClass("col-8");
+                        $(".modal-body #booking_end").addClass("col-5");
                         $(".modal-body #booking_end").val(getFormattedDate(vend));
                         $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
                         $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
@@ -382,35 +384,81 @@
                     console.log('Event: ' + infos.event.title);
                     console.log('Coordinates: ' + infos.jsEvent.pageX + ',' + infos.jsEvent.pageY);
                     console.log('View: ' + infos.view.type);
-                    window.location.replace(""+infos.event.id+"/edit");
-                    /*// change the border color just for fun
-                    infos.el.style.borderColor = 'red';
-                    $('#ShowRdv').modal('show');
-                    var vstart = new Date(infos.event.start);
-                    var vend = new Date(infos.event.end);
-                    
-                    $('#ShowRdv').on('shown.bs.modal', function (event) 
-                  {
-                    $(".before").remove();
-                    $("#booking_titreShowRdv").html("Visualiser "+infos.event.title);
-                    $("#booking_submit_button").hide();
-                    $("#booking_close_button").html("OK");
-                    $(".modal-body #booking_id").val(infos.event.id);
-                    $(".modal-body #booking_title").val(infos.event.title);
-                    $(".modal-body #booking_start").val(getFormattedDate(vstart));
-                    $(".modal-body #booking_end").val(getFormattedDate(vend));
-                    $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
-                    $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
-                  })
-                  $('#ShowRdv').on('hidden.bs.modal', function () 
-                  {
-                    calendar.render();
-                  })/**/
+                    if ("{{ UserRole }}" == "Administrateur")
+                    {
+                      window.location.replace(""+infos.event.id+"/edit");
+                    }
+                    else
+                    {
+                      console.log("idUser : "+infos.event.extendedProps.idUser);
+                      console.log('UserId: ' + "{{ UserId }}" );
+                      if (("{{ UserId }}" == infos.event.extendedProps.idUser) || (!infos.event.extendedProps.idUser))
+                      {
+                        window.location.replace("../rdv/"+infos.event.id+"/edit");
+                      }
+                      else
+                      {
+                        // change the border color just for fun
+                        infos.el.style.borderColor = 'red';
+                        $('#ShowRdv').modal('show');
+                        var vstart = new Date(infos.event.start);
+                        var vend = new Date(infos.event.end);
+                        
+                        $('#ShowRdv').on('shown.bs.modal', function (event) 
+                        {
+                          $(".before").remove();
+                          $("#booking_titreShowRdv").html("Désolé ce rendez-vous est déjà pris ");
+                          $("#booking_submit_button").hide();
+                          $("#booking_close_button").html("OK");
+                          $(".modal-body #booking_id").val(infos.event.id);
+                          $(".modal-body #booking_title").val(infos.event.title);
+                          $(".modal-body #booking_start").val(getFormattedDate(vstart));
+                          $(".modal-body #booking_end").val(getFormattedDate(vend));
+                          // $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
+                          $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
+                        })
+                        $('#ShowRdv').on('hidden.bs.modal', function () 
+                        {
+                          calendar.render();
+                        })/**/
+                      }
+                    }
                 },
                 eventResize: (infos) => 
                 {
-                  console.log('eventResize: function(infos) ');
-                  console.log(infos.event.end)
+                  console.log(infos);
+                  if ("{{ UserRole }}" == "Administrateur")
+                    {
+                      $('#ShowRdv').modal('show');
+                      var vstart = new Date(infos.event.start);
+                      var vend = new Date(infos.event.end);
+                      console.log(infos);
+                      
+                      $('#ShowRdv').on('shown.bs.modal', function (event) 
+                      {
+                        $(".before").remove();
+                        $("#booking_submit_button").show();
+                        $("#booking_titreShowRdv").html("Etes vous sûr.e de vouloir modifier cet évènement ?");
+                        $("#booking_submit_button").html("OUI");
+                        $("#booking_close_button").html("NON");
+                        $(".modal-body #booking_id").val(infos.event.id);
+                        $(".modal-body #booking_title").val(infos.event.title);
+
+                        $(".modal-body #booking_start").val(getFormattedDate(vstart));
+                        $(".modal-body #booking_start").val(getFormattedDate(vstart));
+
+                        $(".modal-body #booking_end").val(getFormattedDate(vend));
+                        $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
+                        $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
+                      })
+                      $('#ShowRdv').on('hidden.bs.modal', function () 
+                      {
+                        $(".before").remove();
+                        infos.revert();
+                        calendar.render();
+                        // $(this).find('form')[0].reset();
+                      })
+                    }
                 },
               });
             calendar.render();
@@ -421,6 +469,20 @@
         });/**/
         window.onload = () => 
         {
+          $(".disponible").on("change", function(ee)  
+          {
+            if (this.value == 1)
+            {
+              if (confirm("attention vous avez cliqué sur oui ; "+"\n"
+                  +"Cette action libère le rendez-vous et le rend de nouveau disponible\n"
+                  +"Voulez vous continuer ?"))
+                  {
+                    //alert ("Suppression");
+                    $("#booking #booking_description").val('');
+                    $("#booking #booking_title").val("RDV DISPONIBLE " + $("div#booking #booking_start").val());
+                  }
+            }
+          });
           Calendrier();
           $.datetimepicker.setLocale('fr');
           $.datetimepicker.setDateFormatter('moment');

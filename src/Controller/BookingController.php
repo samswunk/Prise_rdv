@@ -28,6 +28,18 @@ class BookingController extends AbstractController
             // ->findAll(),
         ]);
     }
+
+    /**
+     * @Route("booking/list", name="booking_list", methods={"GET"})
+     */
+    public function list(BookingRepository $bookingRepository): Response
+    {
+        return $this->render('booking/index.html.twig', [
+            'bookings' => $bookingRepository
+            ->findBy(array(), array('start' => 'DESC')),
+            // ->findAll(),
+        ]);
+    }
     
     /**
      * @Route("booking/new_rdv", name="rdv_new", methods={"GET","POST"})
@@ -134,8 +146,8 @@ class BookingController extends AbstractController
      */
     public function edit(Request $request, Booking $booking): Response
     {
-        $user = $this->getUser();
-        $booking->setIdUser($user);
+        // $user = $this->getUser();
+        // $booking->setIdUser($user);
         
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
@@ -143,7 +155,7 @@ class BookingController extends AbstractController
             
             $this->getDoctrine()->getManager()->flush();
             
-            return $this->redirectToRoute('booking_index');
+            return $this->redirectToRoute('booking_list');
         }
 
         return $this->render('booking/edit.html.twig', [

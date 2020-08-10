@@ -1,0 +1,62 @@
+
+{{ form_start(form) }}
+        <h5 class="card-header info-color white-text text-center py-4">
+            <strong>Je m'inscris au rdv du {{ form.start.vars.value }} au {{ form.end.vars.value }}</strong>
+        </h5>
+        <div class="container col-10">
+            {% set NewPrenom = '' %}
+            {% set RdvId = null %}
+            {% set NewAdresse = app.user.adresse ~ " " ~ app.user.codepostal ~ " " ~ app.user.codepostal  %}
+
+            {% if app.user.prenom|length %}
+                {% set NewPrenom = " " ~ app.user.prenom %}
+            {% endif %}
+            {% set NewTitre = "RDV " ~ app.user.nom ~ NewPrenom ~ " (tel : " ~ app.user.telephone ~ ")" %}
+            {% set RdvId = form.id.vars.value %}
+
+            <div class="form-group">
+                {{ form_row(form.title, {'label':' ', 'value': NewTitre, 'attr': {  class: 'col-12',
+                                                                        disabled: false} }) }}
+                {# {{ form_widget(form.start, {'attr': {'class': 'col-3'}}) }}
+                {{ form_widget(form.end, {'attr': {'class': 'col-3'}}) }}#}
+                {{ form_row(form.description, { 'value': form.description.vars.value ? form.description.vars.value : NewAdresse, 'attr': {  class: 'col-12 required',
+                                                                                        required: true} }) }}
+            </div>
+            <div class="form-group" style="display: {% if (UserRole == "Administrateur") %} block {% else %} none {% endif %} ;">
+                {{ form_row(form.start) }}
+                {{ form_row(form.end) }}
+                {# {{ form_row(form.background_color) }} #}
+                {{ form_row(form.id) }}
+                {{ form_row(form.iduser) }}
+            </div> 
+            <div class="form-control row text-center border border-light">
+                <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
+                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#ShowRdvSuppression">Supprimer le rendez-vous</a>
+            </div>
+            {{ form_end(form, {'render_rest': true}) }}
+        </div>
+    {% if RdvId is not null %}
+        {# SHOW CALENDAR MODAL #}
+        <div  class="modal fade bg-light" 
+                style="min-width: 80%;"
+                id="ShowRdvSuppression" tabindex="-1" role="dialog" aria-labelledby="Suppression" 
+                aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">      
+                <form id="delRdv" class="col-12 row" action="{{ path('rdv_delete', {'id': RdvId}) }}" method="POST">
+                    <div class="modal-content col-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body" >
+                            <h4 class="modal-title">Calendrier</h4>
+                            <p>Êtes vous sûrs de vouloir supprimer ce rdv ?</p>
+                        </div>
+                        <div class="modal-footer center text-center">
+                            <button type="submit" class="btn btn-danger">Supprimer ce rdv</button>
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Garder ce rdv</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}

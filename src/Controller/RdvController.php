@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\RdvType;
+use App\Entity\Booking;
+use App\Form\BookingType;
 use App\Repository\BookingRepository;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,11 +23,69 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class RdvController extends AbstractController
 {
  
-     /**
+    private $security;
+
+    public function __construct(Security $security)
+    {
+            $this->security = $security;
+    } 
+    /**
+     * Modification d'un rdv (pour un utilisateur, se positionner ou le modifier)
+     * 
+     * @Route("/{id}/edit", name="rdv_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, Booking $booking): Response
+    {
+        $user = $this->getUser();
+        $booking->setIdUser($user);
+        
+        $form = $this->createForm(RdvType::class, $booking);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $this->getDoctrine()->getManager()->flush();
+            
+            return $this->redirectToRoute('booking_index');
+        }
+
+        return $this->render('rdv/edit.html.twig', [
+            'booking' => $booking,
+            'form' => $form->createView(),
+        ]);
+    } 
+
+    /**
+     * @Route("/{id}", name="rdv_delete", methods={"GET","POST"})
+     */
+    public function delete(Request $request, Booking $booking): Response
+    {
+        $vMethod=$request->getMethod();
+        // dd($booking);
+        if ($request->isMethod('POST')) 
+        {
+            $start = $booking->getStart(); // new \DateTime(date("Y-m-d H:i:s",strtotime(str_replace('/', '-', $booking->getStart()))));
+            $start = $start->format('d/m/Y H:i');
+            $booking->setTitle('RDV DISPONIBLE '.$start);
+            $booking->setDescription('');
+            $booking->setIdUser(null);
+            $booking->setIsFree(true);
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('booking_index');
+        }
+        return $this->render('rdv/edit.html.twig', [
+            'booking' => $booking,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+      * Afficher le calendrier => renvoie un JSON
+      * 
      * @Route("/", name="rdv_index", methods={"GET"})
      */
     public function index(BookingRepository $bookingRepository,Request $request): Response
     {
+        $CurrentUser = $this->security->getUser();
         if ($request->query->get('start')) 
         {
             $vstart= date('Y-m-d',strtotime($request->query->get('start')));
@@ -40,9 +103,12 @@ class RdvController extends AbstractController
             $data[$key]['backgroundColor']  = "#54B796";//$repo->getBackGroundcolor();
             $data[$key]['id']               = $repo->getId();
             $user = $repo->getIdUser();
-            if ($user) {
-                $data[$key]['backgroundColor']  = "#DBACA9";
-                $data[$key]['borderColor']      = "#DBACA9";
+            if ($user) 
+            {
+                $bgColor="#DBACA9";
+                if ($user->getId() == $CurrentUser->getId()) $bgColor="#FB8BA4";
+                $data[$key]['backgroundColor']  =  $bgColor;
+                $data[$key]['borderColor']      =  $bgColor;
                 $data[$key]['idUser']   = $user->getId();
                 $data[$key]['nom']      = $user->getNom();
                 $data[$key]['email']    = $user->getEmail();
