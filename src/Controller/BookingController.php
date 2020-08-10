@@ -22,6 +22,18 @@ class BookingController extends AbstractController
      */
     public function index(BookingRepository $bookingRepository): Response
     {
+        return $this->render('booking/calendar.html.twig', [
+            'bookings' => $bookingRepository
+            ->findBy(array(), array('start' => 'DESC')),
+            // ->findAll(),
+        ]);
+    }
+
+    /**
+     * @Route("booking/list", name="booking_list", methods={"GET"})
+     */
+    public function list(BookingRepository $bookingRepository): Response
+    {
         return $this->render('booking/index.html.twig', [
             'bookings' => $bookingRepository
             ->findBy(array(), array('start' => 'DESC')),
@@ -34,10 +46,11 @@ class BookingController extends AbstractController
      */
     public function new_rdv(Request $request): Response
     {
+        // dd($request->request->all());   
         $booking = new Booking();
         $id = $request->request->get('booking')['id'];
         $entityManager = $this->getDoctrine()->getManager();
-        
+
         if ($id) 
             {
                 $bookingRepository = $this->getDoctrine()
@@ -55,7 +68,7 @@ class BookingController extends AbstractController
                     $bookingRepository->setStart($start);
                     $bookingRepository->setEnd($end);
                     $entityManager->flush();
-                    return $this->redirectToRoute('app_index');
+                    return $this->redirectToRoute('booking_index');
                 }
             }
 
@@ -66,12 +79,14 @@ class BookingController extends AbstractController
             if ($form->isSubmitted()) 
             {
                 
+                
                 /*$txt = "<pre>";
                 $txt .= $request->request->get('title');
                 $txt .= $request->request->get('start');
                 $txt .= $request->request->get('end');
                 $txt .= $request->request->get('description');
                 $txt .= $request->request->get('background_color');
+                $txt .= $request->request->get('IdUser');
                 $txt .= "</pre>";
                 dd($txt);
                 /*    $txt = "<pre>";
@@ -92,7 +107,7 @@ class BookingController extends AbstractController
                 // return $this->redirectToRoute('booking_index'); 
                 /**/
             }
-        return $this->redirectToRoute('app_index'); 
+        return $this->redirectToRoute('booking_index'); 
     }
     /**
      * @Route("booking/new", name="booking_new", methods={"GET","POST"})
@@ -131,14 +146,16 @@ class BookingController extends AbstractController
      */
     public function edit(Request $request, Booking $booking): Response
     {
+        // $user = $this->getUser();
+        // $booking->setIdUser($user);
+        
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
-        
         if ($form->isSubmitted() && $form->isValid()) {
-
+            
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('booking_index');
+            
+            return $this->redirectToRoute('booking_list');
         }
 
         return $this->render('booking/edit.html.twig', [

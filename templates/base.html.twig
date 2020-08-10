@@ -1,18 +1,40 @@
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('build/app.css') }}" >
-    <link rel="stylesheet" href="{{ asset('fullcalendar/core/main.css') }}" >
-    <link rel="stylesheet" href="{{ asset('fullcalendar/daygrid/main.css') }}" >
-    <link rel="stylesheet" href="{{ asset('fullcalendar/list/main.css') }}" >
-    <link rel="stylesheet" href="{{ asset('fullcalendar/timegrid/main.css') }}" >
-    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.css') }}" >
-    <link rel="stylesheet" href="{{ asset('jquery-ui/jquery-ui.css') }}" >
-    <link rel="stylesheet" href="{{ asset('datetimepicker/datetimepicker.css') }}">
+<link rel="stylesheet" href="{{ asset('build/app.css') }}" >
+<link rel="stylesheet" href="{{ asset('fullcalendar/core/main.css') }}" >
+<link rel="stylesheet" href="{{ asset('fullcalendar/daygrid/main.css') }}" >
+<link rel="stylesheet" href="{{ asset('fullcalendar/list/main.css') }}" >
+<link rel="stylesheet" href="{{ asset('fullcalendar/timegrid/main.css') }}" >
+{# <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.simplex.css') }}" > #}
+
+<link rel="stylesheet" href="{{ asset('jquery-ui/jquery-ui.css') }}" >
+<link rel="stylesheet" href="{{ asset('datetimepicker/datetimepicker.css') }}">
+<link rel="stylesheet" href="{{ asset('fontawesome/css/all.css') }}">
+<link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.css') }}" >
 {% endblock %}
 
 
+<body class="container border border-gray">
 <div class="container">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">Ouverture de RDV</a>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white  border border-gray">
+    <a class="navbar-brand" href="#"><img src="{{ asset('img/logo-chauffatec.jpg') }}" alt=""> 
+    </a>
+    <small>
+      <small>
+        {% set UserRole = 'Utilisateur' %} 
+        {% set UserId = null %} 
+        {% if app.user %}
+          {% set UserId = app.user.id %} 
+          {% for role in app.user.roles %}
+            {% if role == 'ROLE_ADMIN' %}
+              {% set UserRole = 'Administrateur' %} 
+            {% endif %}
+          {% endfor %}
+          Bonjour, {{ UserRole }} {{ app.user.nom ?? "inconnu" }}
+        {% else %}
+          Pas connecté
+        {% endif %}
+      </small>
+    </small>
       <button   class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" 
                 aria-expanded="false" aria-label="Toggle navigation">
         <span   class="navbar-toggler-icon"></span>
@@ -20,50 +42,68 @@
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="{{ path('app_index') }}">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{{ path('app_index') }}">Accueil <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link"                 href="{{ path('booking_index') }}">Interventions</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn btn-success" href="#" data-toggle="modal" data-target="#ShowRdv"><strong class="color-white">Ouvrir un rdv</strong></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn btn-success" href="{{ path('clients_index') }}"><strong class="color-white">Voir les clients</strong></a>
+            <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}"><strong class="color-white">Prendre rdv</strong></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Tarifs</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">À propos</a>
+          {% if UserRole == 'Administrateur' %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ShowRdv">Ouvrir un rdv</a>
+              <a class="dropdown-item" href="{{ path('booking_index') }}">Calendrier</a>
+              <a class="dropdown-item" href="{{ path('booking_list') }}">Liste des rendez-vous</a>
+              <a class="dropdown-item" href="{{ path('user_index') }}">Liste des clients</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Separated link</a>
+            </div>
           </li>
+          {% endif %}
+          {% if UserId is not null %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
+          </li>            
+          {% endif %}
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+        <ul>
+            <li class="navbar-nav active navbar-right">
+              {% if UserId is not null %}
+                <a class="nav-link btn btn-outline-danger" href="{{ path('app_logout') }}">Déconnexion<span class="sr-only bg-danger"></span></a>
+              {% else %}
+                <a class="nav-link btn btn-outline-success" href="{{ path('app_login') }}">Se connecter<span class="sr-only bg-Success"></span></a>
+              {% endif %}
+            </li>
+        </ul>
+        {# <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="text" placeholder="Rechercher">
           <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
-        </form>
+        </form> #}
       </div>
   </nav>
   <div class="col-12"></div>
 {# SHOW CALENDAR MODAL #}
 <div  class="modal fade bg-light" 
-style="min-width: 80%;"
-id="ShowCalendar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" 
-aria-hidden="true">
-<div class="modal-dialog modal-lg" role="document">      
-<div class="modal-content col-12">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal">&times;</button>
-</div>
-<div class="modal-body" >
-<h4 class="modal-title">Calendrier</h4>
-<div id="calendar-holder" class="col-12"></div>
-</div>
-<div class="modal-footer center text-center">
-<button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
-</div>
-</div>
-</div>
+      style="min-width: 80%;"
+      id="ShowCalendar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" 
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">      
+        <div class="modal-content col-12">
+          <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body" >
+            <h4 class="modal-title">Calendrier</h4>
+            <div id="calendar-holder" class="col-12"></div>
+          </div>
+          <div class="modal-footer center text-center">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+          </div>
+        </div>
+      </div>
 </div>
 {# SHOW RDV MODAL #}
 <div  class="modal fade bg-light" 
@@ -78,6 +118,11 @@ aria-hidden="true">
       <div class="modal-body">
         <form id="booking" class="col-12 row" action="{{ path('rdv_new') }}" method="POST">
           <input type="hidden" name="booking[id]" id="booking_id">
+          <input type="hidden" name="booking[iduser]" id="booking_iduser" 
+          {% if UserRole != 'Administrateur' %}
+            value="{{ UserId }}" 
+          {% endif %}
+          >
           <div class="row col-12">
               <label class="col-4" for="booking_title">Titre</label>
               <input  type="text" class="form-control col-8" 
@@ -104,9 +149,9 @@ aria-hidden="true">
               <textarea class="form-control col-8" id="booking_description" name="booking[description]"></textarea>
           </div>
           <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
-          <div class="modal-footer justify-content-between">
-            <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
+          <div class="modal-footer row col-12">
+              <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
           </div>
         </form>
       </div>
@@ -115,7 +160,9 @@ aria-hidden="true">
   </div>
 </div>
 {% block body %}
+
 {% endblock %}
+</body>
 
 {% block javascripts %}
     <script src="{{ asset('js/jquery.js') }}">   </script>
@@ -136,7 +183,35 @@ aria-hidden="true">
     <script src="{{ asset('fullcalendar/timegrid/main.js') }}">   </script>
     {# <script src="{{ asset('fullcalendar/moment/main.global.min.js') }}">   </script> #}
     {# <script src="{{ asset('js/popper.js') }}">   </script> #}
+    <script src="{{ asset('tarteaucitron/tarteaucitron.js')}}"></script>
+
     <script type="text/javascript">
+        
+      tarteaucitron.init({
+    	  "privacyUrl": "", /* Privacy policy url */
+
+    	  "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
+    	  "cookieName": "tarteaucitron", /* Cookie name */
+    
+    	  "orientation": "middle", /* Banner position (top - bottom) */
+    	  "showAlertSmall": true, /* Show the small banner on bottom right */
+    	  "cookieslist": true, /* Show the cookie list */
+
+    	  "adblocker": false, /* Show a Warning if an adblocker is detected */
+    	  "AcceptAllCta" : true, /* Show the accept all button when highPrivacy on */
+    	  "highPrivacy": true, /* Disable auto consent */
+    	  "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */
+
+    	  "removeCredit": false, /* Remove credit link */
+    	  "moreInfoLink": true, /* Show more info link */
+    	  "useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */
+
+    	  //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for multisite */
+                          
+          "readmoreLink": "/cookiespolicy", /* Change the default readmore link */
+
+          "mandatory": false, /* Show a message about mandatory cookies */
+        });
       
       moment.tz.add("Europe/Paris|PMT WET WEST CEST CET WEMT|-9.l 0 -10 -20 -10 -20|0121212121212121212121212121212121212121212121212123434352543434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434|-2nco8.l cNb8.l HA0 19A0 1iM0 11c0 1oo0 Wo0 1rc0 QM0 1EM0 UM0 1u00 10o0 1io0 1wo0 Rc0 1a00 1fA0 1cM0 1cM0 1io0 17c0 1fA0 1a00 1io0 1a00 1io0 17c0 1fA0 1a00 1io0 17c0 1cM0 1cM0 1a00 1io0 1cM0 1cM0 1a00 1fA0 1io0 17c0 1cM0 1cM0 1a00 1fA0 1io0 1qM0 Df0 Ik0 5M30 WM0 1fA0 1cM0 Vx0 hB0 1aq0 16M0 1ekn0 1cL0 1fC0 1a00 1fA0 1cM0 1cM0 1cM0 1fA0 1a00 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|11e6")
       
@@ -162,7 +237,8 @@ aria-hidden="true">
                 //ignoreTimezone: true,
                 locale: 'fr',
                 editable: true,
-                selectable: true,
+                selectable: ("{{ UserRole }}" == "Administrateur" ? true : false),
+                themeSystem: 'bootstrap',
                 selectHelper: true,
                 nowIndicator: true,
                 buttonText: 
@@ -175,149 +251,216 @@ aria-hidden="true">
                 },
                 header: 
                 {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay,list',
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'dayGridMonth,timeGridWeek,timeGridDay,list',
+                },
+                plugins: ['dayGrid','timeGrid','list','interaction'],
+                // timeZone: 'Europe/Paris',
+                // events: "{{ path('rdv_index') }}",
+                events: {
+                  url: "{{ path('rdv_index') }}",
+                  method: 'GET',
+                  /* paramètres envoyés lors de la requête 
+                  extraParams: {
+                    custom_param1: 'something',
+                    custom_param2: 'somethingelse'
+                  },/**/
+                  failure: function() {
+                    // alert('Impossible de charger les événements du calendrier !');
+                  }
+                },
+                eventRender: function(info) 
+                {
+                  var start = info.event.start;
+                  var end = info.event.end;
+                  var affichage3 = moment(start).format("HH:mm") + '-' + moment(end).format("HH:mm");
+
+                    if ((info.view.type == 'dayGridMonth') ||  (info.view.type == 'timeGridWeek'))
+                    {
+                      var new_description =   info.event.title +
+                      '<br/><small>'
+                        + (info.event.extendedProps.description ? info.event.extendedProps.description : 'ouvert') + '</small><br/>'
+                        // + '<strong>Address: </strong><br/>' + infos.address + '<br/>'
+                        + (info.event.extendedProps.adresse ? info.event.extendedProps.adresse : '');
+                        info.el.querySelector('.fc-time').innerHTML = affichage3;
+                        info.el.querySelector('.fc-title').innerHTML = new_description;
+                        ;
+                      }
+                    },
+                    /*function(info,event,element,view) 
+                    {
+                      var tooltip = new Tooltip(info.el, {
+                        title: info.event.extendedProps.description,
+                        placement: 'top',
+                        trigger: 'hover',
+                        container: 'body'
+                      });
+                  },/**/
+                  select: function(infos) 
+                  {
+                      /*console.log("select: function(infos) ");
+                      console.log("START : "+infos.start+"\n"+"END : "+infos.end);*/
+                      $('#ShowRdv').modal('show');
+                      var vtitre = moment(infos.start).tz("Europe/Paris").format("DD MMMM");
+                      var vstart = moment(infos.start).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
+                      var vstart2 = getFormattedDate(new Date(infos.start));
+                      var vend = moment(infos.end).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
+                      // console.log("START "+vstart+"\nSTART2 "+vstart+"\n END"+vend);
+                      $('#ShowRdv').on('shown.bs.modal', function (event) 
+                      {
+                        $(".modal-body #booking_title").val('RDV DISPONIBLE '+vstart);
+                        $(".modal-body #booking_start").val((vstart));
+                        $(".modal-body #booking_end").val((vend));
+                        
+                        /*$.getScript('/event/new',function(){
+                          $("#event_date_range").val(moment(start).format("DD/MM/YYYY HH:mm") +' - '+moment(end).format("DD/MM/YYYY HH:mm"));
+                          date_range_picker();
+                          $(".start_hidden").val(moment(start).format("DD/MM/YYYY HH:mm"));
+                          $(".end_hidden").val(moment(end).format("DD/MM/YYYY HH:mm"));/**/
+                        })
+                        $('#ShowRdv').on('hidden.bs.modal', function () 
+                        {
+                          calendar.render();
+                        })
                   },
-                  plugins: ['dayGrid','timeGrid','list','interaction'],
-                  // timeZone: 'Europe/Paris',
-                  events: "{{ path('rdv_index') }}",
-                  eventRender: function(info) 
+                  dateClick: function(info) 
                   {
-                    // console.log(moment(calendar.view.activeEnd).format("YYYY-MM-DD"));
-                    var start = info.event.start;
-                    var end = info.event.end;
-                    var affichage3 = moment(start).format("HH:mm") + '-' + moment(end).format("HH:mm");
-
-                    if (info.view.type == 'dayGridMonth') 
+                    if ("{{ UserRole }}" == "Administrateur")
                     {
-                      console.log(info.event);
-                      var new_description =   
-                          '<br/><small>'
-                          + info.event.title + '</small><br/>'
-                          // + '<strong>Address: </strong><br/>' + infos.address + '<br/>'
-                          + info.event.extendedProps.description + '<br/>';
-                      info.el.querySelector('.fc-time').innerHTML = affichage3;
-                      info.el.querySelector('.fc-title').innerHTML = new_description;
-                      ;
+                      console.log('dateClick: function(info) ');
+                      $('#ShowRdv').modal('show');
+                      var d = getFormattedDate(new Date(info.dateStr));
+                      $('#ShowRdv').on('shown.bs.modal', function (event) 
+                      {
+                        $(".modal-body #booking_start").val((d));
+                        $(".modal-body #booking_end").val((d));
+                      })
                     }
-                },
-                /*function(info,event,element,view) 
-                {
-                  var tooltip = new Tooltip(info.el, {
-                    title: info.event.extendedProps.description,
-                    placement: 'top',
-                    trigger: 'hover',
-                    container: 'body'
-                  });
-                },/**/
-                select: function(infos) 
-                {
-                  console.log("select: function(infos) ");
-                  console.log("START : "+infos.start+"\n"+"END : "+infos.end);
-                  $('#ShowRdv').modal('show');
-                  var vtitre = moment(infos.start).tz("Europe/Paris").format("DD MMMM");
-                  var vstart = moment(infos.start).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
-                  var vstart2 = getFormattedDate(new Date(infos.start));
-                  var vend = moment(infos.end).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
-                  console.log("START "+vstart+"\nSTART2 "+vstart+"\n END"+vend);
-                  $('#ShowRdv').on('shown.bs.modal', function (event) 
+                  },
+                  eventDrop: (infos) => 
                   {
-                    $(".modal-body #booking_title").val((vtitre));
-                    $(".modal-body #booking_start").val((vstart));
-                    $(".modal-body #booking_end").val((vend));
+                    if ("{{ UserRole }}" == "Administrateur")
+                    {
+                      console.log(infos.event);
+                      $('#ShowRdv').modal('show');
+                      var vstart = new Date(infos.event.start);
+                      var vend = new Date(infos.event.end);
+                      
+                      $('#ShowRdv').on('shown.bs.modal', function (event) 
+                      {
+                        $(".before").remove();
+                        $("#booking_submit_button").show();
+                        $("#booking_titreShowRdv").html("Etes vous sûr.e de vouloir déplacer cet évènement ?");
+                        $(".modal-body #booking_submit_button").html("OUI");
+                        $(".modal-body #booking_close_button").html("NON");
 
-                  /*$.getScript('/event/new',function(){
-                    $("#event_date_range").val(moment(start).format("DD/MM/YYYY HH:mm") +' - '+moment(end).format("DD/MM/YYYY HH:mm"));
-                    date_range_picker();
-                    $(".start_hidden").val(moment(start).format("DD/MM/YYYY HH:mm"));
-                    $(".end_hidden").val(moment(end).format("DD/MM/YYYY HH:mm"));/**/
-                  })
-                  $('#ShowRdv').on('hidden.bs.modal', function () 
-                    {
-                      calendar.render();
-                    })
-                },
-                dateClick: function(info) 
-                {
-                  $('#ShowRdv').modal('show');
-                  var d = getFormattedDate(new Date(info.dateStr));
-                  $('#ShowRdv').on('shown.bs.modal', function (event) 
+                        $(".modal-body #booking_id").val(infos.event.id);
+                        $(".modal-body #booking_title").val(infos.event.title);
+                        $(".modal-body #booking_start").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.start)+' => </small></div>');
+                        $(".modal-body #booking_start").removeClass("col-8");
+                        $(".modal-body #booking_start").addClass("col-5");
+                        $(".modal-body #booking_start").val(getFormattedDate(vstart));
+                        // $("#booking_start").val(getFormattedDate(vstart));
+                        $(".modal-body #booking_end").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.end)+' => </small></div>');
+                        $(".modal-body #booking_end").removeClass("col-8");
+                        $(".modal-body #booking_end").addClass("col-5");
+                        $(".modal-body #booking_end").val(getFormattedDate(vend));
+                        $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
+                        $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
+                      })
+                      $('#ShowRdv').on('hidden.bs.modal', function () 
+                      {
+                        $(".before").remove();
+                        infos.revert();
+                        calendar.render();
+                        // $(this).find('form')[0].reset();
+                      })
+                    }
+                  },
+                  eventClick: (infos) => 
                   {
-                    $(".modal-body #booking_start").val((d));
-                    $(".modal-body #booking_end").val((d));
-                  })
-                },
-                eventDrop: (infos) => 
-                {
-                    console.log(infos.event);
-                    $('#ShowRdv').modal('show');
-                    var vstart = new Date(infos.event.start);
-                    var vend = new Date(infos.event.end);
-                    
-                    $('#ShowRdv').on('shown.bs.modal', function (event) 
+                    console.log('eventClick: function(info) ');
+                    console.log('Event: ' + infos.event.title);
+                    console.log('Coordinates: ' + infos.jsEvent.pageX + ',' + infos.jsEvent.pageY);
+                    console.log('View: ' + infos.view.type);
+                    if ("{{ UserRole }}" == "Administrateur")
                     {
-                      $(".before").remove();
-                      $("#booking_submit_button").show();
-                      $("#booking_titreShowRdv").html("Etes vous sûr.e de vouloir déplacer cet évènement ?");
-                      $("#booking_submit_button").html("OUI");
-                      $("#booking_close_button").html("NON");
-                      $(".modal-body #booking_id").val(infos.event.id);
-                      $(".modal-body #booking_title").val(infos.event.title);
-                      $("#booking_start").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.start)+' => </small></div>');
-                      $("#booking_start").removeClass("col-8");
-                      $("#booking_start").addClass("col-5");
-                      $(".modal-body #booking_start").val(getFormattedDate(vstart));
-                      $(".modal-body #booking_start").val(getFormattedDate(vstart));
-                      $("#booking_end").before('<div class="col-3 before"><small>'+getFormattedDate(infos.oldEvent.end)+' => </small></div>');
-                      $("#booking_end").removeClass("col-8");
-                      $("#booking_end").addClass("col-5");
-                      $(".modal-body #booking_end").val(getFormattedDate(vend));
-                      $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
-                      $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
-                    })
-                    $('#ShowRdv').on('hidden.bs.modal', function () 
+                      window.location.replace(""+infos.event.id+"/edit");
+                    }
+                    else
                     {
-                      $(".before").remove();
-                      infos.revert();
-                      calendar.render();
-                      // $(this).find('form')[0].reset();
-                    })
-                },
-                eventClick: (infos) => 
-                {
-                  console.log('Event: ' + infos.event.title);
-                  console.log('Coordinates: ' + infos.jsEvent.pageX + ',' + infos.jsEvent.pageY);
-                  console.log('View: ' + infos.view.type);
-                  // change the border color just for fun
-                  infos.el.style.borderColor = 'red';
-                  $('#ShowRdv').modal('show');
-                  var vstart = new Date(infos.event.start);
-                  var vend = new Date(infos.event.end);
-                  
-                  $('#ShowRdv').on('shown.bs.modal', function (event) 
-                  {
-                    $(".before").remove();
-                    $("#booking_titreShowRdv").html("Visualiser "+infos.event.title);
-                    $("#booking_submit_button").hide();
-                    $("#booking_close_button").html("OK");
-                    $(".modal-body #booking_id").val(infos.event.id);
-                    $(".modal-body #booking_title").val(infos.event.title);
-                    $(".modal-body #booking_start").val(getFormattedDate(vstart));
-                    $(".modal-body #booking_end").val(getFormattedDate(vend));
-                    $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
-                    $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
-                  })
-                  $('#ShowRdv').on('hidden.bs.modal', function () 
-                  {
-                    calendar.render();
-                  })/**/
+                      console.log("idUser : "+infos.event.extendedProps.idUser);
+                      console.log('UserId: ' + "{{ UserId }}" );
+                      if (("{{ UserId }}" == infos.event.extendedProps.idUser) || (!infos.event.extendedProps.idUser))
+                      {
+                        window.location.replace("../rdv/"+infos.event.id+"/edit");
+                      }
+                      else
+                      {
+                        // change the border color just for fun
+                        infos.el.style.borderColor = 'red';
+                        $('#ShowRdv').modal('show');
+                        var vstart = new Date(infos.event.start);
+                        var vend = new Date(infos.event.end);
+                        
+                        $('#ShowRdv').on('shown.bs.modal', function (event) 
+                        {
+                          $(".before").remove();
+                          $("#booking_titreShowRdv").html("Désolé ce rendez-vous est déjà pris ");
+                          $("#booking_submit_button").hide();
+                          $("#booking_close_button").html("OK");
+                          $(".modal-body #booking_id").val(infos.event.id);
+                          $(".modal-body #booking_title").val(infos.event.title);
+                          $(".modal-body #booking_start").val(getFormattedDate(vstart));
+                          $(".modal-body #booking_end").val(getFormattedDate(vend));
+                          // $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
+                          $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
+                        })
+                        $('#ShowRdv').on('hidden.bs.modal', function () 
+                        {
+                          calendar.render();
+                        })/**/
+                      }
+                    }
                 },
                 eventResize: (infos) => 
                 {
-                    console.log(infos.event.end)
+                  console.log(infos);
+                  if ("{{ UserRole }}" == "Administrateur")
+                    {
+                      $('#ShowRdv').modal('show');
+                      var vstart = new Date(infos.event.start);
+                      var vend = new Date(infos.event.end);
+                      console.log(infos);
+                      
+                      $('#ShowRdv').on('shown.bs.modal', function (event) 
+                      {
+                        $(".before").remove();
+                        $("#booking_submit_button").show();
+                        $("#booking_titreShowRdv").html("Etes vous sûr.e de vouloir modifier cet évènement ?");
+                        $("#booking_submit_button").html("OUI");
+                        $("#booking_close_button").html("NON");
+                        $(".modal-body #booking_id").val(infos.event.id);
+                        $(".modal-body #booking_title").val(infos.event.title);
+
+                        $(".modal-body #booking_start").val(getFormattedDate(vstart));
+                        $(".modal-body #booking_start").val(getFormattedDate(vstart));
+
+                        $(".modal-body #booking_end").val(getFormattedDate(vend));
+                        $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
+                        $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
+                      })
+                      $('#ShowRdv').on('hidden.bs.modal', function () 
+                      {
+                        $(".before").remove();
+                        infos.revert();
+                        calendar.render();
+                        // $(this).find('form')[0].reset();
+                      })
+                    }
                 },
-            });
+              });
             calendar.render();
       }
       /*document.addEventListener('DOMContentLoaded', () => 
@@ -326,6 +469,20 @@ aria-hidden="true">
         });/**/
         window.onload = () => 
         {
+          $(".disponible").on("change", function(ee)  
+          {
+            if (this.value == 1)
+            {
+              if (confirm("attention vous avez cliqué sur oui ; "+"\n"
+                  +"Cette action libère le rendez-vous et le rend de nouveau disponible\n"
+                  +"Voulez vous continuer ?"))
+                  {
+                    //alert ("Suppression");
+                    $("#booking #booking_description").val('');
+                    $("#booking #booking_title").val("RDV DISPONIBLE " + $("div#booking #booking_start").val());
+                  }
+            }
+          });
           Calendrier();
           $.datetimepicker.setLocale('fr');
           $.datetimepicker.setDateFormatter('moment');

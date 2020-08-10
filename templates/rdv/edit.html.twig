@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container col-8">
+    <title>Rdv</title>
+    {{ include('rdv/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+    <div class="form-group row">
+        <a href="{{ path('booking_index') }}" class="btn btn-secondary">Retour</a>
+    </div>
+</div>
+{% endblock %}

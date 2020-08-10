@@ -2,14 +2,18 @@
 
 namespace App\Form;
 
+use App\Entity\User;
 use App\Entity\Booking;
+use Doctrine\DBAL\Types\BooleanType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use App\Form\DataTransformer\DateTimeTransformer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
@@ -17,8 +21,20 @@ class BookingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //$departement = $this->getDoctrine()->getManager()->getRepository('MonBundle:DepartementFrance')->find($id);
+        $user = $options['data'];
+        // $user = $user->getIdUser();
+        // dd($user);
         $builder
-            ->add('title')
+            ->add('title', TextType::class, array
+            (
+                'attr' => 
+                    [
+                        'class' => 'form-control input-inline'
+                    ],
+                'label'=>'Titre',
+            )
+        )
             ->add('start', DateTimeType::class, array
                     (
                         'widget'=> 'single_text',
@@ -33,7 +49,7 @@ class BookingType extends AbstractType
                             ],
                         'html5'=> false,
                         'format'=> 'dd/MM/yyyy HH:mm', 
-                        'date_label'=>'Date de début'                       
+                        'label'=>'Date de début'                        
                     )
                 )
             ->add('end', DateTimeType::class, array
@@ -50,24 +66,53 @@ class BookingType extends AbstractType
                         ],
                     'html5'=> false,
                     'format'=> 'dd/MM/yyyy HH:mm', 
-                    'date_label'=>'Date de fin'
+                    'label'=>'Date de fin'
                 )
             )
             ->add('background_color',ColorType::class,[
                 'required' => false,
                 'attr' => 
                     [
-                        'class' => 'form-control col-8'
-                    ],
+                        'class' => 'form-control'
+                    ], 
+                'label'=>'Couleur'
                 ])
             ->add('description', TextareaType::class,
                 [
                 'required'   => false,
                 'attr' => 
                     [
-                        'class' => 'form-control col-8'
+                        'class' => 'form-control'
                     ],
                 ])
+                
+            ->add('isFree', ChoiceType::class, array(
+                    'choices' => array(
+                        'Oui' => true,
+                        'Non' => false
+                     ),
+                     'attr' => 
+                         [
+                             'class' => 'form-control disponible'
+                         ],
+                     'label' => 'Disponible',
+                    //  'required' => true,
+                    //  'empty_value' => false,
+                    //  'choices_as_values' => true
+                 ))
+            // ->add('iduser', EntityType::class, [
+            //     // looks for choices from this entity
+            //     'class' => User::class,
+            //     // uses the User.username property as the visible option string
+            //     'choice_label' => function ($user) 
+            //         { return $user->getNom()." " . $user->getPrenom() ."
+            //                     " . $user->getEmail()  ." " . $user->getTelephone()  ."
+            //                     " . $user->getAdresse() ." " . $user->getCodePostal()." " . $user->getVille(); 
+            //             },
+            //     // used to render a select box, check boxes or radios
+            //     'multiple' => false,
+            //     'expanded' => false
+            // ]);
         ;
     }
 

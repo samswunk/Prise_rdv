@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h5 class="card-header info-color white-text text-center py-4">
+        <strong>Liste des utilisateurs</strong>
+    </h5>
+    <table class="table small">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>IsVerified</th>
+                <th>Telephone</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Adresse</th>
+                <th>CodePostal</th>
+                <th>Ville</th>
+                <th>RDV</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                {# <td>{{ user.password }}</td> #}
+                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+                <td>{{ user.Telephone }}</td>
+                <td>{{ user.Nom }}</td>
+                <td>{{ user.Prenom }}</td>
+                <td>{{ user.Adresse }}</td>
+                <td>{{ user.CodePostal }}</td>
+                <td>{{ user.Ville }}</td>
+                <td>{{ user.bookings|length }}</td>
+                <td class="row">
+                    <a class="btn btn-sm btn-secondary small" href="{{ path('user_show', {'id': user.id}) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                    <a class="btn btn-sm btn-primary small" href="{{ path('user_edit', {'id': user.id}) }}"><i class="fas fa-edit" aria-hidden="true"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">Pas d'utilisateurs inscrits</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a class="btn btn-success" href="{{ path('user_new') }}">Nouvel utilisateur</a>
+</div>        
+{% endblock %}

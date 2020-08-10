@@ -1,0 +1,33 @@
+<div class="container col-10">
+    {{ form_start(form) }}
+    <h5 class="card-header info-color white-text text-center py-4">
+        <strong>Je m'inscris au rdv du {{ form.start.vars.value }} au {{ form.end.vars.value }}</strong>
+    </h5>
+        <div class="container col-10">
+            {% set NewPrenom = '' %}
+            {% set NewAdresse = app.user.adresse ~ " " ~ app.user.codepostal ~ " " ~ app.user.codepostal  %}
+
+            {% if app.user.prenom|length %}
+                {% set NewPrenom = " " ~ app.user.prenom %}
+            {% endif %}
+            {% set NewTitre = "RDV " ~ app.user.nom ~ NewPrenom ~ " (tel : " ~ app.user.telephone ~ ")" %}
+            <div class="form-group">
+                {{ form_row(form.title, {'label':' ', 'value': NewTitre, 'attr': {  class: 'col-12',
+                                                                        disabled: false} }) }}
+                {# {{ form_widget(form.start, {'attr': {'class': 'col-3'}}) }}
+                {{ form_widget(form.end, {'attr': {'class': 'col-3'}}) }}#}
+                {{ form_row(form.description, { 'value': NewAdresse, 'attr': {  class: 'col-12 required',
+                                                                                        required: true} }) }}
+            </div>
+            <div class="form-group" style="display:" {% if ("{{ UserRole }}" == "Administrateur") %} "block" {% else %} "" {% endif %} ";">
+                {{ form_row(form.start) }}
+                {{ form_row(form.end) }}
+                {{ form_row(form.background_color) }}
+                {{ form_row(form.iduser) }}
+            </div> 
+            <div class="form-control row text-center border border-light">
+                <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
+            </div>
+            {{ form_end(form, {'render_rest': true}) }}
+        </div>
+</div>
