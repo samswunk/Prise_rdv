@@ -9,37 +9,24 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
-class UserType extends AbstractType
+class ProfilType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // dd($options);
-        $bookings = $options['data'];
-        $bookings = $bookings->getBookings();
-        $bookings = $bookings['collections'];
         $builder
-            ->add('email',EmailType::class)
-            // ->add('roles')
-            ->add('roles', ChoiceType::class, [
-                    'choices'=> [
-                        'Utilisateur'=>'ROLE_USER',
-                        'Administrateur'=>'ROLE_ADMIN'
-                    ],
-                    'expanded'=>true,
-                    'multiple'=>true,
-                    'label'=>'Rôles'
-            ])
-            // ->add('isVerified')
-            ->add('Telephone')
             ->add('Nom')
             ->add('Prenom')
+            ->add('email',EmailType::class)
+            ->add('Telephone')
+            // ->add('roles')
+            // ->add('isVerified')
             ->add('Adresse')
             ->add('CodePostal')
             ->add('Ville')
-            // ->add('password')
+            ->add('password')
             /*->add('bookings', EntityType::class, [
                 // looks for choices from this entity
                 'class' => Booking::class,

@@ -3,15 +3,14 @@
 {% block title %}User index{% endblock %}
 
 {% block body %}
-    <h1>User index</h1>
-
-    <table class="table">
+<div class="container">
+    <h1>Liste des utilisateurs</h1>
+    <table class="table small">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Email</th>
                 <th>Roles</th>
-                <th>Password</th>
                 <th>IsVerified</th>
                 <th>Telephone</th>
                 <th>Nom</th>
@@ -19,6 +18,7 @@
                 <th>Adresse</th>
                 <th>CodePostal</th>
                 <th>Ville</th>
+                <th>RDV</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -28,7 +28,7 @@
                 <td>{{ user.id }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>{{ user.password }}</td>
+                {# <td>{{ user.password }}</td> #}
                 <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
                 <td>{{ user.Telephone }}</td>
                 <td>{{ user.Nom }}</td>
@@ -36,18 +36,19 @@
                 <td>{{ user.Adresse }}</td>
                 <td>{{ user.CodePostal }}</td>
                 <td>{{ user.Ville }}</td>
-                <td>
-                    <a href="{{ path('user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('user_edit', {'id': user.id}) }}">edit</a>
+                <td>{{ user.bookings|length }}</td>
+                <td class="row">
+                    <a class="btn btn-sm btn-secondary small" href="{{ path('user_show', {'id': user.id}) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                    <a class="btn btn-sm btn-primary small" href="{{ path('user_edit', {'id': user.id}) }}"><i class="fas fa-edit" aria-hidden="true"></i></a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="12">no records found</td>
+                <td colspan="12">Pas d'utilisateurs inscrits</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('user_new') }}">Create new</a>
+    <a class="btn btn-success" href="{{ path('user_new') }}">Nouvel utilisateur</a>
+</div>        
 {% endblock %}

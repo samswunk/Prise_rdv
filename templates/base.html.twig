@@ -31,7 +31,7 @@
           {% endfor %}
           Bonjour, {{ UserRole }} {{ app.user.nom ?? "inconnu" }}
         {% else %}
-          Pas d'utilisateur
+          Pas connecté
         {% endif %}
       </small>
     </small>
@@ -64,13 +64,17 @@
           {% endif %}
           {% if UserId is not null %}
           <li class="nav-item">
-            <a class="nav-link" href="{{ path('user_edit', { 'id': UserId }) }}">Mes informations</a>
+            <a class="nav-link" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
           </li>            
           {% endif %}
         </ul>
         <ul>
             <li class="navbar-nav active navbar-right">
-              <a class="nav-link btn btn-outline-danger" href="{{ path('app_logout') }}">Déconnection<span class="sr-only bg-danger"></span></a>
+              {% if UserId is not null %}
+                <a class="nav-link btn btn-outline-danger" href="{{ path('app_logout') }}">Déconnexion<span class="sr-only bg-danger"></span></a>
+              {% else %}
+                <a class="nav-link btn btn-outline-success" href="{{ path('app_login') }}">Se connecter<span class="sr-only bg-Success"></span></a>
+              {% endif %}
             </li>
         </ul>
         {# <form class="form-inline my-2 my-lg-0">
@@ -233,6 +237,7 @@
                 locale: 'fr',
                 editable: true,
                 selectable: ("{{ UserRole }}" == "Administrateur" ? true : false),
+                themeSystem: 'bootstrap',
                 selectHelper: true,
                 nowIndicator: true,
                 buttonText: 
@@ -274,9 +279,9 @@
                     {
                       var new_description =   info.event.title +
                       '<br/><small>'
-                        + info.event.extendedProps.description + '</small><br/>'
+                        + (info.event.extendedProps.description ? info.event.extendedProps.description : 'ouvert') + '</small><br/>'
                         // + '<strong>Address: </strong><br/>' + infos.address + '<br/>'
-                        + info.event.extendedProps.adresse + '<br/>';
+                        + (info.event.extendedProps.adresse ? info.event.extendedProps.adresse : '');
                         info.el.querySelector('.fc-time').innerHTML = affichage3;
                         info.el.querySelector('.fc-title').innerHTML = new_description;
                         ;
@@ -293,14 +298,14 @@
                   },/**/
                   select: function(infos) 
                   {
-                      console.log("select: function(infos) ");
-                      console.log("START : "+infos.start+"\n"+"END : "+infos.end);
+                      /*console.log("select: function(infos) ");
+                      console.log("START : "+infos.start+"\n"+"END : "+infos.end);*/
                       $('#ShowRdv').modal('show');
                       var vtitre = moment(infos.start).tz("Europe/Paris").format("DD MMMM");
                       var vstart = moment(infos.start).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
                       var vstart2 = getFormattedDate(new Date(infos.start));
                       var vend = moment(infos.end).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
-                      console.log("START "+vstart+"\nSTART2 "+vstart+"\n END"+vend);
+                      // console.log("START "+vstart+"\nSTART2 "+vstart+"\n END"+vend);
                       $('#ShowRdv').on('shown.bs.modal', function (event) 
                       {
                         $(".modal-body #booking_title").val((vtitre));

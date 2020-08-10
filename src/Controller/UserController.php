@@ -63,15 +63,12 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user): Response
     {
-        
-        // dd(($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ? "Tout va bien" : "alerte !"));
-        $route = ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ? "user_index" : "user_show");
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
+            $this->addFlash('Message',"L'utilisateur a bien été modifié");
             return $this->redirectToRoute('user_index');
         }
 

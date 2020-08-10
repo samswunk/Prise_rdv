@@ -1,6 +1,8 @@
-<div class="container border border-dark col-10">
+<div class="container col-10">
     {{ form_start(form) }}
-    <h1><small>Je m'inscris au rdv du {{ form.start.vars.value }} au {{ form.end.vars.value }} </small></h1>        
+    <h5 class="card-header info-color white-text text-center py-4">
+        <strong>Je m'inscris au rdv du {{ form.start.vars.value }} au {{ form.end.vars.value }}</strong>
+    </h5>
         <div class="container col-10">
             {% set NewPrenom = '' %}
             {% set NewAdresse = app.user.adresse ~ " " ~ app.user.codepostal ~ " " ~ app.user.codepostal  %}
@@ -15,11 +17,13 @@
             {{ form_widget(form.end, {'attr': {'class': 'col-3'}}) }}#}
             {{ form_row(form.description, { 'value': NewAdresse, 'attr': {  class: 'col-12 required',
                                                                             required: true} }) }}
-            <div class="form-control" style="display:block;">
+            <div class="form-control" style="display:none;">
                 {{ form_widget(form.start) }}
                 {{ form_widget(form.end) }}
             </div> 
-        <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
-        {{ form_end(form, {'render_rest': true}) }}
+            <div class="form-control row text-center border border-light">
+                <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
+            </div>
+        {{ form_end(form, {'render_rest': false}) }}
         </div>
 </div>

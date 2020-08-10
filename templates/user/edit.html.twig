@@ -3,17 +3,19 @@
 {% block title %}Edit User{% endblock %}
 
 {% block body %}
-<div class="container row">
-    <div class="col-3">
-        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-          <a    class="nav-link active" id="v-pills-home-tab" data-toggle="pill" 
-                href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Mes informations</a>
-          <a    class="nav-link" id="v-pills-profile-tab" data-toggle="pill" 
-                href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Mes rendez-vous</a>
+<div class="container">
+    <h5 class="card-header info-color white-text text-center py-4">
+        <strong>Edition utilisateur</strong>
+    </h5>
+
+    {{ include('user/_form.html.twig', {'button_label': 'Modifier'}) }}
+    <div class="form-group row">
+        <div class="col-1">
+            <a href="{{ path('user_index') }}" class="btn btn-secondary" style="width: 100px;">Retour</a>
         </div>
-      </div>
-    <div class="col-9">
-        {{ include('user/_form.html.twig', {'button_label': 'Modifier'}) }}
+        <div class="col-1">
+            {{ include('user/_delete_form.html.twig') }}
+        </div>
     </div>
 </div>
 {% endblock %}

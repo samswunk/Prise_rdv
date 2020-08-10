@@ -21,16 +21,18 @@ class BookingRepository extends ServiceEntityRepository
 
     public function findByRange($start,$end)
     {
-        $start  = ($start ? $start : "%");
-        $end    = ($end ? $end : "%");
-        // dd($start,$end);
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.start >= :pstart')
-            ->andWhere('b.end <= :pend')
-            ->setParameter('pstart', $start)
-            ->setParameter('pend', $end)
-            ->getQuery()
-            ->getResult()
+        if (strstr($start,"1970")) $start = date("Y-m-d");
+        if (strstr($end,"1970")) $end = date("Y-m-d");
+        $start  = ($start ? $start : date("Y-m-d"));
+        $end    = ($end ? $end : date("Y-m-d"));
+        $req = $this->createQueryBuilder('b')
+        ->andWhere('b.start >= :pstart')
+        ->andWhere('b.end <= :pend')
+        ->setParameter('pstart', $start)
+        ->setParameter('pend', $end)
+        ->getQuery();
+        
+        return $req->getResult()
         ;
     }
     // /**

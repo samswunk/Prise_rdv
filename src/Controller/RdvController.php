@@ -23,22 +23,26 @@ class RdvController extends AbstractController
      */
     public function index(BookingRepository $bookingRepository,Request $request): Response
     {
-        $vstart= date('Y-m-d',strtotime($request->query->get('start')));
-        $vend= date('Y-m-d',strtotime($request->query->get('end')));
-        $repos=$bookingRepository->findByRange($vstart,$vend);
-        // $repos=$bookingRepository->findAll();
-
+        if ($request->query->get('start')) 
+        {
+            $vstart= date('Y-m-d',strtotime($request->query->get('start')));
+            $vend= date('Y-m-d',strtotime($request->query->get('end')));
+            $repos=$bookingRepository->findByRange($vstart,$vend);
+        }else{
+            $repos=$bookingRepository->findAll();
+        }
         foreach ($repos as $key=>$repo)
         {
             $data[$key]['title']            = $repo->getTitle();
             $data[$key]['start']            = date_format($repo->getStart(),"Y-m-d H:i:s");
             $data[$key]['end']              = date_format($repo->getEnd(),"Y-m-d H:i:s");
             $data[$key]['description']      = $repo->getDescription();
-            $data[$key]['backgroundColor']  = "red";//$repo->getBackGroundcolor();
+            $data[$key]['backgroundColor']  = "#54B796";//$repo->getBackGroundcolor();
             $data[$key]['id']               = $repo->getId();
             $user = $repo->getIdUser();
             if ($user) {
-                $data[$key]['backgroundColor']  = "green";
+                $data[$key]['backgroundColor']  = "#DBACA9";
+                $data[$key]['borderColor']      = "#DBACA9";
                 $data[$key]['idUser']   = $user->getId();
                 $data[$key]['nom']      = $user->getNom();
                 $data[$key]['email']    = $user->getEmail();
