@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container col-8">
+    <h5 class="card-header info-color white-text text-center py-4">
+        <strong>Ouverture de rendez-vous</strong>
+    </h5>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="text-center">
+            <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>  
+        </div> 
+    {{ form_end(form) }}
+</div>
+{% endblock %}

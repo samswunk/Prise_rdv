@@ -59,7 +59,8 @@
               <a class="dropdown-item" href="{{ path('booking_list') }}">Liste des rendez-vous</a>
               <a class="dropdown-item" href="{{ path('user_index') }}">Liste des clients</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Separated link</a>
+                {# <a class="dropdown-item" href="{{ path('multi_new') }}">Ouverture de rdv</a> #}
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ShowRdvMulti">Ouverture de rdv</a>
             </div>
           </li>
           {% endif %}
@@ -85,26 +86,11 @@
       </div>
   </nav>
   <div class="col-12"></div>
-{# SHOW CALENDAR MODAL #}
-<div  class="modal fade bg-light" 
-      style="min-width: 80%;"
-      id="ShowCalendar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" 
-      aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">      
-        <div class="modal-content col-12">
-          <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body" >
-            <h4 class="modal-title">Calendrier</h4>
-            <div id="calendar-holder" class="col-12"></div>
-          </div>
-          <div class="modal-footer center text-center">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
-          </div>
-        </div>
-      </div>
-</div>
+
+{# SHOW RDV MULTI MODAL #}
+  {% include("multi/new.html.twig") %}
+{# END RDV MUTLI MDAL #}
+
 {# SHOW RDV MODAL #}
 <div  class="modal fade bg-light" 
       style="height: 90%; min-width: 80%;"
@@ -136,7 +122,7 @@
           </div>
           <div class="row col-12">
               <label class="col-4" for="booking_end">Date de fin</label>
-              <input  type="text" class="form-control input-inline datetimepicker col-8" 
+              <input  type="text" class="form-control input-inline datetimepicker end col-8" 
                       id="booking_end" name="booking[end]" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
           </div>
           <div class="row col-12">
@@ -224,7 +210,32 @@
         let min = date.getMinutes().toString().padStart(2, '0');
         return day + '/' + month + '/' + year+' '+hour+':'+min;
       }
-      
+      function DateTimePickers() 
+      {
+          $.datetimepicker.setLocale('fr');
+          $.datetimepicker.setDateFormatter('moment');
+          
+          $('.datetimepicker').datetimepicker({
+            format:"DD/MM/YYYY HH:mm",
+            pickDate: false,
+            onShow:function( ct )
+            {
+              this.setOptions(
+                {
+                  maxDate:jQuery('datetimepicker .end').val()?jQuery('.datetimepicker .end').val():false
+                })
+            },
+          });
+
+          $('.datepicker').datetimepicker({
+            format:"DD/MM/YYYY",
+            timepicker:false,
+          });
+          $('.timepicker').datetimepicker({
+            datepicker:false,
+            format:'HH:mm'
+          });/**/
+      }
       function Calendrier()
       {
         var calendarEl = document.getElementById('calendar-holder2');
@@ -299,30 +310,11 @@
                   },/**/
                   select: function(infos) 
                   {
-                      /*console.log("select: function(infos) ");
-                      console.log("START : "+infos.start+"\n"+"END : "+infos.end);*/
+                      
+                      console.log("select: function(infos) ");
+                      console.log("START : "+infos.start+"\n"+"END : "+infos.end);
                       $('#ShowRdv').modal('show');
-                      var vtitre = moment(infos.start).tz("Europe/Paris").format("DD MMMM");
-                      var vstart = moment(infos.start).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
-                      var vstart2 = getFormattedDate(new Date(infos.start));
-                      var vend = moment(infos.end).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
-                      // console.log("START "+vstart+"\nSTART2 "+vstart+"\n END"+vend);
-                      $('#ShowRdv').on('shown.bs.modal', function (event) 
-                      {
-                        $(".modal-body #booking_title").val('RDV DISPONIBLE '+vstart);
-                        $(".modal-body #booking_start").val((vstart));
-                        $(".modal-body #booking_end").val((vend));
-                        
-                        /*$.getScript('/event/new',function(){
-                          $("#event_date_range").val(moment(start).format("DD/MM/YYYY HH:mm") +' - '+moment(end).format("DD/MM/YYYY HH:mm"));
-                          date_range_picker();
-                          $(".start_hidden").val(moment(start).format("DD/MM/YYYY HH:mm"));
-                          $(".end_hidden").val(moment(end).format("DD/MM/YYYY HH:mm"));/**/
-                        })
-                        $('#ShowRdv').on('hidden.bs.modal', function () 
-                        {
-                          calendar.render();
-                        })
+
                   },
                   dateClick: function(info) 
                   {
@@ -463,12 +455,16 @@
               });
             calendar.render();
       }
+
       /*document.addEventListener('DOMContentLoaded', () => 
       {
-          Calendrier();
-        });/**/
+        DateTimePickers();
+        Calendrier();
+      });/**/
         window.onload = () => 
         {
+          DateTimePickers();
+          Calendrier();
           $(".disponible").on("change", function(ee)  
           {
             if (this.value == 1)
@@ -483,13 +479,6 @@
                   }
             }
           });
-          Calendrier();
-          $.datetimepicker.setLocale('fr');
-          $.datetimepicker.setDateFormatter('moment');
-          $('.datetimepicker').datetimepicker({
-          format:"DD/MM/YYYY HH:mm",
-          stepping: 10
-        });
         /*$("#booking_start").on("change", function(ee) 
         {
           console.log("on change : "+$(this).val());

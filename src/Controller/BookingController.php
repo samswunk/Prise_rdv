@@ -109,6 +109,7 @@ class BookingController extends AbstractController
             }
         return $this->redirectToRoute('booking_index'); 
     }
+    
     /**
      * @Route("booking/new", name="booking_new", methods={"GET","POST"})
      */
