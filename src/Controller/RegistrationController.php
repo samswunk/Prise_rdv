@@ -58,6 +58,7 @@ class RegistrationController extends AbstractController
             );
             // do anything else you need here, like send an email
             */
+            
             return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,
                 $request,
@@ -77,7 +78,6 @@ class RegistrationController extends AbstractController
     public function verifyUserEmail(Request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
         /*
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
@@ -92,6 +92,6 @@ class RegistrationController extends AbstractController
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Bienvenue chez Chauffatec.');
 
-        return $this->redirectToRoute('app_index');
+        return $this->redirectToRoute('booking_index');
     }
 }
