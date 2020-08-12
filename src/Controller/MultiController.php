@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Booking;
 use App\Form\MultiType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class MultiController extends AbstractController
 {
+    
+    public function getDateForSpecificDayBetweenDates($startDate,$endDate,$day_number): array
+    {
+        $date_array["startDate"]=$startDate;
+        $date_array["endDate"]=$endDate;
+        $date_array["day_number"]=$day_number;
+        $endDate = strtotime($endDate);
+        $days=array('1'=>'Monday','2' => 'Tuesday','3' => 'Wednesday','4'=>'Thursday','5' =>'Friday','6' => 'Saturday','7'=>'Sunday');
+        for($i = strtotime($days[$day_number], strtotime($startDate)); $i <= $endDate; $i = strtotime('+1 week', $i))
+        $date_array[]=date('Y-m-d',$i);
+        
+        return $date_array;
+    }
     /**
      * @Route("/new/", name="multi_new", methods={"GET","POST"})
      */
@@ -23,15 +37,39 @@ class MultiController extends AbstractController
 
         if ($request->isMethod('POST')) 
         {
-            if ($form->isSubmitted() && $form->isValid()) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $data = $form->getData();
-            } else {
-                $form->submit($request->request->get($form->getName()));
-                $entityManager = $this->getDoctrine()->getManager();
-                $data = $form->getData();
+            $vstart = $request->request->get('multi')['start']." ".$request->request->get('multi')['start_hour'];
+            $vend = $request->request->get('multi')['end']." ".$request->request->get('multi')['end_hour'];
+            $start2 = date("Y-m-d",strtotime(str_replace('/', '-', $vstart)));
+            $end2 = date("Y-m-d ",strtotime(str_replace('/', '-', $vend)));
+            $vstartHeure=$request->request->get('multi')['start_hour'];
+            $vendHeure=$request->request->get('multi')['end_hour'];
+            $txt = "Tous les ".$request->request->get('day');
+            $txt .= " du " . $request->request->get('multi')['start'] ." au " . $request->request->get('multi')['end'];
+            $txt .= " de " . $request->request->get('multi')['start_hour']." à ".$request->request->get('multi')['end_hour'];
+            $TabJours=$this->getDateForSpecificDayBetweenDates(  $start2, $end2, $request->request->get('day'));
+            $txt .= print_r($TabJours);
+            $em = $this->getDoctrine()->getManager();
+            foreach ($TabJours as $key => $jour)
+            {
+                $booking = new Booking;
+                $booking->setTitle("RDV DISPONIBLE");
+                $booking->setStart(new \DateTime(date("Y-m-d H:i:s",strtotime($jour." ".$vstartHeure))));
+                $booking->setEnd(new \DateTime(date("Y-m-d H:i:s",strtotime($jour." ".$vendHeure))));
+                $booking->setIsFree(true);
+                $tab[$key]['start']  = new \DateTime(date("Y-m-d H:i:s",strtotime($jour." ".$vstartHeure)));
+                $tab[$key]['end']    = new \DateTime(date("Y-m-d H:i:s",strtotime($jour." ".$vendHeure)));
+                $em->persist($booking);
             }
-            dd($donees);
+            $em->flush();
+            // dd($em->flush());
+            // if ($form->isSubmitted() && $form->isValid()) {
+            //     $entityManager = $this->getDoctrine()->getManager();
+            //     $data = $form->getData();
+            // } else {
+            //     $form->submit($request->request->get($form->getName()));
+            //     $data = $form->getData();
+            // }
+            // dd($donees);
             return $this->redirectToRoute('booking_index');
         }
         return $this->render('multi/multi.html.twig', [

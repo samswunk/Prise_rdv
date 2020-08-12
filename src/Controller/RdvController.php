@@ -38,6 +38,7 @@ class RdvController extends AbstractController
     {
         $user = $this->getUser();
         $booking->setIdUser($user);
+        $booking->setIsFree(false);
         
         $form = $this->createForm(RdvType::class, $booking);
         $form->handleRequest($request);
@@ -86,35 +87,56 @@ class RdvController extends AbstractController
     public function index(BookingRepository $bookingRepository,Request $request): Response
     {
         $CurrentUser = $this->security->getUser();
+        $admin = $this->security->isGranted('ROLE_ADMIN');
+
         if ($request->query->get('start')) 
         {
             $vstart= date('Y-m-d',strtotime($request->query->get('start')));
             $vend= date('Y-m-d',strtotime($request->query->get('end')));
             $repos=$bookingRepository->findByRange($vstart,$vend);
-        }else{
+        }
+        else
+        {
             $repos=$bookingRepository->findAll();
         }
         foreach ($repos as $key=>$repo)
         {
-            $data[$key]['title']            = $repo->getTitle();
-            $data[$key]['start']            = date_format($repo->getStart(),"Y-m-d H:i:s");
-            $data[$key]['end']              = date_format($repo->getEnd(),"Y-m-d H:i:s");
-            $data[$key]['description']      = $repo->getDescription();
-            $data[$key]['backgroundColor']  = "#54B796";//$repo->getBackGroundcolor();
-            $data[$key]['id']               = $repo->getId();
-            $user = $repo->getIdUser();
+            $title            = $repo->getIsFree() ? $repo->getTitle() : "RDV INDISPONIBLE";
+            $description      = $repo->getIsFree() ? $repo->getDescription() : "";
+            $bgColor          = $repo->getIsFree() ? "#407855" : "#D36D37"; //$repo->getBackGroundcolor();
+            $textColor        = $repo->getIsFree() ? "#FFFFFF" : "#FFFFFF"; //$repo->getBackGroundcolor();
+            $editable         = $repo->getIsFree() ? true : false;//$repo->getBackGroundcolor();
+            $user             = $repo->getIdUser();
             if ($user) 
             {
-                $bgColor="#DBACA9";
-                if ($user->getId() == $CurrentUser->getId()) $bgColor="#FB8BA4";
-                $data[$key]['backgroundColor']  =  $bgColor;
-                $data[$key]['borderColor']      =  $bgColor;
-                $data[$key]['idUser']   = $user->getId();
-                $data[$key]['nom']      = $user->getNom();
-                $data[$key]['email']    = $user->getEmail();
-                $data[$key]['telephone']= $user->getTelephone();
-                $data[$key]['adresse']  = $user->getAdresse() ." " . $user->getCodePostal() ." " . $user->getVille();
+                $title            = "RDV INDISPONIBLE"; // $repo->getTitle();
+                $description      = ""; // $repo->getDescription();
+                $bgColor          = "#D36D37";
+                $editable         = "false";//$repo->getBackGroundcolor();
+                if (($user->getId() == $CurrentUser->getId()) || $admin)
+                {
+                    $title            = $repo->getTitle();
+                    $description      = $repo->getDescription();
+                    $editable         = "true";//$repo->getBackGroundcolor();
+                    $bgColor          ="#A4262C";
+                    $data[$key]['idUser']   = $user->getId();
+                    $data[$key]['nom']      = $user->getNom();
+                    $data[$key]['email']    = $user->getEmail();
+                    $data[$key]['telephone']= $user->getTelephone();
+                    $data[$key]['adresse']  = $user->getAdresse() ." " . $user->getCodePostal() ." " . $user->getVille();
+                }
             }
+            $data[$key]['id']               = $repo->getId();
+            $data[$key]['title']            = $title;
+            $data[$key]['description']      = $description;
+            $data[$key]['start']            = date_format($repo->getStart(),"Y-m-d H:i:s");
+            $data[$key]['end']              = date_format($repo->getEnd(),"Y-m-d H:i:s");
+            $data[$key]['editable']         = $editable;//$repo->getBackGroundcolor();
+            $data[$key]['isFree']           = $repo->getIsFree();
+            $data[$key]['backgroundColor']  =  $bgColor;
+            $data[$key]['borderColor']      =  $bgColor;
+            $data[$key]['textColor']        =  $textColor;
+            $data[$key]['color']            =  "#FFFFFF";
         }
         // $data = json_decode($data);
 

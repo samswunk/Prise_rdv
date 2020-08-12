@@ -47,9 +47,6 @@
           <li class="nav-item">
             <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}"><strong class="color-white">Prendre rdv</strong></a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Tarifs</a>
-          </li>
           {% if UserRole == 'Administrateur' %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
@@ -60,7 +57,7 @@
               <a class="dropdown-item" href="{{ path('user_index') }}">Liste des clients</a>
               <div class="dropdown-divider"></div>
                 {# <a class="dropdown-item" href="{{ path('multi_new') }}">Ouverture de rdv</a> #}
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ShowRdvMulti">Ouverture de rdv</a>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#multi">Ouverture de rdv</a>
             </div>
           </li>
           {% endif %}
@@ -75,7 +72,7 @@
               {% if UserId is not null %}
                 <a class="nav-link btn btn-outline-danger" href="{{ path('app_logout') }}">Déconnexion<span class="sr-only bg-danger"></span></a>
               {% else %}
-                <a class="nav-link btn btn-outline-success" href="{{ path('app_login') }}">Se connecter<span class="sr-only bg-Success"></span></a>
+                <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}">Se connecter<span class="sr-only bg-Success"></span></a>
               {% endif %}
             </li>
         </ul>
@@ -170,34 +167,10 @@
     {# <script src="{{ asset('fullcalendar/moment/main.global.min.js') }}">   </script> #}
     {# <script src="{{ asset('js/popper.js') }}">   </script> #}
     <script src="{{ asset('tarteaucitron/tarteaucitron.js')}}"></script>
+    <script src="{{ asset('js/tarteaucitron.js')}}"></script>
+    <script src="{{ asset('js/datetimepickers.js')}}"></script>
 
     <script type="text/javascript">
-        
-      tarteaucitron.init({
-    	  "privacyUrl": "", /* Privacy policy url */
-
-    	  "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
-    	  "cookieName": "tarteaucitron", /* Cookie name */
-    
-    	  "orientation": "middle", /* Banner position (top - bottom) */
-    	  "showAlertSmall": true, /* Show the small banner on bottom right */
-    	  "cookieslist": true, /* Show the cookie list */
-
-    	  "adblocker": false, /* Show a Warning if an adblocker is detected */
-    	  "AcceptAllCta" : true, /* Show the accept all button when highPrivacy on */
-    	  "highPrivacy": true, /* Disable auto consent */
-    	  "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */
-
-    	  "removeCredit": false, /* Remove credit link */
-    	  "moreInfoLink": true, /* Show more info link */
-    	  "useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */
-
-    	  //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for multisite */
-                          
-          "readmoreLink": "/cookiespolicy", /* Change the default readmore link */
-
-          "mandatory": false, /* Show a message about mandatory cookies */
-        });
       
       moment.tz.add("Europe/Paris|PMT WET WEST CEST CET WEMT|-9.l 0 -10 -20 -10 -20|0121212121212121212121212121212121212121212121212123434352543434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434|-2nco8.l cNb8.l HA0 19A0 1iM0 11c0 1oo0 Wo0 1rc0 QM0 1EM0 UM0 1u00 10o0 1io0 1wo0 Rc0 1a00 1fA0 1cM0 1cM0 1io0 17c0 1fA0 1a00 1io0 1a00 1io0 17c0 1fA0 1a00 1io0 17c0 1cM0 1cM0 1a00 1io0 1cM0 1cM0 1a00 1fA0 1io0 17c0 1cM0 1cM0 1a00 1fA0 1io0 1qM0 Df0 Ik0 5M30 WM0 1fA0 1cM0 Vx0 hB0 1aq0 16M0 1ekn0 1cL0 1fC0 1a00 1fA0 1cM0 1cM0 1cM0 1fA0 1a00 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|11e6")
       
@@ -210,32 +183,7 @@
         let min = date.getMinutes().toString().padStart(2, '0');
         return day + '/' + month + '/' + year+' '+hour+':'+min;
       }
-      function DateTimePickers() 
-      {
-          $.datetimepicker.setLocale('fr');
-          $.datetimepicker.setDateFormatter('moment');
-          
-          $('.datetimepicker').datetimepicker({
-            format:"DD/MM/YYYY HH:mm",
-            pickDate: false,
-            onShow:function( ct )
-            {
-              this.setOptions(
-                {
-                  maxDate:jQuery('datetimepicker .end').val()?jQuery('.datetimepicker .end').val():false
-                })
-            },
-          });
 
-          $('.datepicker').datetimepicker({
-            format:"DD/MM/YYYY",
-            timepicker:false,
-          });
-          $('.timepicker').datetimepicker({
-            datepicker:false,
-            format:'HH:mm'
-          });/**/
-      }
       function Calendrier()
       {
         var calendarEl = document.getElementById('calendar-holder2');
@@ -247,7 +195,7 @@
                 timezone: 'Europe/Paris',
                 //ignoreTimezone: true,
                 locale: 'fr',
-                editable: true,
+                // editable: true,
                 selectable: ("{{ UserRole }}" == "Administrateur" ? true : false),
                 themeSystem: 'bootstrap',
                 selectHelper: true,
@@ -291,14 +239,14 @@
                     {
                       var new_description =   info.event.title +
                       '<br/><small>'
-                        + (info.event.extendedProps.description ? info.event.extendedProps.description : 'ouvert') + '</small><br/>'
+                        + (info.event.extendedProps.description ? info.event.extendedProps.description : '') + '</small><br/>'
                         // + '<strong>Address: </strong><br/>' + infos.address + '<br/>'
                         + (info.event.extendedProps.adresse ? info.event.extendedProps.adresse : '');
                         info.el.querySelector('.fc-time').innerHTML = affichage3;
                         info.el.querySelector('.fc-title').innerHTML = new_description;
                         ;
-                      }
-                    },
+                    }
+                },
                     /*function(info,event,element,view) 
                     {
                       var tooltip = new Tooltip(info.el, {
@@ -308,13 +256,34 @@
                         container: 'body'
                       });
                   },/**/
-                  select: function(infos) 
-                  {
-                      
-                      console.log("select: function(infos) ");
-                      console.log("START : "+infos.start+"\n"+"END : "+infos.end);
+                select: function(infos) 
+                {
+                  if ("{{ UserRole }}" == "Administrateur")
+                  {   console.log("select: function(infos) ");
+                      console.log("START : "+infos.start+"\n"+"END : "+infos.end);/**/
                       $('#ShowRdv').modal('show');
-
+                      var vtitre = moment(infos.start).tz("Europe/Paris").format("DD MMMM");
+                      var vstart = moment(infos.start).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
+                      var vstart2 = getFormattedDate(new Date(infos.start));
+                      var vend = moment(infos.end).tz("Europe/Paris").format("DD/MM/YYYY HH:mm");
+                      // console.log("START "+vstart+"\nSTART2 "+vstart+"\n END"+vend);
+                      $('#ShowRdv').on('shown.bs.modal', function (event) 
+                      {
+                        $(".modal-body #booking_title").val('RDV DISPONIBLE '+vstart);
+                        $(".modal-body #booking_start").val((vstart));
+                        $(".modal-body #booking_end").val((vend));
+                        
+                        /*$.getScript('/event/new',function(){
+                          $("#event_date_range").val(moment(start).format("DD/MM/YYYY HH:mm") +' - '+moment(end).format("DD/MM/YYYY HH:mm"));
+                          date_range_picker();
+                          $(".start_hidden").val(moment(start).format("DD/MM/YYYY HH:mm"));
+                          $(".end_hidden").val(moment(end).format("DD/MM/YYYY HH:mm"));/**/
+                      })
+                      $('#ShowRdv').on('hidden.bs.modal', function () 
+                      {
+                          calendar.render();
+                      })
+                    }
                   },
                   dateClick: function(info) 
                   {
@@ -382,14 +351,26 @@
                     }
                     else
                     {
-                      console.log("idUser : "+infos.event.extendedProps.idUser);
+                      /*$.each(infos.event.extendedProps, function(index, val) {
+                        console.log(index+"=>"+val);
+                      });/**/
+                      console.log("isFree : "+ (infos.event.extendedProps.isFree));
+                      console.log("idUser : "+ (infos.event.extendedProps.idUser));
+                      console.log("idEvent: "+ (infos.event.id));
                       console.log('UserId: ' + "{{ UserId }}" );
-                      if (("{{ UserId }}" == infos.event.extendedProps.idUser) || (!infos.event.extendedProps.idUser))
+                      if ("{{ UserId }}" == infos.event.extendedProps.idUser) 
                       {
+                        console.log("LES DEUX ID SONT IDENTIQUES IL S'AGIT DU RDV DE LA PERS CONNECTÉE => MODIFICATION");
+                        window.location.replace("../rdv/"+infos.event.id+"/edit");
+                      }
+                      else if ((infos.event.extendedProps.isFree) && ("{{ UserId }}" != infos.event.extendedProps.idUser))
+                      {
+                        console.log("LES DEUX ID SONT DIFFÉRENTS MAIS LE RDV EST OUVERT ("+infos.event.extendedProps.isFree+") => INSCRIPTION" );
                         window.location.replace("../rdv/"+infos.event.id+"/edit");
                       }
                       else
                       {
+                        console.log("LES DEUX ID SONT DIFFÉRENTS ET LE RDV EST FERMÉ => PAS DE REACTION" );
                         // change the border color just for fun
                         infos.el.style.borderColor = 'red';
                         $('#ShowRdv').modal('show');
@@ -464,22 +445,32 @@
         window.onload = () => 
         {
           DateTimePickers();
-          Calendrier();
+          $("#multi_repetition").change(function() 
+          {
+            $("#ConsoleRepetition").html($(this).val()+" fois ");
+          });
+          
+          $("input[type=radio][name=day]").change(function() 
+          {
+            $("#ConsoleJour").html("Tous les " + $(this).attr('id'));
+          });
+          
           $(".disponible").on("change", function(ee)  
           {
             if (this.value == 1)
             {
-              if (confirm("attention vous avez cliqué sur oui ; "+"\n"
-                  +"Cette action libère le rendez-vous et le rend de nouveau disponible\n"
-                  +"Voulez vous continuer ?"))
-                  {
-                    //alert ("Suppression");
-                    $("#booking #booking_description").val('');
-                    $("#booking #booking_title").val("RDV DISPONIBLE " + $("div#booking #booking_start").val());
-                  }
+              if (confirm("Attention vous avez cliqué sur libérer un rendez vous alors qu'un utilisateur était déjà inscrit"+"\n"
+              +"Cette action libère le rendez-vous et le rend de nouveau disponible\n"
+              +"Voulez vous continuer ?"))
+              {
+                //alert ("Suppression");
+                $("#booking #booking_description").val('');
+                $("#booking #booking_title").val("RDV DISPONIBLE " + $("div#booking #booking_start").val());
+              }
             }
           });
-        /*$("#booking_start").on("change", function(ee) 
+          Calendrier();
+          /*$("#booking_start").on("change", function(ee) 
         {
           console.log("on change : "+$(this).val());
           var dateStart = new Date($(this).val(), "d/M/Y H:i:s");

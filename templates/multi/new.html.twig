@@ -1,91 +1,103 @@
 {% block body %}
+{% endblock %}
 {# SHOW RDV MODAL #}
-<div  class="bg-light modal fade"
+<div  class="modal fade bg-light"
       style="height: 90%; min-width: 80%;"
-      id="ShowRdvMulti" tabindex="-1" role="dialog" aria-labelledby="ModalRdv" aria-hidden="true">
+      id="multi" tabindex="-1" role="dialog" aria-labelledby="Modalmulti" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">      
     <div class="modal-content">
       <div class="modal-header alert alert-danger">
-          <h4 id="booking_titreShowRdv" class="modal-titlecenter col-5">Ouvrir un Rdv</h4>
+          <h4 id="multi_titreShowRdv" class="modal-titlecenter col-5">Ouvrir un Rdv</h4>
           <button type="button" class="close col-6" data-dismiss="modal">&times;</button>
       </div>
+      <h5 class="card-header info-color white-text text-center py-4">
+        <small class="row">
+          <div class="col-6 border border-blue">
+            <p name="ConsoleJour" id="ConsoleJour"></p>
+            <p name="ConsoleHeure" id="ConsoleHeure"></p>
+            <p name="ConsoleDate" id="ConsoleDate"></p>
+          </div>
+          <div class="col-6 border border-red">
+            <p name="ConsoleRepetition" id="ConsoleRepetition"></p>
+          </div>
+        </small>
+      </h5>
       <div class="modal-body">
         <form id="multi" class="col-12" action="{{ path('multi_new') }}" method="POST">
-          <input type="hidden" name="booking[id]" id="booking_id">
-          <input type="hidden" name="booking[iduser]" id="booking_iduser" 
+          <input type="hidden" name="multi[id]" id="multi_id">
+          <input type="hidden" name="multi[iduser]" id="multi_iduser" 
           {% if UserRole != 'Administrateur' %}
             value="{{ UserId }}" 
           {% endif %}
           >
-          <div class="row col-12 m-0">
-            {# <label class="col-4" for="booking_title">Titre</label>
+          {#<div class="row col-12 m-0">
+             <label class="col-4" for="multi_title">Titre</label>
             <input  type="text" class="form-control col-8" 
-                    name="booking[title]" id="booking_title" placeholder="Entrez un titre" 
+                    name="multi[title]" id="multi_title" placeholder="Entrez un titre" 
                     required="required" maxlength="255">
           </div> #}
           <div class="form-group row col-12 m-0">
             <div class="row col-6 m-0">
-                <label class="col-5" for="booking_start_date">Date de début</label>
-                <input  type="text" class="form-control input-inline datepicker col-6" 
-                        id="booking_start_date" name="booking[start_date]" data-provide="datepicker" format="dd/MM/yyyy" input="string" input_format="y-M-d">
+                <label class="col-5" for="multi_start">Date de début</label>
+                <input  type="text" class="form-control input-inline datepicker start col-6" 
+                        id="multi_start" name="multi[start]" data-provide="datepicker" format="dd/MM/yyyy" input="string" input_format="y-M-d">
             </div>
             <div class="row col-6 m-0">
-                <label class="col-5" for="booking_end">Date de fin</label>
-                <input  type="text" class="form-control input-inline datepicker col-6" 
-                        id="booking_end" name="booking[end]" data-provide="datepicker" format="dd/MM/yyyy" input="string" input_format="y-M-d">
+                <label class="col-5" for="multi_end">Date de fin</label>
+                <input  type="text" class="form-control input-inline datepicker end col-6" 
+                        id="multi_end" name="multi[end]" data-provide="datepicker" format="dd/MM/yyyy" input="string" input_format="y-M-d">
             </div>
           </div>
           <div class="form-group row col-12 m-0">
             <div class="row col-6 m-0">
-                <label class="col-5" for="booking_start_hour">Heure de début</label>
-                <input  type="text" class="form-control input-inline timepicker col-6" 
-                        id="booking_start_hour" name="booking[start_hour]" data-provide="timepicker" format="HH:mm" input="string" input_format="HH:mm:ss">
+                <label class="col-5" for="multi_start_hour">Heure de début</label>
+                <input  type="text" class="form-control input-inline timepicker start col-6" 
+                        id="multi_start_hour" name="multi[start_hour]" data-provide="timepicker" format="HH:mm" input="string" input_format="HH:mm:ss">
             </div>
             <div class="row col-6 m-0">
-                <label class="col-5" for="booking_end_hour">Heure de fin</label>
-                <input  type="text" class="form-control input-inline timepicker col-6" 
-                        id="booking_end_hour" name="booking[end_hour]" data-provide="timepicker" format="HH:mm" input="string" input_format="HH:mm:ss">
+                <label class="col-5" for="multi_end_hour">Heure de fin</label>
+                <input  type="text" class="form-control input-inline timepicker end col-6" 
+                        id="multi_end_hour" name="multi[end_hour]" data-provide="timepicker" format="HH:mm" input="string" input_format="HH:mm:ss">
             </div>
           </div>
           <div class="row col-12 border border-blue" style="height: auto;">
             <div class="col-6 border border-red m-0 p-0">
               <h5 class="col-12 text-center">Jours</h5>
               <div class="col-12 m-0 p-0">
-                <input type="radio" name="day" id="lundi"     value="lundi" class="col-4 m-0 p-0">       <label class="col-6 m-0 p-0" for="booking_day">lundi</label>
-                <input type="radio" name="day" id="mardi"     value="mardi" class="col-4 m-0 p-0">       <label class="col-6 m-0 p-0" for="booking_day">mardi</label>
-                <input type="radio" name="day" id="mercredi"  value="mercredi" class="col-4 m-0 p-0"> <label class="col-6 m-0 p-0" for="booking_day">mercredi</label>
-                <input type="radio" name="day" id="jeudi"     value="jeudi" class="col-4 m-0 p-0">       <label class="col-6 m-0 p-0" for="booking_day">jeudi</label>
-                <input type="radio" name="day" id="vendredi"  value="vendredi" class="col-4 m-0 p-0"> <label class="col-6 m-0 p-0" for="booking_day">vendredi</label>
-                <input type="radio" name="day" id="samedi"    value="samedi" class="col-4 m-0 p-0">     <label class="col-6 m-0 p-0" for="booking_day">samedi</label>
-                <input type="radio" name="day" id="dimanche"  value="dimanche" class="col-4 m-0 p-0"> <label class="col-6 m-0 p-0" for="booking_day">dimanche</label>
+                <input type="radio" name="day" id="lundi"     value="1" class="col-4 m-0 p-0">    <label class="col-6 m-0 p-0" for="lundi">   lundi</label>
+                <input type="radio" name="day" id="mardi"     value="2" class="col-4 m-0 p-0">    <label class="col-6 m-0 p-0" for="mardi">   mardi</label>
+                <input type="radio" name="day" id="mercredi"  value="3" class="col-4 m-0 p-0"> <label class="col-6 m-0 p-0" for="mercredi">mercredi</label>
+                <input type="radio" name="day" id="jeudi"     value="4" class="col-4 m-0 p-0">    <label class="col-6 m-0 p-0" for="jeudi">   jeudi</label>
+                <input type="radio" name="day" id="vendredi"  value="5" class="col-4 m-0 p-0"> <label class="col-6 m-0 p-0" for="vendredi">vendredi</label>
+                <input type="radio" name="day" id="samedi"    value="6" class="col-4 m-0 p-0">   <label class="col-6 m-0 p-0" for="samedi">  samedi</label>
+                <input type="radio" name="day" id="dimanche"  value="7" class="col-4 m-0 p-0"> <label class="col-6 m-0 p-0" for="dimanche">dimanche</label>
               </div>
             </div>
             <div class="col-6 text-center">
               <div class="row col-12">
                 <h5 class="col-12">Nombre de répétitions</h5>
                 <div class="col-12 m-0 p-0">
-                  <input  class="col-3" type="number" name="booking[repetition]" id="booking_repetition">
+                  <input  class="col-3" type="number" name="multi[repetition]" id="multi_repetition">
                 </div>
               </div>
               {# <div class="row col-12">
-                  <label class="col-8" for="booking_background_color">Couleur</label>
+                  <label class="col-8" for="multi_background_color">Couleur</label>
                   <input  type="color" class="col-4" 
-                          id="booking_background_color" name="booking[background_color]" placeholder="Selectionnez une couleur">
+                          id="multi_background_color" name="multi[background_color]" placeholder="Selectionnez une couleur">
               </div> #}
             </div>
           </div>
           {# <div class="col-12">
-              <label    class="col-12" for="booking_description">Description</label>
-              <textarea class="form-control col-12" id="booking_description" name="booking[description]"></textarea>
+              <label    class="col-12" for="multi_description">Description</label>
+              <textarea class="form-control col-12" id="multi_description" name="multi[description]"></textarea>
           </div> #}
-          <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
+          <input type="hidden" id="multi__token" name="multi[_token]" value="{{ csrf_token('insert') }}">
           <div class="modal-footer row col-12">
-              <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
+              <button class="btn btn-success"  id="multi_submit_button">Sauvegarder</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal" id="multi_close_button">Fermer</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-{% endblock %}

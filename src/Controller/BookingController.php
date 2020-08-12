@@ -42,71 +42,45 @@ class BookingController extends AbstractController
     }
     
     /**
+     * CREATION d'un RDV par MODAL
+     * 
      * @Route("booking/new_rdv", name="rdv_new", methods={"GET","POST"})
      */
     public function new_rdv(Request $request): Response
     {
         // dd($request->request->all());   
         $booking = new Booking();
+        
+        // si un id existe il s'agit d'une modification.
         $id = $request->request->get('booking')['id'];
         $entityManager = $this->getDoctrine()->getManager();
-
+        
         if ($id) 
-            {
+        {
+            echo(" MODIFICATION DU RDV ".$id);
                 $bookingRepository = $this->getDoctrine()
                     ->getRepository(Booking::class, 'default')
                     ->find($id);
                 if ($bookingRepository) 
-                {   //date_format ( DateTimeInterface $object , string $format )
-                    echo("OLD DATE : ". date_format($bookingRepository->getStart(),"Y-m-d H:i:s"));
-                    echo("NEW DATE : ". date("Y-m-d H:i:s",strtotime(str_replace('/', '-', $request->request->get('booking')['start']))));
-                    // die();
-                    $start = new \DateTime(date("Y-m-d H:i:s",strtotime(str_replace('/', '-', $request->request->get('booking')['start']))));
+                {   $start = new \DateTime(date("Y-m-d H:i:s",strtotime(str_replace('/', '-', $request->request->get('booking')['start']))));
                     $end = new \DateTime(date("Y-m-d H:i:s",strtotime(str_replace('/', '-', $request->request->get('booking')['end']).":00")));
-                    // echo("date : " . $start);
-                    // echo("convert : ".date(strtotime($start)));
                     $bookingRepository->setStart($start);
                     $bookingRepository->setEnd($end);
+                    $bookingRepository->setIsFree(true);
                     $entityManager->flush();
                     return $this->redirectToRoute('booking_index');
                 }
-            }
-
+        }
+        echo(" CREATION D'UN RDV ".$id);
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
-        // $data = json_encode($request->request->all(), true);
-            // $form->submit(array_merge(['url' => null], $request->request->all()), false);
-            if ($form->isSubmitted()) 
-            {
-                
-                
-                /*$txt = "<pre>";
-                $txt .= $request->request->get('title');
-                $txt .= $request->request->get('start');
-                $txt .= $request->request->get('end');
-                $txt .= $request->request->get('description');
-                $txt .= $request->request->get('background_color');
-                $txt .= $request->request->get('IdUser');
-                $txt .= "</pre>";
-                dd($txt);
-                /*    $txt = "<pre>";
-                return $this->redirectToRoute('booking_index'); 
-                $booking->setTitle($request->request->get('title'));
-                
-                // $date = date_create_from_format('d/m/Y H:i:s',$request->request->get('start'));
-                // $date = date('d/m/Y H:i:s',$request->request->get('start'));
-                // $date = date_create($request->request->get('start'));
-                // $date = $request->request->get('start');
-                $booking->setStart(date_create($request->request->get('start')));
-                $booking->setEnd(date_create($request->request->get('end')));
-                $booking->setDescription($request->request->get('description'));
-                $booking->setBackgroundColor($request->request->get('background_color'));
+        if ($form->isSubmitted()) 
+        {
+            $booking->setIsFree(true);
+            $entityManager->persist($booking);
+            $entityManager->flush();
                 /**/
-                $entityManager->persist($booking);
-                $entityManager->flush();
-                // return $this->redirectToRoute('booking_index'); 
-                /**/
-            }
+        }
         return $this->redirectToRoute('booking_index'); 
     }
     
