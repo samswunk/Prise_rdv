@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Entity\Marque;
 use App\Entity\Booking;
+use App\Entity\Energie;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use App\Form\DataTransformer\DateTimeTransformer;
@@ -100,7 +102,29 @@ class RdvType extends AbstractType
                 // used to render a select box, check boxes or radios
                 'multiple' => false,
                 'expanded' => false
-            ]);
+            ])
+            ->add('marque', EntityType::class, [
+                // looks for choices from this entity
+                'class' => Marque::class,
+                'attr' => 
+                    [
+                        'class' => 'form-control',
+                    ],
+                // used to render a select box, check boxes or radios
+                'multiple' => false,
+                'expanded' => true
+            ])
+            ->add('energie', EntityType::class, [
+                // looks for choices from this entity
+                'class' => Energie::class,
+                'attr' => 
+                    [
+                        'class' => 'form-control',
+                    ],
+                // used to render a select box, check boxes or radios
+                'multiple' => false,
+                'expanded' => true
+            ])
         ;
     }
 

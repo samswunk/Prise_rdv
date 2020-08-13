@@ -41,14 +41,14 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item active ml-2">
             <a class="nav-link" href="{{ path('app_index') }}">Accueil <span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item ml-5">
             <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}"><strong class="color-white">Prendre rdv</strong></a>
           </li>
           {% if UserRole == 'Administrateur' %}
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown ml-2">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ShowRdv">Ouvrir un rdv</a>
@@ -56,13 +56,16 @@
               <a class="dropdown-item" href="{{ path('booking_list') }}">Liste des rendez-vous</a>
               <a class="dropdown-item" href="{{ path('user_index') }}">Liste des clients</a>
               <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{ path('marque_index') }}">Liste des marques</a>
+              <a class="dropdown-item" href="{{ path('energie_index') }}">Liste des energies</a>
+              <div class="dropdown-divider"></div>
                 {# <a class="dropdown-item" href="{{ path('multi_new') }}">Ouverture de rdv</a> #}
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#multi">Ouverture de rdv</a>
             </div>
           </li>
           {% endif %}
           {% if UserId is not null %}
-          <li class="nav-item">
+          <li class="nav-item ml-2">
             <a class="nav-link" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
           </li>            
           {% endif %}
@@ -106,36 +109,38 @@
             value="{{ UserId }}" 
           {% endif %}
           >
-          <div class="row col-12">
-              <label class="col-4" for="booking_title">Titre</label>
-              <input  type="text" class="form-control col-8" 
-                      name="booking[title]" id="booking_title" placeholder="Entrez un titre" 
-                      required="required" maxlength="255">
+          <div class="m-0 p-0 row col-12" id="divContenu">
+            <div class="row col-12">
+                <label class="col-4" for="booking_title">Titre</label>
+                <input  type="text" class="form-control col-8" 
+                        name="booking[title]" id="booking_title" placeholder="Entrez un titre" 
+                        required="required" maxlength="255">
+            </div>
+            <div class="row col-12">
+                <label class="col-4" for="booking_start">Date de début</label>
+                <input  type="text" class="form-control input-inline datetimepicker col-8" 
+                        id="booking_start" name="booking[start]" required="required" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
+            </div>
+            <div class="row col-12">
+                <label class="col-4" for="booking_end">Date de fin</label>
+                <input  type="text" class="form-control input-inline datetimepicker end col-8" 
+                        id="booking_end" name="booking[end]" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
+            </div>
+            <div class="row col-12">
+                <label class="col-4" for="booking_background_color">Couleur</label>
+                <input  type="color" class="form-control col-8" 
+                        id="booking_background_color" name="booking[background_color]" placeholder="Selectionnez une couleur">
+            </div>
+            <div class="row col-12">
+                <label    class="col-4" for="booking_description">Description</label>
+                <textarea class="form-control col-8" id="booking_description" name="booking[description]"></textarea>
+            </div>
+            <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
           </div>
-          <div class="row col-12">
-              <label class="col-4" for="booking_start">Date de début</label>
-              <input  type="text" class="form-control input-inline datetimepicker col-8" 
-                      id="booking_start" name="booking[start]" required="required" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
-          </div>
-          <div class="row col-12">
-              <label class="col-4" for="booking_end">Date de fin</label>
-              <input  type="text" class="form-control input-inline datetimepicker end col-8" 
-                      id="booking_end" name="booking[end]" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
-          </div>
-          <div class="row col-12">
-              <label class="col-4" for="booking_background_color">Couleur</label>
-              <input  type="color" class="form-control col-8" 
-                      id="booking_background_color" name="booking[background_color]" placeholder="Selectionnez une couleur">
-          </div>
-          <div class="row col-12">
-              <label    class="col-4" for="booking_description">Description</label>
-              <textarea class="form-control col-8" id="booking_description" name="booking[description]"></textarea>
-          </div>
-          <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
           <div class="modal-footer row col-12">
-              <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
-          </div>
+            <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
+        </div>
         </form>
       </div>
   </div>
@@ -189,7 +194,7 @@
         var calendarEl = document.getElementById('calendar-holder2');
         var calendar = new FullCalendar.Calendar(calendarEl, 
         {
-          height: 600,
+          height: 800,
                 width: 600, 
                 defaultView: 'timeGridWeek',
                 timezone: 'Europe/Paris',
@@ -374,21 +379,24 @@
                         // change the border color just for fun
                         infos.el.style.borderColor = 'red';
                         $('#ShowRdv').modal('show');
+                        $("#ShowRdv .modal-lg").removeClass("modal-lg").addClass("modal-sm");
                         var vstart = new Date(infos.event.start);
                         var vend = new Date(infos.event.end);
                         
                         $('#ShowRdv').on('shown.bs.modal', function (event) 
                         {
                           $(".before").remove();
-                          $("#booking_titreShowRdv").html("Désolé ce rendez-vous est déjà pris ");
+                          $("#booking_titreShowRdv").html("Rendez-vous indisponible");
                           $("#booking_submit_button").hide();
                           $("#booking_close_button").html("OK");
+                          $("#divContenu").hide();
+
                           $(".modal-body #booking_id").val(infos.event.id);
-                          $(".modal-body #booking_title").val(infos.event.title);
-                          $(".modal-body #booking_start").val(getFormattedDate(vstart));
-                          $(".modal-body #booking_end").val(getFormattedDate(vend));
-                          // $(".modal-body #booking_background_color").val(infos.event.backgroundColor);
-                          $(".modal-body #booking_description").val(infos.event.extendedProps.description);             
+                          /*$(".modal-body #booking_title").hide(); // .val(infos.event.title);
+                          $(".modal-body #booking_start").hide(); // .val(getFormattedDate(vstart));
+                          $(".modal-body #booking_end").hide(); // .val(getFormattedDate(vend));
+                          $(".modal-body #booking_background_color").hide(); // .val(infos.event.backgroundColor);
+                          $(".modal-body #booking_description").hide(); // .val(infos.event.extendedProps.description);             */
                         })
                         $('#ShowRdv').on('hidden.bs.modal', function () 
                         {

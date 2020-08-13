@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Energie{% endblock %}
+
+{% block body %}
+    <h1>Nouvelle Energie</h1>
+
+    {{ include('energie/_form.html.twig') }}
+
+    <a href="{{ path('energie_index') }}" class="btn btn-secondary">Retour</a>
+{% endblock %}

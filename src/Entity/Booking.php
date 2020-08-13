@@ -57,6 +57,16 @@ class Booking
      */
     private $isFree;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Marque::class, inversedBy="bookings")
+     */
+    private $marque;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Energie::class, inversedBy="bookings")
+     */
+    private $energie;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -183,5 +193,29 @@ class Booking
             dd("preUpdate this->IsFree id ".$this->IsFree);
             $this->setIdUser = null;
         }
+    }
+
+    public function getMarque(): ?Marque
+    {
+        return $this->marque;
+    }
+
+    public function setMarque(?Marque $marque): self
+    {
+        $this->marque = $marque;
+
+        return $this;
+    }
+
+    public function getEnergie(): ?Energie
+    {
+        return $this->energie;
+    }
+
+    public function setEnergie(?Energie $energie): self
+    {
+        $this->energie = $energie;
+
+        return $this;
     }    
 }
