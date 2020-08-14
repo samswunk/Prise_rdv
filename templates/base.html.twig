@@ -13,7 +13,7 @@
 {% endblock %}
 
 
-<body class="container border border-gray">
+<body class="container border border-gray" style="font-family: Roboto,sans-serif;">
 <div class="container">
   <nav class="navbar navbar-expand-lg navbar-light bg-white  border border-gray">
     <a class="navbar-brand" href="#"><img src="{{ asset('img/logo-chauffatec.jpg') }}" alt=""> 
@@ -147,10 +147,20 @@
   </div>
   </div>
 </div>
-{% block body %}
+  {% if block("title") is defined %}
+  <div class="container col-{% if block("size") is defined %}{{ block('size') }}{% else %}8{% endif %}">
+    <h5 class="card-header info-color white-text text-center py-4">
+      <strong>{{ block('title') }}</strong>
+    </h5>
+    {% endif %}
+    {% block body %}
+    
+    {% endblock %}
 
-{% endblock %}
-</body>
+    {% if block("title") is defined %}
+        </div>
+      </body>
+    {% endif %}
 
 {% block javascripts %}
     <script src="{{ asset('js/jquery.js') }}">   </script>
@@ -477,6 +487,13 @@
               }
             }
           });
+          
+          $(".typeEnergie").on("change", function(ee)  
+          {
+            var price = $(this).find('option:selected').data('price');
+            $("#prixEstimatif").html("Prix éstimé : "+ price + "€");
+          });
+
           Calendrier();
           /*$("#booking_start").on("change", function(ee) 
         {

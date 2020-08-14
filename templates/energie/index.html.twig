@@ -1,16 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Energie index{% endblock %}
+{% block title %}Type d'energie{% endblock %}
 
 {% block body %}
-    <h1>Type d'energie</h1>
-
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>NomEnergie</th>
-                <th>TarifEnergie</th>
+                <th>Energie</th>
+                <th>Tarif</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -22,7 +20,7 @@
                 <td>{{ energie.tarifEnergie }}</td>
                 <td>
                     <a href="{{ path('energie_show', {'id': energie.id}) }}" class="btn btn-secondary col-4"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                    <a href="{{ path('energie_edit', {'id': energie.id}) }}" class="btn btn-sucess"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                    <a href="{{ path('energie_edit', {'id': energie.id}) }}" class="btn btn-success"><i class="fa fa-edit" aria-hidden="true"></i></a>
                 </td>
             </tr>
         {% else %}

@@ -1,5 +1,5 @@
 <form method="post" action="{{ path('energie_delete', {'id': energie.id}) }}" onsubmit="return confirm('Êtes vous sûr.e de vouloir supprimer cette energie ??');">
     <input type="hidden" name="_method" value="DELETE">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ energie.id) }}">
-    <button class="btn">Delete</button>
+    <button class="btn btn-danger">Supprimer</button>
 </form>

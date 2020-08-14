@@ -1,27 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User index{% endblock %}
-
+{% block title %}Liste des utilisateurs{% endblock %}
+{% block size %}12{% endblock size %}
 {% block body %}
-<div class="container">
-    <h5 class="card-header info-color white-text text-center py-4">
-        <strong>Liste des utilisateurs</strong>
-    </h5>
     <table class="table small">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Email</th>
                 <th>Roles</th>
-                <th>IsVerified</th>
+                {# <th>Certifié</th> #}
                 <th>Telephone</th>
                 <th>Nom</th>
                 <th>Prenom</th>
                 <th>Adresse</th>
-                <th>CodePostal</th>
+                <th>Code Postal</th>
                 <th>Ville</th>
-                <th>RDV</th>
-                <th>actions</th>
+                <th>Rdv</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -31,7 +27,7 @@
                 <td>{{ user.email }}</td>
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                 {# <td>{{ user.password }}</td> #}
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+                {# <td>{{ user.isVerified ? 'Yes' : 'No' }}</td> #}
                 <td>{{ user.Telephone }}</td>
                 <td>{{ user.Nom }}</td>
                 <td>{{ user.Prenom }}</td>
@@ -52,5 +48,4 @@
         </tbody>
     </table>
     <a class="btn btn-success" href="{{ path('user_new') }}">Nouvel utilisateur</a>
-</div>        
 {% endblock %}

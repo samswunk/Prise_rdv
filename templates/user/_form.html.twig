@@ -1,10 +1,39 @@
-<div class="container">{{ form_start(form) }}
-    {{ form_row(form.email) }}
-    {# {{ form_row(form.password) }} #}
-    {{ form_row(form.Telephone) }}
-    {{ form_row(form.Nom) }}
-    {{ form_row(form.roles)     }}
+{{ form_start(form,{'attr':{'class':'form-row'}}) }}
+    <div class="form-group row col-12">
+        <div class="col-6">
+            {{ form_row(form.Nom,{'attr':{'class':'form-control'}}) }}
+        </div>
+        <div class="col-6">
+            {{ form_row(form.Prenom,{'attr':{'class':'form-control'}}) }}
+        </div>
+    </div>
+    <div class="form-group row col-12">
+        <div class="col-6">
+            {{ form_row(form.email,{'attr':{'class':'form-control'}}) }}
+        </div>
+        <div class="col-6">
+            {{ form_row(form.Telephone,{'attr':{'class':'form-control'}}) }}
+        </div>
+    </div>
+    <div class="form-group row col-12">
+        <div class="col-12">
+                {{ form_row(form.roles,{'attr':{'class':'form-control'}})     }}
+                {# {{ form_row(form.password) }} #}
+        </div>
+    </div>
+    <div class="form-group row col-12">
+        <div class="col-12">
+            {{ form_row(form.Adresse,{'attr':{'class':'form-control'}})     }}
+        </div>
+        <div class="form-group row col-12">
+            <div class="col-6">
+                {{ form_row(form.CodePostal,{'attr':{'class':'form-control'}})     }}
+            </div>
+            <div class="col-6">
+                {{ form_row(form.Ville,{'attr':{'class':'form-control'}})     }}
+            </div>
+        </div>
+    </div>
     {{ form_widget(form) }}
     <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}
-</div>

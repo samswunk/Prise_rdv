@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class EnergieType extends AbstractType
 {
@@ -21,7 +22,8 @@ class EnergieType extends AbstractType
                                 'class' => 'form-control',
                             ]
             ])
-            ->add('tarifEnergie',FloatType::class,[
+            ->add('tarifEnergie',NumberType::class,[
+                'scale'=>2,
                 'label' => 'Tarif',
                 'attr' => 
                             [

@@ -1,12 +1,9 @@
 {# templates/booking/calendar.html.twig #}
 {% extends 'base.html.twig' %}
 
+{% block title %}Ouverture de Rdv{% endblock %}
+
 {% block body %}
-    {# SHOW PRISE RDV #}
-    <div class="container col-8" id="ShowRdv">
-      <h5 class="card-header info-color white-text text-center py-4">
-        <strong>Ouverture de Rdv</strong>
-      </h5>      
       <div class="body row" >
         <div id="rdv-holder" class="col-12">
           {{ include('./booking/_form.html.twig') }}
@@ -16,5 +13,4 @@
           <a class="btn btn-secondary"  href="{{ path('booking_index') }}" class="btn btn-secondary">Retour</a>
           {# <a class="btn btn-primary"    href="{{ path('booking_new') }}">Prendre rdv</a> #}
         </div>
-    </div>
 {% endblock %}

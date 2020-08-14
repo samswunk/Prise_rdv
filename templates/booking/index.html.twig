@@ -1,10 +1,8 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Liste des rdv{% endblock %}
+
 {% block body %}
-    <div class="container">
-        <h5 class="card-header info-color white-text text-center py-4">
-            <strong>Liste des rdv</strong>
-        </h5>
         <table class="table">
             <thead>
                 <tr>
@@ -42,5 +40,4 @@
         <div class="center text-center">
             <a class="btn btn-primary" href="{{ path('booking_new') }}">Prendre rdv</a>
         </div>
-    </div>    
 {% endblock %}

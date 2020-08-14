@@ -104,30 +104,43 @@ class RdvType extends AbstractType
                 'expanded' => false
             ])
             ->add('marque', EntityType::class, [
-                // looks for choices from this entity
+                'placeholder' => "Quelle est la marque de votre chaudière ?",
                 'class' => Marque::class,
+                'choice_label'  => 'nomMarque',
                 'attr' => 
                     [
                         'class' => 'form-control',
                     ],
                 // used to render a select box, check boxes or radios
                 'multiple' => false,
-                'expanded' => true
+                'expanded' => false
             ])
             ->add('energie', EntityType::class, [
-                // looks for choices from this entity
+                'placeholder' => "Quel type d'energie ?",
                 'class' => Energie::class,
+                'choice_label'=>'nomEnergie',
                 'attr' => 
                     [
-                        'class' => 'form-control',
+                        'class' => 'form-control typeEnergie',
                     ],
                 // used to render a select box, check boxes or radios
                 'multiple' => false,
-                'expanded' => true
+                'expanded' => false
             ])
         ;
-    }
 
+        // $builder->addEventListener(
+        //     FormEvents::PRE_SET_DATA,
+        //     function (FormEvent $event) use ($builder){
+        //        /** @var Energie $data */
+        //        $data = $builder->getData();
+        //        if ($data->getEnergie()) {
+        //           $builder->setAttribute('data-energie-prix', $data->getEnergie());
+        //        }
+        //     }
+        // );
+    }
+    
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

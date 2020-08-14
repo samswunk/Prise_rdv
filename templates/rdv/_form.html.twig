@@ -1,25 +1,43 @@
 
 {{ form_start(form) }}
         <h5 class="card-header info-color white-text text-center py-4">
-            <strong>Je m'inscris au rdv du {{ form.start.vars.value }} au {{ form.end.vars.value }}</strong>
+            Je m'inscris au rdv du <strong>{{ form.start.vars.value }}</strong><small> au {{ form.end.vars.value }}</small>
+            <p id="prixEstimatif"></p>
+            <div class="alert alert-warning small">
+                <p>ATTENTION ! Rdv pour un <strong><u>entretien de chaudière</u></strong> Uniquement </br>
+                Pour autre préstation merci de contacter le <strong>06 83 20 40 58</strong></p>
+            </div>
         </h5>
-        <div class="container col-10">
+        <div class="container col-12">
             {% set NewPrenom = '' %}
             {% set RdvId = null %}
-            {% set NewAdresse = app.user.adresse ~ " " ~ app.user.codepostal ~ " " ~ app.user.codepostal  %}
+            {% set EnergieId = null %}
+            {% set NewAdresse = app.user.adresse ~ " " ~ app.user.codepostal ~ " " ~ app.user.ville  %}
 
             {% if app.user.prenom|length %}
                 {% set NewPrenom = " " ~ app.user.prenom %}
             {% endif %}
             {% set NewTitre = "RDV " ~ app.user.nom ~ NewPrenom ~ " (tel : " ~ app.user.telephone ~ ")" %}
             {% set RdvId = form.id.vars.value %}
+            {% if form.energie.vars.value %}
+                {% set EnergieId = form.energie.vars.value %}
+            {% endif %}
 
             <div class="form-group">
-                {{ form_row(form.title, {'label':' ', 'value': NewTitre, 'attr': {  class: 'col-12',
+                {{ form_row(form.title, {'label':' ', 'value': NewTitre, 'attr': {  class: 'form-control col-12',
                                                                         disabled: false} }) }}
                 {# {{ form_widget(form.start, {'attr': {'class': 'col-3'}}) }}
                 {{ form_widget(form.end, {'attr': {'class': 'col-3'}}) }}#}
-                {{ form_row(form.description, { 'value': form.description.vars.value ? form.description.vars.value : NewAdresse, 'attr': {  class: 'col-12 required',
+                {{ form_row(form.marque, { 'attr': {  class: 'form-control col-12 required',required: true} }) }}
+                <div><label for="rdv_energie" class="required">Energie</label>
+                <select id="rdv_energie" name="rdv[energie]" required="required" class="form-control col-12 required typeEnergie">
+                    <option value="" selected="selected">Quel type d'energie ?</option>
+                    {% for choix in form.energie.vars.choices %}
+                        <option {% if EnergieId == choix.value %}selected="selected"{% endif %} data-price="{{choix.data.tarifEnergie}}" value="{{choix.value}}">{{choix.label}}</option>    
+                    {% endfor %}
+                </select>
+                {# {{ form_row(form.energie, { 'attr': {  class: 'col-12 required',required: true} }) }} #}
+                {{ form_row(form.description, { 'value': form.description.vars.value ? form.description.vars.value : NewAdresse, 'attr': {  class: 'form-control col-12 required',
                                                                                         required: true} }) }}
             </div>
             <div class="form-group" style="display: {% if (UserRole == "Administrateur") %} block {% else %} none {% endif %} ;">
@@ -33,7 +51,7 @@
                 <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
                 <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#ShowRdvSuppression">Supprimer le rendez-vous</a>
             </div>
-            {{ form_end(form, {'render_rest': true}) }}
+            {{ form_end(form, {'render_rest': false}) }}
         </div>
     {% if RdvId is not null %}
         {# SHOW CALENDAR MODAL #}
