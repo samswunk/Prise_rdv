@@ -37,11 +37,16 @@ class RdvController extends AbstractController
     public function edit(Request $request, Booking $booking): Response
     {
         $user = $this->getUser();
+        // $energie = $this->getEnergie();
+        // $marque = $this->getMarque();
         $booking->setIdUser($user);
+        // $booking->setIdUser($energie);
+        // $booking->setIdUser($marque);
         $booking->setIsFree(false);
         
         $form = $this->createForm(RdvType::class, $booking);
         $form->handleRequest($request);
+        // dd($request->request->all(),$form);
         if ($form->isSubmitted() && $form->isValid()) {
             
             $this->getDoctrine()->getManager()->flush();
@@ -69,6 +74,8 @@ class RdvController extends AbstractController
             $booking->setTitle('RDV DISPONIBLE '.$start);
             $booking->setDescription('');
             $booking->setIdUser(null);
+            $booking->setMarque(null);
+            $booking->setEnergie(null);
             $booking->setIsFree(true);
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('booking_index');

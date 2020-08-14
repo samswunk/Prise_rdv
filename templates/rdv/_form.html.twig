@@ -5,7 +5,7 @@
             <p id="prixEstimatif"></p>
             <div class="alert alert-warning small">
                 <p>ATTENTION ! Rdv pour un <strong><u>entretien de chaudière</u></strong> Uniquement </br>
-                Pour autre préstation merci de contacter le <strong>06 83 20 40 58</strong></p>
+                Pour toute autre prestation merci de contacter le <strong>06 83 20 40 58</strong></p>
             </div>
         </h5>
         <div class="container col-12">
@@ -37,10 +37,11 @@
                     {% endfor %}
                 </select>
                 {# {{ form_row(form.energie, { 'attr': {  class: 'col-12 required',required: true} }) }} #}
+                {{ form_row(form._token) }}
                 {{ form_row(form.description, { 'value': form.description.vars.value ? form.description.vars.value : NewAdresse, 'attr': {  class: 'form-control col-12 required',
                                                                                         required: true} }) }}
             </div>
-            <div class="form-group" style="display: {% if (UserRole == "Administrateur") %} block {% else %} none {% endif %} ;">
+            <div class="form-group" {% if UserRole == "Administrateur" %} style= "display:block;" {% else %} style= "display:none;" {% endif %} >
                 {{ form_row(form.start) }}
                 {{ form_row(form.end) }}
                 {# {{ form_row(form.background_color) }} #}
