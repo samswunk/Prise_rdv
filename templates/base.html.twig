@@ -393,13 +393,13 @@
                         var vstart = new Date(infos.event.start);
                         var vend = new Date(infos.event.end);
                         
+                        $("#divContenu").hide();
                         $('#ShowRdv').on('shown.bs.modal', function (event) 
                         {
                           $(".before").remove();
                           $("#booking_titreShowRdv").html("Rendez-vous indisponible");
                           $("#booking_submit_button").hide();
                           $("#booking_close_button").html("OK");
-                          $("#divContenu").hide();
 
                           $(".modal-body #booking_id").val(infos.event.id);
                           /*$(".modal-body #booking_title").hide(); // .val(infos.event.title);

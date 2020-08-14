@@ -34,7 +34,7 @@ class RdvController extends AbstractController
      * 
      * @Route("/{id}/edit", name="rdv_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Booking $booking): Response
+    public function edit(Request $request, Booking $booking, \Swift_Mailer $mailer): Response
     {
         $user = $this->getUser();
         // $energie = $this->getEnergie();
@@ -46,11 +46,37 @@ class RdvController extends AbstractController
         
         $form = $this->createForm(RdvType::class, $booking);
         $form->handleRequest($request);
-        // dd($request->request->all(),$form);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $view = $form->getViewData();
+
+        $marque     = $view->getMarque()->getNomMarque();
+        $energie    = $view->getEnergie()->getNomEnergie();
+        $tarif      = $view->getEnergie()->getTarifEnergie();
+        $contact    = $user->getNom().' '.$user->getPrenom();
+        $telephone  = $user->getTelephone();
+        $adresse    = $user->getAdresse().' '.$user->getCodePostal().' '.$user->getVille();
+        $emailDest  = $user->getEmail();
+        $start      = $view->getStart()->format('d/m/Y H:i');
+        $end        = $view->getEnd()->format('d/m/Y H:i');
+        $message = 'Le '.date("d/m/Y à H:i") .' '.$contact.' a modifié son rdv : '
+                    . 'Marque       : '.$marque
+                    . 'Energie      : '.$energie
+                    . 'Date         : '.$start
+                    . 'Fin estimée  : '.$end
+                    . 'Tarif estimé : '.$tarif;
+
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+            $msg = (new \Swift_Message('Objet'))
+            ->setFrom('contact@chauffatec.fr')
+            ->setTo($emailDest)
+            ->setBody(  $message,
+                        'text/html'
+                        );
+
+            $mailer->send($msg);
             
             $this->getDoctrine()->getManager()->flush();
-            
+            $this->addFlash('message',"un mail vient d'être envoyé");
             return $this->redirectToRoute('booking_index');
         }
 
