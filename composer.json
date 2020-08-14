@@ -34,7 +34,6 @@
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "4.4.*",
         "symfonycasts/verify-email-bundle": "^1.0",
-        "twbs/bootstrap": "4.5.0",
         "twig/twig": "~2.0"
     },
     "require-dev": {

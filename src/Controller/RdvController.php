@@ -120,7 +120,8 @@ class RdvController extends AbstractController
                 $description      = ""; // $repo->getDescription();
                 $bgColor          = "#D36D37";
                 $editable         = "false";//$repo->getBackGroundcolor();
-                if (($user->getId() == $CurrentUser->getId()) || $admin)
+                if (    ( $CurrentUser && $user->getId() == $CurrentUser->getId() )  
+                    || $admin)
                 {
                     $title            = $repo->getTitle();
                     $description      = $repo->getDescription();

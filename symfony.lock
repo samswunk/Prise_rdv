@@ -1,4 +1,7 @@
 {
+    "composer/package-versions-deprecated": {
+        "version": "1.8.2"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -524,9 +527,6 @@
     },
     "symfonycasts/verify-email-bundle": {
         "version": "v1.0.0"
-    },
-    "twbs/bootstrap": {
-        "version": "v4.5.0"
     },
     "twig/extra-bundle": {
         "version": "v3.0.3"
