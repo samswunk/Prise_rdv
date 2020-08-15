@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RdvType;
+use App\Entity\Marque;
 use App\Entity\Booking;
+use App\Entity\Energie;
 use App\Form\BookingType;
 use App\Repository\BookingRepository;
 use Symfony\Component\Serializer\Serializer;
@@ -24,56 +26,77 @@ class RdvController extends AbstractController
 {
  
     private $security;
+    private $mailer;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security,\Swift_Mailer $mailer)
     {
             $this->security = $security;
+            $this->mailer = $mailer;
     } 
-    /**
-     * Modification d'un rdv (pour un utilisateur, se positionner ou le modifier)
-     * 
-     * @Route("/{id}/edit", name="rdv_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Booking $booking, \Swift_Mailer $mailer): Response
-    {
-        $user = $this->getUser();
-        // $energie = $this->getEnergie();
-        // $marque = $this->getMarque();
-        $booking->setIdUser($user);
-        // $booking->setIdUser($energie);
-        // $booking->setIdUser($marque);
-        $booking->setIsFree(false);
-        
-        $form = $this->createForm(RdvType::class, $booking);
-        $form->handleRequest($request);
-        $view = $form->getViewData();
 
-        $marque     = $view->getMarque()->getNomMarque();
-        $energie    = $view->getEnergie()->getNomEnergie();
-        $tarif      = $view->getEnergie()->getTarifEnergie();
+    public function envoiMail($typeEnvoi, Booking $booking, User $user,Marque $marque, Energie $energie)
+    {
+        switch($typeEnvoi)
+        {
+            case 'delete':
+                $libEnvoi="supprimé";
+                break;
+            case 'edit':
+                $libEnvoi="modifié";
+                break;
+            case 'create':
+                $libEnvoi="choisi";
+                break;
+        }
+        $marque     = $marque->getNomMarque();
+        $tarif      = sprintf('$d €', $energie->getTarifEnergie());
+        $energie    = $energie->getNomEnergie();
         $contact    = $user->getNom().' '.$user->getPrenom();
         $telephone  = $user->getTelephone();
         $adresse    = $user->getAdresse().' '.$user->getCodePostal().' '.$user->getVille();
         $emailDest  = $user->getEmail();
-        $start      = $view->getStart()->format('d/m/Y H:i');
-        $end        = $view->getEnd()->format('d/m/Y H:i');
-        $message = 'Le '.date("d/m/Y à H:i") .' '.$contact.' a modifié son rdv : '
-                    . 'Marque       : '.$marque
-                    . 'Energie      : '.$energie
-                    . 'Date         : '.$start
-                    . 'Fin estimée  : '.$end
-                    . 'Tarif estimé : '.$tarif;
+        $start      = $booking->getStart()->format('d/m/Y H:i');
+        $end        = $booking->getEnd()->format('d/m/Y H:i');
 
-        if ($form->isSubmitted() && $form->isValid()) 
-        {
-            $msg = (new \Swift_Message('Objet'))
+        $message = '<html><body>
+                    Le '.date("d/m/Y à H:i") .' '.$contact.' a '.$libEnvoi.' son rdv : '
+                    . '<br>Marque       : '.$marque
+                    . '<br>Energie      : '.$energie
+                    . '<br>Date         : '.$start
+                    . '<br>Fin estimée  : '.$end
+                    . '<br>Tarif estimé : '.$tarif
+                    .'</body></html>';
+
+        $msg = (new \Swift_Message('Objet'))
             ->setFrom('contact@chauffatec.fr')
             ->setTo($emailDest)
             ->setBody(  $message,
                         'text/html'
                         );
 
-            $mailer->send($msg);
+        $this->mailer->send($msg);
+    }
+    /**
+     * Modification d'un rdv (pour un utilisateur, se positionner ou le modifier)
+     * 
+     * @Route("/{id}/edit", name="rdv_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, Booking $booking): Response
+    {
+        // On cherche l'idUser du booking pour savoir s'il s'agit d'une création ou d'une modification 
+        $IdUserPrec = $booking->getIdUser();
+
+        $user = $this->getUser();
+        $booking->setIdUser($user);
+        $booking->setIsFree(false);
+        
+        $form = $this->createForm(RdvType::class, $booking);
+        $form->handleRequest($request);
+        $view = $form->getViewData();
+
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+            $this->envoiMail(($IdUserPrec?'edit':'create'),$booking,$user,$view->getMarque(),$view->getEnergie());
             
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('message',"un mail vient d'être envoyé");
@@ -97,6 +120,7 @@ class RdvController extends AbstractController
         {
             $start = $booking->getStart(); // new \DateTime(date("Y-m-d H:i:s",strtotime(str_replace('/', '-', $booking->getStart()))));
             $start = $start->format('d/m/Y H:i');
+            $this->envoiMail('delete',$booking, $booking->getIdUser(),$booking->getMarque(),$booking->getEnergie());
             $booking->setTitle('RDV DISPONIBLE '.$start);
             $booking->setDescription('');
             $booking->setIdUser(null);
