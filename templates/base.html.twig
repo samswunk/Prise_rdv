@@ -54,9 +54,10 @@
             <div class="dropdown-menu">
               <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ShowRdv">Ouvrir un rdv</a>
               <a class="dropdown-item" href="{{ path('booking_index') }}">Calendrier</a>
-              <a class="dropdown-item" href="{{ path('booking_list') }}">Liste des rendez-vous</a>
-              <a class="dropdown-item" href="{{ path('user_index') }}">Liste des clients</a>
+              <a class="dropdown-item" href="{{ path('booking_valid') }}">Liste des rendez-vous à valider</a>
               <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{ path('user_index') }}">Liste des clients</a>
+              <a class="dropdown-item" href="{{ path('booking_list') }}">Liste des rendez-vous</a>
               <a class="dropdown-item" href="{{ path('marque_index') }}">Liste des marques</a>
               <a class="dropdown-item" href="{{ path('energie_index') }}">Liste des energies</a>
               <div class="dropdown-divider"></div>
@@ -508,6 +509,36 @@
           });
 
           $('.datatable').DataTable({
+            "language": {
+              "sEmptyTable":     "Aucune donnée disponible dans le tableau",
+              "sInfo":           "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments",
+              "sInfoEmpty":      "Affichage de l'élément 0 à 0 sur 0 élément",
+              "sInfoFiltered":   "(filtré à partir de _MAX_ éléments au total)",
+              "sInfoPostFix":    "",
+              "sInfoThousands":  ",",
+              "sLengthMenu":     "Afficher _MENU_ éléments",
+              "sLoadingRecords": "Chargement...",
+              "sProcessing":     "Traitement...",
+              "sSearch":         "Rechercher :",
+              "sZeroRecords":    "Aucun élément correspondant trouvé",
+              "oPaginate": {
+                  "sFirst":    "Premier",
+                  "sLast":     "Dernier",
+                  "sNext":     "Suivant",
+                  "sPrevious": "Précédent"
+              },
+              "oAria": {
+                  "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
+                  "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+              },
+              "select": {
+                      "rows": {
+                          "_": "%d lignes sélectionnées",
+                          "0": "Aucune ligne sélectionnée",
+                          "1": "1 ligne sélectionnée"
+                      } 
+              }
+            },
             "order": [[ 8, "desc" ]]
           });
 

@@ -34,6 +34,20 @@ class BookingRepository extends ServiceEntityRepository
         return $req->getResult()
         ;
     }
+    public function findEventsToValidate($start)
+    {
+        if (strstr($start,"1970")) $start = date("Y-m-d");
+        $start  = ($start ? $start : date("Y-m-d"));
+        $req = $this->createQueryBuilder('b')
+        ->andWhere('b.start >= :pstart')
+        ->andWhere('b.isFree = 0')
+        ->setParameter('pstart', $start)
+        // ->setParameter('pend', $end)
+        ->getQuery();
+        
+        return $req->getResult()
+        ;
+    }
     // /**
     //  * @return Booking[] Returns an array of Booking objects
     //  */

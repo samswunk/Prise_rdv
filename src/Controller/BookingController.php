@@ -35,10 +35,31 @@ class BookingController extends AbstractController
     }
 
     /**
+     * @Route("booking/valid", name="booking_valid", methods={"GET"})
+     */
+    public function valid(BookingRepository $bookingRepository): Response
+    {
+        
+        $start = date("Y-m-d");
+        /*$datetime = new \DateTime('tomorrow');
+        echo $datetime->format('Y-m-d H:i:s');*/
+        return $this->render('booking/index.html.twig', [
+            'bookings' => $bookingRepository->findEventsToValidate($start)
+
+            //->findBy(array(), array('start' => 'DESC')),
+            // ->findAll(),
+        ]);
+    }
+
+    /**
      * @Route("booking/list", name="booking_list", methods={"GET"})
      */
     public function list(BookingRepository $bookingRepository): Response
     {
+        
+        $start = date("Y-m-d");
+        /*$datetime = new \DateTime('tomorrow');
+        echo $datetime->format('Y-m-d H:i:s');*/
         return $this->render('booking/index.html.twig', [
             'bookings' => $bookingRepository
             ->findBy(array(), array('start' => 'DESC')),
