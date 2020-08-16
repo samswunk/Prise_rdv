@@ -27,11 +27,10 @@ class BookingRepository extends ServiceEntityRepository
         $end    = ($end ? $end : date("Y-m-d"));
         $req = $this->createQueryBuilder('b')
         ->andWhere('b.start >= :pstart')
-        ->andWhere('b.end <= :pend')
+        // ->andWhere('b.end <= :pend')
         ->setParameter('pstart', $start)
-        ->setParameter('pend', $end)
+        // ->setParameter('pend', $end)
         ->getQuery();
-        
         return $req->getResult()
         ;
     }

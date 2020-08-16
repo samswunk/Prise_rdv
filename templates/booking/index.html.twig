@@ -2,37 +2,62 @@
 
 {% block title %}Liste des rdv{% endblock %}
 
+{% block size %}12{% endblock size %}
+
 {% block body %}
-        <table class="table">
-            <thead>
+        <table class="display table datatable" style="font-size:14px;">
+            <thead style=" padding: 0; margin: 0;">
                 <tr>
-                    <th>Id</th>
-                    <th>Titre</th>
-                    <th>DateDebut</th>
-                    <th>DateFin</th>
-                    <th>Description</th>
-                    <th>actions</th>
+                    <th style="width: 1%;">Id</th>
+                    <th style="width: 12%;">Titre</th>
+                    <th>Date Debut</th>
+                    <th>Date Fin</th>
+                    <th>Client</th>
+                    <th>Marque</th>
+                    <th>Energie</th>
+                    <th style="width: 1%;">Dispo</th>
+                    <th style="width: 1%;">Valid</th>
+                    <th style="width: 5%;">actions</th>
                 </tr>
             </thead>
             <tbody>
             {% for booking in bookings %}
-                <tr>
-                    <td>{{ booking.id }}</td>
-                    <td>{{ booking.title }}</td>
-                    <td>{{ booking.start ? booking.start|date('d/m/Y H:i') : '' }}</td>
-                    <td>{{ booking.end ? booking.end|date('d/m/Y H:i') : '' }}</td>
-                    <td>{{ booking.description}}</td>
-                    <td>
-                        <div class="form-group row">
-                            <a href="{{ path('booking_show', {'id': booking.id}) }}" class="btn btn-primary col-4">Afficher</a>
-                            <a href="{{ path('booking_edit', {'id': booking.id}) }}" class="btn btn-success col-4">Modifier</a>
+                <tr class="bg bg-{{ (booking.isFree ? '' : (booking.isConfirmed ? 'info' : 'danger')) }}">
+                    <td style="padding: 0; margin: 0;">{{ booking.id }}</td>
+                    <td style="padding: 0; margin: 0;">{{ booking.title }}</td>
+                    <td style="padding: 0; margin: 0;">{{ booking.start ? booking.start|date('d/m/Y H:i') : '' }}</td>
+                    <td style="padding: 0; margin: 0;">{{ booking.end ? booking.end|date('d/m/Y H:i') : '' }}</td>
+                    <td style="padding: 0; margin: 0;">{{ booking.IdUser ? booking.IdUser.Nom ~ ' ' ~ booking.IdUser.Prenom : '' }}</td>
+                    <td style="padding: 0; margin: 0;">{{ booking.marque ? booking.marque.nomMarque : '' }}</td>
+                    <td style="padding: 0; margin: 0;">{{ booking.energie ? booking.energie.nomEnergie : '' }}</td>
+                    <td style="width: 1px;">{{ booking.isFree ? '<i class="fas fa-lock-open"></i>' : '<i class="fas fa-lock"></i>' }}</td>
+                    <td style="enable-background:unset; width: 1px;">
+                        {% if booking.isConfirmed %}
+                            <i class="fas fa-check-circle"></i>
+                        {% else %}
+                            {% if booking.isFree %}
+                                
+                            {% else %}
+                                {% if booking.marque and booking.energie %}
+                                    <a href="{{ path('rdv_valider', {'id': booking.id }) }}"><i class="fas fa-spinner fa-pulse"></i></a>
+                                {% else %}    
+                                    <a href="{{ path('booking_edit', {'id': booking.id }) }}"><i class="fas fa-spinner fa-pulse"></i></a>
+                                {% endif %}
+                            {% endif %}                                            
+                        {% endif %}
+                    </td>
+                    {# {{ dump(booking.IdUser) }} #}
+                    <td style="width: 5%; " >
+                        <div class="row m-0 p-0">
+                            <a href="{{ path('booking_show', {'id': booking.id}) }}" class="btn btn-sm btn-primary col fa fa-eye m-0 mt-1 p-0"></a>
+                            <a href="{{ path('booking_edit', {'id': booking.id}) }}" class="btn btn-sm btn-success col fa fa-edit m-0 mt-1 p-0"></a>
                             {{ include('booking/_delete_form.html.twig') }}
                         </div>
                     </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5">no records found</td>
+                    <td colspan="10">Aucun rendez-vous</td>
                 </tr>
             {% endfor %}
             </tbody>

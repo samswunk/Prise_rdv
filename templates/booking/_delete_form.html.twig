@@ -1,9 +1,9 @@
 <form   method="post" 
         action="{{ path('booking_delete', {'id': booking.id}) }}" 
         onsubmit="return confirm('Êtes vous sûrs de vouloir supprimer ce rdv ?');"
-        class="col-4"
-        style="padding: 0; margin: 0;">
+        class="col-4 mt-1"
+        style="padding: 0; margin: 0; height:10px;">
     <input type="hidden" name="_method" value="DELETE">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ booking.id) }}">
-    <button class="btn btn-danger">Supprimer</button>
+    <button class="btn btn-danger" style="padding: 0; margin: 0; height:23px; width:20px;"><i class="fas fa-trash m-0 p-0"></i></button>
 </form>

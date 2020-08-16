@@ -28,14 +28,14 @@
                                                                                 </td>
                                                                                 <td align="right"
                                                                                     style="font-size:16px; line-height:35px; color:#FFFFFF;">
-                                                                                    <span style="vertical-align:middle;">Rendez-vous en attente de confirmation</span>
+                                                                                    <span style="vertical-align:middle;">Annulation de rendez-vous</span>
                                                                                 </td>
                                                                                 <td     align="right" width="38">
                                                                                     <img    alt=""
                                                                                             border="0" height="24"
                                                                                             style="display: block;"
                                                                                             width="24"
-                                                                                            src="http://chauffatec.fr/img/stand-by.png">
+                                                                                            src="http://chauffatec.fr/img/confirm.png">
                                                                                 </td>
                                                                             </tr>
                                                                         </tbody>
@@ -67,7 +67,21 @@
                                                                             <tr>
                                                                                 <td style="font-size:14px; color:#435F71; font-weight:bold;">
                                                                                     <span class="Object" id="OBJ_PREFIX_DWT149_com_zimbra_date">
-                                                                                        Rendez-vous le {{ booking.start ? booking.start|date('d/m/Y à H:i') : '' }}
+                                                                                        Votre rendez-vous du {{ booking.start ? booking.start|date('d/m/Y à H:i') : '' }} .
+                                                                                    </span>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td style="font-size:14px; color:#435F71; font-weight:bold;">
+                                                                                    <span class="Object" id="OBJ_PREFIX_DWT149_com_zimbra_date">
+                                                                                        Pour l'entretien de votre chaudière {{ booking.marque.NomMarque }} à {{ booking.energie.NomEnergie }}
+                                                                                    </span>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td style="font-size:14px; color:#435F71; font-weight:bold;">
+                                                                                    <span class="Object" id="OBJ_PREFIX_DWT149_com_zimbra_date">
+                                                                                        a malheureusement été <strong>annulé</strong>. 
                                                                                     </span>
                                                                                 </td>
                                                                             </tr>
@@ -81,9 +95,7 @@
                                                                                             <tr style="font-size:14px; color:#435F71; line-height:24px;">
                                                                                                 <td class="xs-inline-block"
                                                                                                     style="padding-right:5%;padding-bottom:10px;">
-                                                                                                    Votre rendez-vous est <strong>en attente de confirmation.</strong> 
-                                                                                                    Vous recevrez d'ici peu un mail de confirmation. 
-                                                                                                    En cas d'imprévu, pensez à l'annuler le plus tôt possible.
+                                                                                                    Nouc vous prions de nous excuser pour la gène occasionnée. 
                                                                                                 </td>
                                                                                                 <td class="xs-inline-block xs-text-center xs-full-width"><img
                                                                                                     align="center" height="200"
@@ -95,31 +107,6 @@
                                                                                 </td>
                                                                             </tr>
                                                                             <tr></tr>
-                                                                            <tr>
-                                                                                <td align="center">
-                                                                                    <table border="0" cellpadding="0"
-                                                                                        cellspacing="0"
-                                                                                        style="display:inline-block; margin:7px;"
-                                                                                        width="264">
-                                                                                        <tbody>
-                                                                                            <tr align="center">
-                                                                                                <td align="center"
-                                                                                                    bgcolor="#FF7E00"
-                                                                                                    height="44"
-                                                                                                    style="border-radius:4px; background-color:#FF7E00;"
-                                                                                                    valign="center"
-                                                                                                    width="264"><span
-                                                                                                        class="Object"
-                                                                                                        id="OBJ_PREFIX_DWT151_com_zimbra_url"><a
-                                                                                                            style="display:block; text-decoration:none; line-height:44px; color:#FFFFFF;"
-                                                                                                            href="{{ path('rdv_edit', { 'id': booking.id }) }}"
-                                                                                                            target="_blank">ANNULER RDV</a></span>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </td>
-                                                                            </tr>
                                                                         </tbody>
                                                                     </table>
                                                                 </td>
@@ -145,8 +132,8 @@
                                                             <tr>
                                                                 <td align="center"
                                                                     style="color:#435F71; line-height:18px;">
-                                                                    <p style="font-size:24px; ">Avez vous pensé à renseigner votre adresse ?</p>
-                                                                    <p>Accédez à votre compte.</p>
+                                                                    <p style="font-size:24px; ">Votre rendez-vous est annulé ?</p>
+                                                                    <p>Accédez à votre compte pour en selectionner un autre.</p>
                                                                 </td>
                                                             </tr>
                                                             <tr>

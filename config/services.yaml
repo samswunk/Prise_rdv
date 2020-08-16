@@ -27,3 +27,5 @@ services:
     # please note that last definitions always *replace* previous ones
     
     # App\EventSubscriber\CalendarSubscriber:
+    Rdv:
+        class: App\Controller\RdvController

@@ -16,7 +16,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class BookingController extends AbstractController
 {
-    
+    private $rdv;
+
+    public function __construct(RdvController $rdv)
+    {
+        $this->rdv = $rdv;
+    }    
     /**
      * @Route("booking/", name="booking_index", methods={"GET"})
      */
@@ -67,6 +72,7 @@ class BookingController extends AbstractController
                     $bookingRepository->setStart($start);
                     $bookingRepository->setEnd($end);
                     $bookingRepository->setIsFree(true);
+                    $bookingRepository->setIsConfirmed(false);
                     $entityManager->flush();
                     return $this->redirectToRoute('booking_index');
                 }
@@ -77,6 +83,7 @@ class BookingController extends AbstractController
         if ($form->isSubmitted()) 
         {
             $booking->setIsFree(true);
+            $booking->setIsFree(false);
             $entityManager->persist($booking);
             $entityManager->flush();
                 /**/
@@ -126,9 +133,19 @@ class BookingController extends AbstractController
         
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             
             $this->getDoctrine()->getManager()->flush();
+            $rdv = $this->rdv;
+            $typeEnvoi = ($request->request->get('booking')["isConfirmed"]==1 ? 'confirm' : 'cancel');
+            // dd($request,
+            //     $request->request->get('booking')["isFree"],
+            //     $request->request->get('booking')["isConfirmed"],
+            //     $request->request->all(),
+            //     $typeEnvoi
+            // );
+            $rdv->envoiMail($typeEnvoi,$booking,$booking->getIdUser(),$booking->getMarque(),$booking->getEnergie());
             
             return $this->redirectToRoute('booking_list');
         }
