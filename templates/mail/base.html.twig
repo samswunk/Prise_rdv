@@ -1,0 +1,236 @@
+<html style="padding: 0px; margin: 0px;">
+    <head>
+        <title>CHAUFFATEC</title>
+        {% block stylesheets %}    
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <style>
+            a {
+                text-decoration: none;
+                color: #0596de;
+            }
+
+            body {
+                font-size: 14px;
+                background-color: #EEF2F6;
+            }
+
+            .MsgHeaderTable .Object,
+            .MsgHeaderTable .Object-hover {
+                white-space: nowrap;
+                cursor: pointer;
+            }
+
+            .MsgBody {
+                background-color: white;
+            }
+
+            .MsgBody-text {
+                color: #000;
+                font-family: monospace;
+            }
+
+            .MsgBody-text,
+            .MsgBody-html {
+                padding: 10px;
+            }
+
+            .MsgBody .SignatureText {
+                color: gray;
+            }
+
+            .MsgBody .QuotedText0 {
+                color: purple;
+            }
+
+            .MsgBody .QuotedText1 {
+                color: green;
+            }
+
+            .MsgBody .QuotedText2 {
+                color: red;
+            }
+
+            .Object {
+                color: darkblue;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .Object-hover {
+                color: darkblue;
+                text-decoration: underline;
+            }
+
+            .Object-active {
+                color: darkgreen;
+                text-decoration: underline;
+            }
+
+            .FakeAnchor,
+            a:link,
+            a:visited {
+                color: darkblue;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            a:hover {
+                color: darkblue;
+                text-decoration: underline;
+            }
+
+            a:active {
+                color: darkgreen;
+                text-decoration: underline;
+            }
+
+            .POObject {
+                color: blue;
+            }
+
+            .POObjectApproved {
+                color: green;
+            }
+
+            .POObjectRejected {
+                color: red;
+            }
+
+            .zimbraHide {
+                display: none;
+            }
+
+            .MsgBody-html pre,
+            .MsgBody-html pre * {
+                white-space: pre-line;
+                word-wrap: break-word !important;
+                text-wrap: suppress !important;
+            }
+
+            .MsgBody-html tt,
+            .MsgBody-html tt * {
+                font-family: monospace;
+                white-space: pre-line;
+                word-wrap: break-word !important;
+                text-wrap: suppress !important;
+            }
+
+            .ZmSearchResult {
+                background-color: #fffec4;
+            }
+            .chauffatec_font {
+                font-family: 'Roboto', sans-serif;
+            }
+            .chauffatec_bg_color {
+                background-color: #EE4423; 
+            }
+            .chauffatec_title {
+                line-height: 1.5; 
+                color: #fff;
+                display: -webkit-box;
+                font-size: 1.5rem;
+                font-weight: 300;
+                height:auto;
+            }
+        </style>
+        {% endblock stylesheets %}
+    </head>
+
+    <body   style="margin: 0px; height: auto;" 
+            class="MsgBody MsgBody-html chauffatec_font">
+        <table align="center" bgcolor="#EEF2F6" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+                <tr>
+                    <td width="14"></td>
+                    <td align="center">
+{% block body %}
+    
+{% endblock %}
+                    </td>
+                    <td width="14"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td align="center">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td width="20"><span class="Object" id="OBJ_PREFIX_DWT156_com_zimbra_url">
+                                        <img border="0" height="40" src="http://chauffatec.fr/img/confiance.png"/>
+                                    </td>
+                                    <td width="25"></td>
+                                    <td width="20"><span class="Object" id="OBJ_PREFIX_DWT157_com_zimbra_url">
+                                        <img border="0" height="40" src="http://chauffatec.fr/img/conseil.png"/>
+                                    </td>
+                                    <td width="25"></td>
+                                    <td width="20"><span class="Object" id="OBJ_PREFIX_DWT158_com_zimbra_url">
+                                        <img border="0" height="40" src="http://chauffatec.fr/img/qualifications.png"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td align="center">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr align="center">
+                                    <td><span class="Object" id="OBJ_PREFIX_DWT160_com_zimbra_url"><a style="color:#435F71;"
+                                                href="http://www.chauffatec.fr"
+                                                target="_blank">
+                                                <font color="#435F71" style="font-size:12px; color:#435F71;">CONTACT</font>
+                                            </a></span></td>
+                                    <td width="25">|</td>
+                                    <td><span class="Object" id="OBJ_PREFIX_DWT161_com_zimbra_url"><a style="color:#435F71;"
+                                                href="http://www.chauffatec.fr"
+                                                target="_blank">
+                                                <font color="#435F71" style="font-size:12px; color:#435F71;">À PROPOS</font>
+                                            </a></span></td>
+                                    <td width="25">|</td>
+                                    <td><span class="Object" id="OBJ_PREFIX_DWT162_com_zimbra_url"><a style="color:#435F71;"
+                                                href="http://www.chauffatec.fr"
+                                                target="_blank">
+                                                <font color="#435F71" style="font-size:12px; color:#435F71;">AIDE</font>
+                                            </a></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td align="center">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr align="center">
+                                    <td style="font-size:10px; color:#435F71; line-height:20px;">
+                                        <p>Copyright • 2020<br><span id="DWT164" class="ZmSearchResult">Chauffatec</span> | 3 rue Durival | NANCY 54000<br>
+                                                Merci d’ajouter l'adresse 
+                                                <span   class="Object"
+                                                        id="OBJ_PREFIX_DWT165_com_zimbra_email">contact@chauffatec.fr</span> à votre carnet d'adresse</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td align="center"><img border="0" height="40" width="133"
+                            src="http://chauffatec.fr/img/logo-chauffatec.png"></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
