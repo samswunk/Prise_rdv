@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="{{ asset('datetimepicker/datetimepicker.css') }}">
 <link rel="stylesheet" href="{{ asset('fontawesome/css/all.css') }}">
 <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.css') }}" >
+<link rel="stylesheet" href="{{ asset('datatable/css/dataTables.bootstrap4.min.css') }}" >
 {% endblock %}
 
 
@@ -65,6 +66,8 @@
           </li>
           {% endif %}
           {% if UserId is not null %}
+          <input type="hidden" name="startDate" id="startDate" 
+            {% if UserRole == 'Administrateur' %}value="2018-01-01" {% else %}value="{{ 'now'|date_modify('+2 day')|date('Y-m-d') }}"{% endif %}>
           <li class="nav-item ml-2">
             <a class="nav-link" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
           </li>            
@@ -104,11 +107,7 @@
       <div class="modal-body">
         <form id="booking" class="col-12 row" action="{{ path('rdv_new') }}" method="POST">
           <input type="hidden" name="booking[id]" id="booking_id">
-          <input type="hidden" name="booking[iduser]" id="booking_iduser" 
-          {% if UserRole != 'Administrateur' %}
-            value="{{ UserId }}" 
-          {% endif %}
-          >
+          <input type="hidden" name="booking[iduser]" id="booking_iduser" {% if UserRole != 'Administrateur' %}value="{{ UserId }}" {% endif %}>
           <div class="m-0 p-0 row col-12" id="divContenu">
             <div class="row col-12">
                 <label class="col-4" for="booking_title">Titre</label>
@@ -184,7 +183,10 @@
     <script src="{{ asset('tarteaucitron/tarteaucitron.js')}}"></script>
     <script src="{{ asset('js/tarteaucitron.js')}}"></script>
     <script src="{{ asset('js/datetimepickers.js')}}"></script>
-
+    
+    <script src="{{ asset('datatable/js/datatable.min.js') }}">   </script>
+    <script src="{{ asset('datatable/js/dataTables.bootstrap4.min.js') }}">   </script>
+    
     <script type="text/javascript">
       
       moment.tz.add("Europe/Paris|PMT WET WEST CEST CET WEMT|-9.l 0 -10 -20 -10 -20|0121212121212121212121212121212121212121212121212123434352543434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434|-2nco8.l cNb8.l HA0 19A0 1iM0 11c0 1oo0 Wo0 1rc0 QM0 1EM0 UM0 1u00 10o0 1io0 1wo0 Rc0 1a00 1fA0 1cM0 1cM0 1io0 17c0 1fA0 1a00 1io0 1a00 1io0 17c0 1fA0 1a00 1io0 17c0 1cM0 1cM0 1a00 1io0 1cM0 1cM0 1a00 1fA0 1io0 17c0 1cM0 1cM0 1a00 1fA0 1io0 1qM0 Df0 Ik0 5M30 WM0 1fA0 1cM0 Vx0 hB0 1aq0 16M0 1ekn0 1cL0 1fC0 1a00 1fA0 1cM0 1cM0 1cM0 1fA0 1a00 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|11e6")
@@ -201,67 +203,78 @@
 
       function Calendrier()
       {
+        // console.log(moment(new Date()));
+        var today = new Date();
+        var demain = $("#startDate").val();
+        //demain = moment(demain).tz("Europe/Paris").format("YYYY-MM-DD");
         var calendarEl = document.getElementById('calendar-holder2');
         var calendar = new FullCalendar.Calendar(calendarEl, 
         {
           height: 800,
-                width: 600, 
-                defaultView: 'timeGridWeek',
-                timezone: 'Europe/Paris',
-                //ignoreTimezone: true,
-                locale: 'fr',
-                // editable: true,
-                selectable: ("{{ UserRole }}" == "Administrateur" ? true : false),
-                themeSystem: 'bootstrap',
-                selectHelper: true,
-                nowIndicator: true,
-                buttonText: 
+          width: 600, 
+          defaultView: 'timeGridWeek',
+          timezone: 'Europe/Paris',
+          //ignoreTimezone: true,
+          locale: 'fr',
+          // editable: true,
+          selectable: ("{{ UserRole }}" == "Administrateur" ? true : false),
+          themeSystem: 'bootstrap',
+          selectHelper: true,
+          nowIndicator: true,
+          validRange: 
+          {
+            start: demain
+          },
+          buttonText: 
+          {
+            today: 'Aujourd\'hui',
+            month: 'Mois',
+            week: 'Semaine',
+            day: 'Jour',
+            list: 'Liste'
+          },
+          header: 
+          {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,list',
+          },
+          plugins: ['dayGrid','timeGrid','list','interaction'],
+          events: {
+            url: "{{ path('rdv_index') }}",
+            method: 'GET',
+            /* paramètres envoyés lors de la requête 
+            extraParams: {
+              custom_param1: 'something',
+              custom_param2: 'somethingelse'
+            },/**/
+            failure: function() {
+              // alert('Impossible de charger les événements du calendrier !');
+            }
+          },
+                /*eventRender: function(info) 
                 {
-                  today: 'Aujourd\'hui',
-                  month: 'Mois',
-                  week: 'Semaine',
-                  day: 'Jour',
-                  list: 'Liste'
-                },
-                header: 
-                {
-                  left: 'prev,next today',
-                  center: 'title',
-                  right: 'dayGridMonth,timeGridWeek,timeGridDay,list',
-                },
-                plugins: ['dayGrid','timeGrid','list','interaction'],
-                // timeZone: 'Europe/Paris',
-                // events: "{{ path('rdv_index') }}",
-                events: {
-                  url: "{{ path('rdv_index') }}",
-                  method: 'GET',
-                  /* paramètres envoyés lors de la requête 
-                  extraParams: {
-                    custom_param1: 'something',
-                    custom_param2: 'somethingelse'
-                  },/**/
-                  failure: function() {
-                    // alert('Impossible de charger les événements du calendrier !');
-                  }
-                },
-                eventRender: function(info) 
-                {
+                  var cell = info['el'];
                   var start = info.event.start;
                   var end = info.event.end;
                   var affichage3 = moment(start).format("HH:mm") + '-' + moment(end).format("HH:mm");
-
-                    if ((info.view.type == 'dayGridMonth') ||  (info.view.type == 'timeGridWeek'))
+                  if (moment(start).tz("Europe/Paris").format("YYYY-MM-DD") <= demain )
+                  {
+                      info.el.querySelector('.fc-content').setAttribute('style','opacity:0.2;background-color: #CCCCCC;');
+                      // ;
+                    }
+                    /*if ((info.view.type == 'dayGridMonth') ||  (info.view.type == 'timeGridWeek'))
                     {
                       var new_description =   info.event.title +
                       '<br/><small>'
-                        + (info.event.extendedProps.description ? info.event.extendedProps.description : '') + '</small><br/>'
+                        // + (info.event.extendedProps.description ? info.event.extendedProps.description : '') + '</small><br/>'
                         // + '<strong>Address: </strong><br/>' + infos.address + '<br/>'
                         + (info.event.extendedProps.adresse ? info.event.extendedProps.adresse : '');
                         info.el.querySelector('.fc-time').innerHTML = affichage3;
                         info.el.querySelector('.fc-title').innerHTML = new_description;
                         ;
                     }
-                },
+                },/**/
                     /*function(info,event,element,view) 
                     {
                       var tooltip = new Tooltip(info.el, {
@@ -492,6 +505,10 @@
           {
             var price = $(this).find('option:selected').data('price');
             $("#prixEstimatif").html("Prix éstimé : "+ price + "€");
+          });
+
+          $('.datatable').DataTable({
+            "order": [[ 8, "desc" ]]
           });
 
           Calendrier();

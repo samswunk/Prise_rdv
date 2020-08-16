@@ -34,23 +34,29 @@ class RdvController extends AbstractController
             $this->mailer = $mailer;
     } 
 
-    public function envoiMail($typeEnvoi, Booking $booking, User $user,Marque $marque, Energie $energie)
+    public function envoiMail($typeEnvoi, Booking $booking, User $user, ?Marque $marque, ?Energie $energie)
     {
         switch($typeEnvoi)
         {
             case 'delete':
-                $libEnvoi="supprimé";
+                $libEnvoi="annulation";
                 break;
             case 'edit':
-                $libEnvoi="modifié";
+                $libEnvoi="mail";
                 break;
             case 'create':
-                $libEnvoi="choisi";
+                $libEnvoi="mail";
+                break;
+            case 'confirm':
+                $libEnvoi="confirmation";
+                break;
+            case 'cancel':
+                $libEnvoi="avalidation";
                 break;
         }
-        $marque     = $marque->getNomMarque();
-        $tarif      = sprintf('$d €', $energie->getTarifEnergie());
-        $energie    = $energie->getNomEnergie();
+        $marque     = $marque ? $marque->getNomMarque() : '' ;
+        $tarif      = $energie ? $energie->getTarifEnergie().' €' : '' ;
+        $energie    = $energie ? $energie->getNomEnergie() : '';
         $contact    = $user->getNom().' '.$user->getPrenom();
         $telephone  = $user->getTelephone();
         $adresse    = $user->getAdresse().' '.$user->getCodePostal().' '.$user->getVille();
@@ -59,23 +65,55 @@ class RdvController extends AbstractController
         $end        = $booking->getEnd()->format('d/m/Y H:i');
 
         $message = '<html><body>
-                    Le '.date("d/m/Y à H:i") .' '.$contact.' a '.$libEnvoi.' son rdv : '
+                    Le '.date("d/m/Y à H:i") .' '.$contact.' a '.$libEnvoi.' le rdv du ' .$start . ' : '
                     . '<br>Marque       : '.$marque
                     . '<br>Energie      : '.$energie
-                    . '<br>Date         : '.$start
                     . '<br>Fin estimée  : '.$end
                     . '<br>Tarif estimé : '.$tarif
+                    . '<br>Ce rendez-vous vous engage auprès du professionnel. Merci de prévenir  : '.$tarif
                     .'</body></html>';
 
         $msg = (new \Swift_Message('Objet'))
             ->setFrom('contact@chauffatec.fr')
             ->setTo($emailDest)
-            ->setBody(  $message,
+            ->setBody(  $this->renderView('mail/'.$libEnvoi.'.html.twig', [
+                            'booking'   => $booking,
+                            'contact'   => $contact,
+                            'marque'    => $marque,
+                            'tarif'     => $tarif
+                        ]),
                         'text/html'
                         );
+            // ->setBody(  $message,
+            //             'text/html'
+            //             );
 
         $this->mailer->send($msg);
     }
+
+    /**
+    * @Route("/{id}/valider", name="rdv_valider", methods={"GET","POST"})
+    */
+    public function Valider(Request $request, Booking $booking): Response
+    {
+        
+        $booking->setIsConfirmed(1);
+        $this->getDoctrine()->getManager()->flush();
+        $this->envoiMail('confirm',$booking,$booking->getIdUser(),$booking->getMarque(),$booking->getEnergie());
+        $this->addFlash('message',"Le rdv est confirmé, et un mail vient d'être envoyé");
+        return $this->redirectToRoute('booking_list');
+    }
+
+    /**
+     * @Route("/{id}/mail", name="mail", methods={"GET","POST"})
+    */
+    public function mail(Booking $booking): Response
+    {
+        return $this->render('mail/mail.html.twig', [
+            'booking' => $booking,
+        ]);
+    }
+
     /**
      * Modification d'un rdv (pour un utilisateur, se positionner ou le modifier)
      * 
@@ -132,7 +170,6 @@ class RdvController extends AbstractController
         }
         return $this->render('rdv/edit.html.twig', [
             'booking' => $booking,
-            'form' => $form->createView(),
         ]);
     }
 
@@ -143,12 +180,13 @@ class RdvController extends AbstractController
      */
     public function index(BookingRepository $bookingRepository,Request $request): Response
     {
-        $CurrentUser = $this->security->getUser();
-        $admin = $this->security->isGranted('ROLE_ADMIN');
+        $CurrentUser    = $this->security->getUser();
+        $admin          = $this->security->isGranted('ROLE_ADMIN');
 
-        if ($request->query->get('start')) 
+        if (($request->query->get('start')) && !$admin) 
         {
             $vstart= date('Y-m-d',strtotime($request->query->get('start')));
+            $vstart= date('Y-m-d');
             $vend= date('Y-m-d',strtotime($request->query->get('end')));
             $repos=$bookingRepository->findByRange($vstart,$vend);
         }
@@ -164,19 +202,27 @@ class RdvController extends AbstractController
             $textColor        = $repo->getIsFree() ? "#FFFFFF" : "#FFFFFF"; //$repo->getBackGroundcolor();
             $editable         = $repo->getIsFree() ? true : false;//$repo->getBackGroundcolor();
             $user             = $repo->getIdUser();
+            /* 
+            * s'il y a un utilisateur enregistré (idUser !null) pour ce rdv il s'agit d'un rdv déjà pris
+            */
             if ($user) 
             {
                 $title            = "RDV INDISPONIBLE"; // $repo->getTitle();
                 $description      = ""; // $repo->getDescription();
                 $bgColor          = "#D36D37";
                 $editable         = "false";//$repo->getBackGroundcolor();
+                /* 
+                * si un utilisateur est loggé (CurrentUser!=null) et que son id = à l'event chargé, l'utilisateur peut tout voir
+                * OU
+                * si l'utilisateur courrant est administrateur il peut tout voir.
+                */
                 if (    ( $CurrentUser && $user->getId() == $CurrentUser->getId() )  
                     || $admin)
                 {
                     $title            = $repo->getTitle();
                     $description      = $repo->getDescription();
                     $editable         = "true";//$repo->getBackGroundcolor();
-                    $bgColor          ="#A4262C";
+                    $bgColor          = "#A4262C";
                     $data[$key]['idUser']   = $user->getId();
                     $data[$key]['nom']      = $user->getNom();
                     $data[$key]['email']    = $user->getEmail();

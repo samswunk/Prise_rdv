@@ -67,6 +67,11 @@ class Booking
      */
     private $energie;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isConfirmed;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -215,6 +220,18 @@ class Booking
     public function setEnergie(?Energie $energie): self
     {
         $this->energie = $energie;
+
+        return $this;
+    }
+
+    public function getIsConfirmed(): ?bool
+    {
+        return $this->isConfirmed;
+    }
+
+    public function setIsConfirmed(?bool $isConfirmed): self
+    {
+        $this->isConfirmed = $isConfirmed;
 
         return $this;
     }    

@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Entity\Marque;
 use App\Entity\Booking;
+use App\Entity\Energie;
 use Doctrine\DBAL\Types\BooleanType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -85,34 +87,54 @@ class BookingType extends AbstractType
                         'class' => 'form-control'
                     ],
                 ])
-                
+                ->add('marque', EntityType::class, [
+                    'placeholder' => "Quelle est la marque de votre chaudière ?",
+                    'class' => Marque::class,
+                    'choice_label'  => 'nomMarque',
+                    'attr' => 
+                        [
+                            'class' => 'form-control',
+                        ],
+                    // used to render a select box, check boxes or radios
+                    'multiple' => false,
+                    'expanded' => false
+                ])
+                ->add('energie', EntityType::class, [
+                    'placeholder' => "Quel type d'energie ?",
+                    'class' => Energie::class,
+                    'choice_label'=>'nomEnergie',
+                    'attr' => 
+                        [
+                            'class' => 'form-control typeEnergie',
+                        ],
+                    // used to render a select box, check boxes or radios
+                    'multiple' => false,
+                    'expanded' => false
+                ])                
             ->add('isFree', ChoiceType::class, array(
+                    'placeholder' => "Souhaitez vous vérouiller le rdv ?",
                     'choices' => array(
-                        'Oui' => true,
-                        'Non' => false
+                        'Déverouiller (Les utilisateurs pourront choisir ce rdv)' => true, // disponible
+                        'Verouiller (Les utilisateurs ne pourront pas choisir ce rdv)' => false
                      ),
                      'attr' => 
                          [
                              'class' => 'form-control disponible'
                          ],
-                     'label' => 'Disponible',
-                    //  'required' => true,
-                    //  'empty_value' => false,
-                    //  'choices_as_values' => true
+                     'label' => 'Vérouiller/Dévérouiller le rdv',
                  ))
-            // ->add('iduser', EntityType::class, [
-            //     // looks for choices from this entity
-            //     'class' => User::class,
-            //     // uses the User.username property as the visible option string
-            //     'choice_label' => function ($user) 
-            //         { return $user->getNom()." " . $user->getPrenom() ."
-            //                     " . $user->getEmail()  ." " . $user->getTelephone()  ."
-            //                     " . $user->getAdresse() ." " . $user->getCodePostal()." " . $user->getVille(); 
-            //             },
-            //     // used to render a select box, check boxes or radios
-            //     'multiple' => false,
-            //     'expanded' => false
-            // ]);
+            ->add('isConfirmed', ChoiceType::class, array(
+                    'placeholder' => "Souhaitez vous valider le rdv ?",
+                    'choices' => array(
+                        'Valider' => true,
+                        'Avalider' => false
+                     ),
+                     'attr' => 
+                         [
+                             'class' => 'form-control confirmation'
+                         ],
+                     'label' => 'Valider le rendez-vous',
+                 ))
         ;
     }
 
