@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RÉINITIALISATION DU MOT DE PASSE{% endblock %}
+
+{% block size %}12{% endblock size %}
+
+{% block body %}
+<div class="container text-center">
+    <form method="post" class="col-6 offset-3 mt-5">
+        {{ form_start(emailForm) }}
+        {{ form_end(emailForm) }}
+    </form>
+</div>
+{% endblock %}
