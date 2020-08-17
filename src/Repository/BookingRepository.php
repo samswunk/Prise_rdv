@@ -43,9 +43,10 @@ class BookingRepository extends ServiceEntityRepository
         ->andWhere('b.isFree = 0')
         ->setParameter('pstart', $start)
         // ->setParameter('pend', $end)
-        ->getQuery();
-        
-        return $req->getResult()
+        ->getQuery()
+        ->getResult();
+        dd($req);
+        return $req
         ;
     }
     // /**

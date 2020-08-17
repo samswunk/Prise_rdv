@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\NewPwdType;
 use App\Form\ResetPwdType;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class SecurityController extends AbstractController
@@ -91,15 +94,38 @@ class SecurityController extends AbstractController
         ]);
     }
 
-        /**
-     * @Route("/reset/{token}", name="app_reset")
+    /**
+     * @Route("/reset/{token}", name="app_reset",methods={"GET","POST"})
      */
-    public function reset()
+    public function reset($token,Request $request,  UserPasswordEncoderInterface $pwdEncoder, UserRepository $userRepository)
     {
-        $form = $this->createForm(ResetPwdType::class);
-        // $form->handleRequest($request);
-        // if ($form->isSubmitted() && $form->isValid())   
-        // {
+        $user = $userRepository->findOneByResetToken($token) ;
+        $form = $this->createForm(NewPwdType::class);
+        $form->handleRequest($request);
+
+        if(!$user)
+        {
+            $this->addFlash('danger','Token inconnu');
+            return $this->redirectToRoute('app_login');
+        }
+        
+        if ($request->isMethod('POST')) // $formisSubmitted() && $form->isValid())   
+        {
+            $user->setResetToken(null);
+            $user->setPassword($pwdEncoder->encodePassword($user,$request->request->get('new_pwd')['pass']));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success','Mot de passe modifié avec succès');
+            
+            return $this->redirectToRoute('app_login');
+
+        }
+
+        return $this->render('security/reset.html.twig',[
+            'resetForm' =>$form->createView()
+        ]);
     }
 
 }
