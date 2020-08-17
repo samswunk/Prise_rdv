@@ -12,11 +12,11 @@
                     <div class=""><h4><strong class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</strong></h4></div>
                 {% endif %}
 
-                {% if app.user %}
+                {# {% if app.user %}
                     <div class="mb-3">
                         Vous êtes authentifiés en tant que {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
                     </div>
-                {% endif %}
+                {% endif %} #}
 
                 <h1 class="h3 mb-3 font-weight-normal text-center text-white">Vous avez déjà un compte ?</h1>
                 <label for="inputEmail">Email</label>
@@ -40,6 +40,10 @@
                     <button class="text-center btn btn-lg btn-primary" type="submit">
                         Valider
                     </button>
+                    <div class="text-center">
+                        <a  class="btn btn-sm btn-link txt-center" href="{{ path('app_forgot') }}" >
+                            <span class="strong text-center">Mot de passe oublié ?</span></a>
+                    </div>
                 </div>
             </form>
         </div>

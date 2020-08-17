@@ -78,6 +78,11 @@ class User implements UserInterface
      */
     private $bookings;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $resetToken;
+
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
@@ -272,6 +277,18 @@ class User implements UserInterface
                 $booking->setIdUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
 
         return $this;
     }

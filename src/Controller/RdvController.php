@@ -34,24 +34,33 @@ class RdvController extends AbstractController
             $this->mailer = $mailer;
     } 
 
-    public function envoiMail($typeEnvoi, Booking $booking, User $user, ?Marque $marque, ?Energie $energie)
+    public function envoiMail($typeEnvoi, ?Booking $booking, ?User $user, ?Marque $marque, ?Energie $energie,$token=null,$url='')
     {
         switch($typeEnvoi)
         {
             case 'delete':
                 $libEnvoi="annulation";
-                break;
+                $objEnvoi=strtoupper($libEnvoi)." de votre rendez-vous chauffatec.fr";
+            break;
             case 'edit':
                 $libEnvoi="mail";
-                break;
+                $objEnvoi="Modification rendez-vous chauffatec.fr";
+            break;
             case 'create':
                 $libEnvoi="mail";
-                break;
+                $objEnvoi="Demande de rendez-vous chauffatec.fr";
+            break;
             case 'confirm':
                 $libEnvoi="confirmation";
-                break;
+                $objEnvoi=strtoupper($libEnvoi)." de votre rendez-vous chauffatec.fr";
+            break;
             case 'cancel':
                 $libEnvoi="avalidation";
+                $objEnvoi="Annulation de rendez-vous.";
+            break;
+            case 'reset':
+                $libEnvoi="reset";
+                $objEnvoi="Réinitialisation de mot de passe.";
                 break;
         }
         $marque     = $marque ? $marque->getNomMarque() : '' ;
@@ -61,34 +70,24 @@ class RdvController extends AbstractController
         $telephone  = $user->getTelephone();
         $adresse    = $user->getAdresse().' '.$user->getCodePostal().' '.$user->getVille();
         $emailDest  = $user->getEmail();
-        $start      = $booking->getStart()->format('d/m/Y H:i');
-        $end        = $booking->getEnd()->format('d/m/Y H:i');
-
-        $message = '<html><body>
-                    Le '.date("d/m/Y à H:i") .' '.$contact.' a '.$libEnvoi.' le rdv du ' .$start . ' : '
-                    . '<br>Marque       : '.$marque
-                    . '<br>Energie      : '.$energie
-                    . '<br>Fin estimée  : '.$end
-                    . '<br>Tarif estimé : '.$tarif
-                    . '<br>Ce rendez-vous vous engage auprès du professionnel. Merci de prévenir  : '.$tarif
-                    .'</body></html>';
-
-        $msg = (new \Swift_Message('Objet'))
-            ->setFrom('contact@chauffatec.fr')
+        $start      = $booking ? $booking->getStart()->format('d/m/Y H:i') : '';
+        $end        = $booking ? $booking->getEnd()->format('d/m/Y H:i') : '';
+        $msg = (new \Swift_Message($objEnvoi))
+            // ->setFrom('contact@chauffatec.fr')
+            ->setFrom('chauffatec@hotmail.fr')
             ->setTo($emailDest)
-            ->setBody(  $this->renderView('mail/'.$libEnvoi.'.html.twig', [
+            ->setBody($this->renderView('mail/'.$libEnvoi.'.html.twig', [
                             'booking'   => $booking,
                             'contact'   => $contact,
                             'marque'    => $marque,
-                            'tarif'     => $tarif
+                            'tarif'     => $tarif,
+                            'url'       => $url
                         ]),
                         'text/html'
                         );
-            // ->setBody(  $message,
-            //             'text/html'
-            //             );
 
         $this->mailer->send($msg);
+
     }
 
     /**

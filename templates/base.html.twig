@@ -89,7 +89,16 @@
         </form> #}
       </div>
   </nav>
-  <div class="col-12"></div>
+  <div class="col-12">
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash-notice alert alert-{{ label }}">
+              <h3>{{ message }}</h3>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {# <div class=""><h4><strong class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</strong></h4></div> #}
+  </div>
 
 {# SHOW RDV MULTI MODAL #}
   {% include("multi/new.html.twig") %}
