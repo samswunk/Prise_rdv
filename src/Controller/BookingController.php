@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use DateTimeInterface;
 use App\Entity\Booking;
 use App\Form\BookingType;
 use App\Repository\BookingRepository;
@@ -23,7 +22,7 @@ class BookingController extends AbstractController
         $this->rdv = $rdv;
     }    
     /**
-     * @Route("booking/", name="booking_index", methods={"GET"})
+     * @Route("booking/", name="booking_index", methods={"GET","POST"})
      */
     public function index(BookingRepository $bookingRepository): Response
     {

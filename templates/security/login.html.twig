@@ -7,7 +7,7 @@
 {% block body %}
     <div class="row">
         <div class="col-md-8 ml-5" style="background-color: lightcoral;">
-            <form method="post">
+            <form method="post" action="{{path('app_login')}}">
                 {% if error %}
                     <div class=""><h4><strong class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</strong></h4></div>
                 {% endif %}
@@ -24,9 +24,9 @@
                 <label for="inputPassword">Password</label>
                 <input type="password" name="password" id="inputPassword" class="form-control" required>
 
-                <input type="hidden" name="_csrf_token"
-                    value="{{ csrf_token('authenticate') }}"
-                >
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <input type="hidden" name="go_to" value="{{ path('booking_index') }}"/>
+                <input type="hidden" name="back_to" value="{{ path('app_forgot') }}"/>
 
                 {#
                     <div class="checkbox mb-3">

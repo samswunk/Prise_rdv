@@ -20,6 +20,16 @@ security:
             guard:
                 authenticators:
                     - App\Security\UserAuthenticator
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                # default_target_path: booking_index
+                target_path_parameter: go_to
+                failure_path_parameter: back_to
+                # always_use_default_target_path: true
+                username_parameter: email
+                password_parameter: password
+                remember_me: false
             logout:
                 path: app_logout
                 # where to redirect after logout
@@ -36,9 +46,11 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/booking, roles: ROLE_USER }
+        - { path: ^/booking/list, roles: ROLE_ADMIN }
         - { path: ^/profil, roles: ROLE_USER }
         - { path: ^/oubli, roles: ROLE_USER }
         - { path: ^/rdv, roles: ROLE_USER }
+        
     role_hierarchy:
         ROLE_EDITOR: ROLE_USER
         ROLE_ADMIN: ROLE_EDITOR
