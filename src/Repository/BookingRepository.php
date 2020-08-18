@@ -43,11 +43,8 @@ class BookingRepository extends ServiceEntityRepository
         ->andWhere('b.isFree = 0')
         ->setParameter('pstart', $start)
         // ->setParameter('pend', $end)
-        ->getQuery()
-        ->getResult();
-        dd($req);
-        return $req
-        ;
+        ->getQuery();
+        return $req->getResult();
     }
     // /**
     //  * @return Booking[] Returns an array of Booking objects

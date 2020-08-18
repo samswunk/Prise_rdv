@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\ProfilType;
+use App\Repository\BookingRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,13 +18,15 @@ class ProfilController extends AbstractController
     /**
     * @Route("/{id}/edit", name="profil_edit", methods={"GET","POST"})
     */
-    public function editProfil(Request $request, User $profil): Response
+    public function editProfil(Request $request, User $profil, $id,BookingRepository $bookingRepository): Response
     {
         
         // dd(($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ? "Tout va bien" : "alerte !"));
         $TabProfil = $request->request->get('profil');
 
-        $route = ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ? "profil_index" : "booking_index");
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  $bookings = $bookingRepository->findBy(['IdUser'=>$id],['start' => 'DESC']);
+
+        $route = ($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ? "booking_index" : "booking_index");
         $form = $this->createForm(ProfilType::class, $profil);
         $form->handleRequest($request);
 

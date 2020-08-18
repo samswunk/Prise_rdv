@@ -27,20 +27,22 @@
                     <div class="form-group row">
                         <div class="md-form col-8">        
                             {{ form_row(form.email, {'attr': {'class': 'form-control'}}) }}
-                            <small id="emailHelp" class="form-text text-muted">Nous ne partageons votre email avec personne.</small>
+                            <small id="emailHelp" class="form-text text-muted alert alert-info m-0 p-0" style="height: 20px;">Nous ne partageons votre email avec personne.</small>
                         </div>
                         <div class="md-form col-4">        
                             {{ form_row(form.Telephone, {'attr': {'class': 'form-control','type':'password'}}) }}
                         </div>
                     </div>
-                    <div class="form-group col-12">
-                        <!-- First name -->
+                    <div class="text-center">
+                        <a  class="btn btn-sm btn-link txt-center" href="{{ path('app_forgot') }}" >
+                            <span class="strong text-center">Mot de passe oublié ?</span></a>
+                    </div>
+                    <div class="form-group col-12" style="display: none;">
                         <div class="md-form">        
                             {{ form_row(form.password, {'attr': {'class': 'form-control'}}) }}
                         </div>
                     </div>
                     <div class="form-group col-12">
-                        <!-- First name -->
                         <div class="md-form">        
                             {{ form_row(form.Telephone, {'attr': {'class': 'form-control'}}) }}
                         </div>
@@ -58,16 +60,29 @@
     <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
         <div class="card-body px-lg-5 pt-0">
             <div class="form-group row">
-                <div class="md-form col-12">        
+                <div class="md-form col- mt-2 text-info">        
                     Vous avez {{VarBookings|length}} rendez-vous
                 </div>
             </div>
-            {% for booking in VarBookings %}
+            {% for booking in VarBookings|reverse %}
+            {% set DateDebut = booking.start|date('d/m/Y') %}
+            {% set Today = 'now'|date('Y-m-d') %}
+            {% set a = '<div style="opacity:0.6">' %}
+            {% set a_fin = '</div>' %}
+            {% if Today <= DateDebut %}
+                {# {% set a = "<a href=\"../rdv/" ~ booking.id ~ "/edit\" class=\"btn btn-info\">" %} #}
+                {% set a = '<a href="#" class="btn btn-warning">' %}
+                {% set a_fin = '</a>' %}
+            {% endif %}
             <div class="form-group row">
-                <div class="md-form col-12 border border-light bg-light">        
-                    <p style="font-family: Roboto, sans-serif;"><i class="fas fa-calendar-alt"></i>Le <strong>{{ booking.start|date('d/m/Y') }}</strong> à <strong>{{ booking.start|date('H:i') }}</strong>
-                    <i>(Fin estimée à {{ booking.end|date('H:i') }})</i>
-                    <p><small>Descriptif : {{ booking.description }}</small></p>
+                <div class="md-form col-12 border border-light">        
+                        {{ a|raw }}
+                        <p style="font-family: Verdana, sans-serif;"><i class="fas fa-calendar-alt"></i> Le <strong>{{ booking.start|date('d/m/Y') }}</strong> à <strong>{{ booking.start|date('H:i') }}</strong>
+                            <small><i>(Fin estimée à {{ booking.end|date('H:i') }})</i></small>
+                            {# <i>(Tarif estimé à {{ booking.TarifEnergie }})</i> #}
+                            <p><small>Descriptif : {{ booking.description }}</small></p>
+                        {{ a_fin|raw }}
+                    
                 </div>
             </div>
             {% endfor %}

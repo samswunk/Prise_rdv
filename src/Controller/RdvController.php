@@ -85,7 +85,7 @@ class RdvController extends AbstractController
                         ]),
                         'text/html'
                         );
-
+                        
         $this->mailer->send($msg);
 
     }
