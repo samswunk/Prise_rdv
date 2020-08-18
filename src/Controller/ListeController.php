@@ -37,7 +37,7 @@ class ListeController extends AbstractController
 
         if (($request->query->get('start')) && !$admin) 
         {
-            $vstart= date('Y-m-d',strtotime($request->query->get('start')));
+            // $vstart= date('Y-m-d',strtotime($request->query->get('start')));
             $vstart= date('Y-m-d');
             $vend= date('Y-m-d',strtotime($request->query->get('end')));
             $repos=$bookingRepository->findByRange($vstart,$vend);
@@ -46,6 +46,7 @@ class ListeController extends AbstractController
         {
             $repos=$bookingRepository->findAll();
         }
+
         foreach ($repos as $key=>$repo)
         {
             $title            = $repo->getIsFree() ? $repo->getTitle() : "RDV INDISPONIBLE";
@@ -54,6 +55,7 @@ class ListeController extends AbstractController
             $textColor        = $repo->getIsFree() ? "#FFFFFF" : "#FFFFFF"; //$repo->getBackGroundcolor();
             $editable         = $repo->getIsFree() ? true : false;//$repo->getBackGroundcolor();
             $user             = $repo->getIdUser();
+            $data[$key]['isConfirmed']  = $repo->getIsConfirmed();
             /* 
             * s'il y a un utilisateur enregistré (idUser !null) pour ce rdv il s'agit d'un rdv déjà pris
             */
@@ -68,13 +70,14 @@ class ListeController extends AbstractController
                 * OU
                 * si l'utilisateur courrant est administrateur il peut tout voir.
                 */
+                // dd($CurrentUser->getId(),$user->getId());
                 if (    ( $CurrentUser && $user->getId() == $CurrentUser->getId() )  
                     || $admin)
                 {
                     $title            = $repo->getTitle();
                     $description      = $repo->getDescription();
                     $editable         = "true";//$repo->getBackGroundcolor();
-                    $bgColor          = "#A4262C";
+                    $bgColor          = ( $data[$key]['isConfirmed'] ? "#17A2B8" : "#A4262C"); // bleu plus sympa "#008EF6"
                     $data[$key]['idUser']   = $user->getId();
                     $data[$key]['nom']      = $user->getNom();
                     $data[$key]['email']    = $user->getEmail();
@@ -89,6 +92,7 @@ class ListeController extends AbstractController
             $data[$key]['end']              = date_format($repo->getEnd(),"Y-m-d H:i:s");
             $data[$key]['editable']         = $editable;//$repo->getBackGroundcolor();
             $data[$key]['isFree']           = $repo->getIsFree();
+            
             $data[$key]['backgroundColor']  =  $bgColor;
             $data[$key]['borderColor']      =  $bgColor;
             $data[$key]['textColor']        =  $textColor;

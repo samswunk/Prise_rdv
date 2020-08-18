@@ -76,10 +76,10 @@ class BookingController extends AbstractController
         // dd($request->request->all());   
         $booking = new Booking();
         
-        // si un id existe il s'agit d'une modification.
         $id = $request->request->get('booking')['id'];
         $entityManager = $this->getDoctrine()->getManager();
         
+        // si un id existe il s'agit d'une modification.
         if ($id) 
         {
             echo(" MODIFICATION DU RDV ".$id);
@@ -103,7 +103,7 @@ class BookingController extends AbstractController
         if ($form->isSubmitted()) 
         {
             $booking->setIsFree(true);
-            $booking->setIsFree(false);
+            $booking->setIsConfirmed(false);
             $entityManager->persist($booking);
             $entityManager->flush();
                 /**/
