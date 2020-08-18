@@ -14,9 +14,11 @@
 {% endblock %}
 
 
-<body class="container border border-gray" style="font-family: Roboto,sans-serif;">
-<div class="container">
-  <nav class="navbar navbar-expand-lg navbar-light bg-white  border border-gray">
+<body class="container col-12 m-0 p-0" 
+      style="background-color: #EEF2F6; font-family: Roboto,sans-serif;">
+<div class="container col-12">
+  {# <nav class="navbar navbar-expand-lg navbar-light bg-white  border border-gray"> #}
+  <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
     <a class="navbar-brand" href="#"><img src="{{ asset('img/logo-chauffatec.jpg') }}" alt=""> 
     </a>
     <small>
@@ -30,9 +32,6 @@
               {% set UserRole = 'Administrateur' %} 
             {% endif %}
           {% endfor %}
-          Bonjour, {{ UserRole }} {{ app.user.nom ?? "inconnu" }}
-        {% else %}
-          Pas connecté
         {% endif %}
       </small>
     </small>
@@ -65,7 +64,9 @@
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#multi">Ouverture de rdv</a>
             </div>
           </li>
-          {% endif %}
+        </ul>
+        {% endif %}
+        <ul class="navbar-nav navbar-right">
           {% if UserId is not null %}
           <input type="hidden" name="startDate" id="startDate" 
             {% if UserRole == 'Administrateur' %}value="2018-01-01" {% else %}value="{{ 'now'|date_modify('+2 day')|date('Y-m-d') }}"{% endif %}>
@@ -73,11 +74,26 @@
             <a class="nav-link" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
           </li>            
           {% endif %}
+          {% if UserId is not null %}
+              <li class="nav-item dropdown ml-2">
+                <a  class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" 
+                    aria-haspopup="true" aria-expanded="false"
+                    style="font-weight:600;"><i class="far fa-user"></i> {{ app.user.prenom ~ " " ~ app.user.nom }}</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{{ path('booking_index') }}"><i class="far fa-calendar-alt"></i> Calendrier</a>
+                  <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                </div>
+              </li>
+            {% else %}
+              <li class="navbar-nav active">
+                <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}">Se connecter<span class="sr-only bg-Success"></span></a>
+              </li>
+            {% endif %}
         </ul>
-        <ul>
-            <li class="navbar-nav active navbar-right">
+        <ul class="navbar-right">
+            <li class="navbar-nav active">
               {% if UserId is not null %}
-                <a class="nav-link btn btn-outline-danger" href="{{ path('app_logout') }}">Déconnexion<span class="sr-only bg-danger"></span></a>
+                <a class="nav-link btn btn-outline-danger" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Déconnexion<span class="sr-only bg-danger"></span></a>
               {% else %}
                 <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}">Se connecter<span class="sr-only bg-Success"></span></a>
               {% endif %}
@@ -157,11 +173,12 @@
   </div>
 </div>
   {% if block("title") is defined %}
-  <div class="container col-{% if block("size") is defined %}{{ block('size') }}{% else %}8{% endif %}">
-    <h5 class="card-header info-color white-text text-center py-4">
+  <div class="container col-{% if block("size") is defined %}{{ block('size') }}{% else %}6{% endif %}">
+    <h5 class="text-left py-4">
       <strong>{{ block('title') }}</strong>
     </h5>
     {% endif %}
+
     {% block body %}
     
     {% endblock %}
