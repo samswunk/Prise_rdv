@@ -150,22 +150,20 @@ class BookingController extends AbstractController
     {
         // $user = $this->getUser();
         // $booking->setIdUser($user);
-        
+        // dd($request);
         $form = $this->createForm(BookingType::class, $booking);
-        $form->handleRequest($request);
 
+        $form->handleRequest($request);
+        
+        // dd($form,
+        //     $booking
+        // );
         if ($form->isSubmitted() && $form->isValid()) {
             
             $this->getDoctrine()->getManager()->flush();
             $rdv = $this->rdv;
             $typeEnvoi = ($request->request->get('booking')["isConfirmed"]==1 ? 'confirm' : 'cancel');
-            // dd($request,
-            //     $request->request->get('booking')["isFree"],
-            //     $request->request->get('booking')["isConfirmed"],
-            //     $request->request->all(),
-            //     $typeEnvoi
-            // );
-            $rdv->envoiMail($typeEnvoi,$booking,$booking->getIdUser(),$booking->getMarque(),$booking->getEnergie());
+            if ($booking->getIdUser()) $rdv->envoiMail($typeEnvoi,$booking,$booking->getIdUser(),$booking->getMarque(),$booking->getEnergie());
             
             return $this->redirectToRoute('booking_list');
         }

@@ -20,7 +20,7 @@
                                                                         <tbody>
                                                                             <tr>
                                                                                 <td valign="middle" align="left" style="color:#FFFFFF;">
-                                                                                    <span class="Object" id="OBJ_PREFIX_DWT148_com_zimbra_url">
+                                                                                    <span class="Object">
                                                                                         <h1 style=""><a  href="https://www.chauffatec.fr" target="_blank"
                                                                                             class="chauffatec_title" style="color:#FFFFFF;font-weight:300;">
                                                                                             CHAUFFATEC</a></h1>
@@ -66,21 +66,17 @@
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="font-size:14px; color:#435F71; font-weight:bold;">
-                                                                                    <span class="Object" id="OBJ_PREFIX_DWT149_com_zimbra_date">
+                                                                                    <span class="Object">
                                                                                         Votre rendez-vous du {{ booking.start ? booking.start|date('d/m/Y à H:i') : '' }} .
                                                                                     </span>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td style="font-size:14px; color:#435F71; font-weight:bold;">
-                                                                                    <span class="Object" id="OBJ_PREFIX_DWT149_com_zimbra_date">
+                                                                                    <span class="Object">
                                                                                         Pour l'entretien de votre chaudière {{ booking.marque.NomMarque }} à {{ booking.energie.NomEnergie }}
                                                                                     </span>
                                                                                 </td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style="font-size:14px; color:#435F71; font-weight:bold;">
-                                                                                    <span class="Object" id="OBJ_PREFIX_DWT149_com_zimbra_date">
+                                                                                    <span class="Object">
                                                                                         a malheureusement été <strong>annulé</strong>. 
                                                                                     </span>
                                                                                 </td>
@@ -147,9 +143,7 @@
                                                                                     height="44"
                                                                                     style="border-radius:4px; background-color:#0596DE;"
                                                                                     valign="center" width="264">
-                                                                                    <span
-                                                                                        class="Object"
-                                                                                        id="OBJ_PREFIX_DWT153_com_zimbra_url"><a
+                                                                                    <span class="Object"><a
                                                                                             style="display:block; text-decoration:none; line-height:44px; color:#FFFFFF;"
                                                                                             href="{{ absolute_url(path('profil_edit', { 'id': booking.idUser.id })) }}"
                                                                                             target="_blank">MON COMPTE</a></span></td>

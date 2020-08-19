@@ -23,20 +23,19 @@ class BookingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //$departement = $this->getDoctrine()->getManager()->getRepository('MonBundle:DepartementFrance')->find($id);
         $user = $options['data'];
         // $user = $user->getIdUser();
         // dd($user);
         $builder
             ->add('title', TextType::class, array
-            (
-                'attr' => 
-                    [
-                        'class' => 'form-control input-inline'
-                    ],
-                'label'=>'Titre',
+                (
+                    'attr' => 
+                        [
+                            'class' => 'form-control input-inline'
+                        ],
+                    'label'=>'Titre',
+                )
             )
-        )
             ->add('start', DateTimeType::class, array
                     (
                         'widget'=> 'single_text',
@@ -71,14 +70,14 @@ class BookingType extends AbstractType
                     'label'=>'Date de fin'
                 )
             )
-            ->add('background_color',ColorType::class,[
-                'required' => false,
-                'attr' => 
-                    [
-                        'class' => 'form-control'
-                    ], 
-                'label'=>'Couleur'
-                ])
+            // ->add('background_color',ColorType::class,[
+            //     'required' => false,
+            //     'attr' => 
+            //         [
+            //             'class' => 'form-control'
+            //         ], 
+            //     'label'=>'Couleur'
+            //     ])
             ->add('description', TextareaType::class,
                 [
                 'required'   => false,
@@ -87,53 +86,54 @@ class BookingType extends AbstractType
                         'class' => 'form-control'
                     ],
                 ])
-                ->add('marque', EntityType::class, [
-                    'placeholder' => "Quelle est la marque de votre chaudière ?",
-                    'class' => Marque::class,
-                    'choice_label'  => 'nomMarque',
-                    'attr' => 
-                        [
-                            'class' => 'form-control',
-                        ],
-                    // used to render a select box, check boxes or radios
-                    'multiple' => false,
-                    'expanded' => false
-                ])
-                ->add('energie', EntityType::class, [
-                    'placeholder' => "Quel type d'energie ?",
-                    'class' => Energie::class,
-                    'choice_label'=>'nomEnergie',
-                    'attr' => 
-                        [
-                            'class' => 'form-control typeEnergie',
-                        ],
-                    // used to render a select box, check boxes or radios
-                    'multiple' => false,
-                    'expanded' => false
-                ])                
+            // ->add('marque', EntityType::class, [
+            //         'placeholder' => "Quelle marque ?",
+            //         'class' => Marque::class,
+            //         'choice_label'  => 'nomMarque',
+            //         'label'  => 'La marque de votre chaudière',
+            //         'attr' => 
+            //             [
+            //                 'class' => 'form-control'
+            //             ],
+            //         // used to render a select box, check boxes or radios
+            //         'multiple' => false,
+            //         'expanded' => false
+            //     ])
+            // ->add('energie', EntityType::class, [
+            //         'placeholder' => "Quel type d'energie ?",
+            //         'class' => Energie::class,
+            //         'choice_label'=>'nomEnergie',
+            //         'attr' => 
+            //             [
+            //                 'class' => 'form-control typeEnergie'
+            //             ],
+            //         // used to render a select box, check boxes or radios
+            //         'multiple' => false,
+            //         'expanded' => false
+            //     ])                
             ->add('isFree', ChoiceType::class, array(
                     'placeholder' => "Souhaitez vous vérouiller le rdv ?",
                     'choices' => array(
-                        'Déverouiller (Les utilisateurs pourront choisir ce rdv)' => true, // disponible
-                        'Verouiller (Les utilisateurs ne pourront pas choisir ce rdv)' => false
+                        'Les utilisateurs peuvent choisir ce rdv (rdv ouvert)' => true, // disponible
+                        'Les utilisateurs ne peuvent pas choisir ce rdv (rdv verouillé)' => false
                      ),
                      'attr' => 
                          [
                              'class' => 'form-control disponible'
                          ],
-                     'label' => 'Vérouiller/Dévérouiller le rdv',
+                     'label' => 'STATUT DU RDV (Determine si le rdv est disponible ou non dans le calendrier)',
                  ))
             ->add('isConfirmed', ChoiceType::class, array(
                     'placeholder' => "Souhaitez vous valider le rdv ?",
                     'choices' => array(
-                        'Valider' => true,
-                        'Avalider' => false
+                        'OUI' => true,
+                        'NON' => false
                      ),
                      'attr' => 
                          [
                              'class' => 'form-control confirmation'
                          ],
-                     'label' => 'Valider le rendez-vous',
+                     'label' => 'Souhaitez vous valider le rendez-vous ?',
                  ))
         ;
     }
