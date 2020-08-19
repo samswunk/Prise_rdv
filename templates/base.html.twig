@@ -47,13 +47,15 @@
           <li class="nav-item active ml-2">
             <a class="nav-link" href="{{ path('app_index') }}">Accueil <span class="sr-only">(current)</span></a>
           </li>
+        </ul>
+        <ul class="navbar-nav navbar-center mr-auto">
           <li class="nav-item ml-5">
             <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}"><strong class="color-white">Prendre rdv</strong></a>
           </li>
           {% if UserRole == 'Administrateur' %}
             <li class="nav-item dropdown ml-2">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
-              <div class="dropdown-menu">
+              <div class="dropdown-menu border rounded">
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ShowRdv">Ouvrir un rdv</a>
                 <a class="dropdown-item" href="{{ path('booking_index') }}">Calendrier</a>
                 <a class="dropdown-item" href="{{ path('booking_valid') }}">Liste des rendez-vous à valider</a>
@@ -74,6 +76,9 @@
               <input type="hidden" name="startDate" id="startDate" 
               {% if UserRole == 'Administrateur' %}value="2018-01-01" {% else %}value="{{ 'now'|date_modify('+2 day')|date('Y-m-d') }}"{% endif %}>
               <li class="nav-item ml-2">
+                <a class="nav-link" href="{{ path('rdv_profil', { 'id': UserId }) }}">Mes rendez-vous</a>
+              </li>            
+              <li class="nav-item ml-2">
                 <a class="nav-link" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
               </li>            
               <li class="nav-item dropdown ml-2">
@@ -91,7 +96,7 @@
               </li>
           {% endif %}
         </ul>
-        <ul class="navbar-right">
+        {# <ul class="navbar-right">
             <li class="navbar-nav active">
               {% if UserId is not null %}
                 <a class="nav-link btn btn-outline-danger" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Déconnexion<span class="sr-only bg-danger"></span></a>
@@ -99,7 +104,7 @@
                 <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}">Se connecter<span class="sr-only bg-Success"></span></a>
               {% endif %}
             </li>
-        </ul>
+        </ul> #}
         {# <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="text" placeholder="Rechercher">
           <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
@@ -166,7 +171,7 @@
           <div class="modal-footer row col-12">
             <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
             <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
-        </div>
+          </div>
         </form>
       </div>
   </div>
