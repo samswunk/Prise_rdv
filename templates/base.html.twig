@@ -11,30 +11,33 @@
 <link rel="stylesheet" href="{{ asset('fontawesome/css/all.css') }}">
 <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.css') }}" >
 <link rel="stylesheet" href="{{ asset('datatable/css/dataTables.bootstrap4.min.css') }}" >
+<style>
+  .bg-chauffatec {
+      background-color: #EE4423;
+    }
+  .color-chauffatec {
+      color: #EE4423;
+    }
+</style>
 {% endblock %}
 
+{% set UserRole = 'Utilisateur' %} 
+{% set UserId = null %} 
+{% if app.user %}
+  {% set UserId = app.user.id %} 
+  {% for role in app.user.roles %}
+    {% if role == 'ROLE_ADMIN' %}
+      {% set UserRole = 'Administrateur' %} 
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
-<body class="container col-12 m-0 p-0" 
+<body class="container col-12"  
       style="background-color: #EEF2F6; font-family: Roboto,sans-serif;">
-<div class="container col-12">
   {# <nav class="navbar navbar-expand-lg navbar-light bg-white  border border-gray"> #}
-  <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
-    <a class="navbar-brand" href="#"><img src="{{ asset('img/logo-chauffatec.jpg') }}" alt=""> 
+  <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-white" style="height: 48px;">
+    <a class="color-chauffatec" href="#" style="font-weight: 300; font-size: 1.5rem;"><strong>SARL CHAUFFATEC</strong><!-- <img src="{{ asset('img/logo-chauffatec.jpg') }}" alt=""> -->
     </a>
-    <small>
-      <small>
-        {% set UserRole = 'Utilisateur' %} 
-        {% set UserId = null %} 
-        {% if app.user %}
-          {% set UserId = app.user.id %} 
-          {% for role in app.user.roles %}
-            {% if role == 'ROLE_ADMIN' %}
-              {% set UserRole = 'Administrateur' %} 
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-      </small>
-    </small>
       <button   class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" 
                 aria-expanded="false" aria-label="Toggle navigation">
         <span   class="navbar-toggler-icon"></span>
@@ -48,33 +51,31 @@
             <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}"><strong class="color-white">Prendre rdv</strong></a>
           </li>
           {% if UserRole == 'Administrateur' %}
-          <li class="nav-item dropdown ml-2">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ShowRdv">Ouvrir un rdv</a>
-              <a class="dropdown-item" href="{{ path('booking_index') }}">Calendrier</a>
-              <a class="dropdown-item" href="{{ path('booking_valid') }}">Liste des rendez-vous à valider</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{{ path('user_index') }}">Liste des clients</a>
-              <a class="dropdown-item" href="{{ path('booking_list') }}">Liste des rendez-vous</a>
-              <a class="dropdown-item" href="{{ path('marque_index') }}">Liste des marques</a>
-              <a class="dropdown-item" href="{{ path('energie_index') }}">Liste des energies</a>
-              <div class="dropdown-divider"></div>
-                {# <a class="dropdown-item" href="{{ path('multi_new') }}">Ouverture de rdv</a> #}
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#multi">Ouverture de rdv</a>
-            </div>
-          </li>
+            <li class="nav-item dropdown ml-2">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ShowRdv">Ouvrir un rdv</a>
+                <a class="dropdown-item" href="{{ path('booking_index') }}">Calendrier</a>
+                <a class="dropdown-item" href="{{ path('booking_valid') }}">Liste des rendez-vous à valider</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ path('user_index') }}">Liste des clients</a>
+                <a class="dropdown-item" href="{{ path('booking_list') }}">Liste des rendez-vous</a>
+                <a class="dropdown-item" href="{{ path('marque_index') }}">Liste des marques</a>
+                <a class="dropdown-item" href="{{ path('energie_index') }}">Liste des energies</a>
+                <div class="dropdown-divider"></div>
+                  {# <a class="dropdown-item" href="{{ path('multi_new') }}">Ouverture de rdv</a> #}
+                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#multi">Ouverture de rdv</a>
+              </div>
+            </li>
+          {% endif %}
         </ul>
-        {% endif %}
         <ul class="navbar-nav navbar-right">
           {% if UserId is not null %}
-          <input type="hidden" name="startDate" id="startDate" 
-            {% if UserRole == 'Administrateur' %}value="2018-01-01" {% else %}value="{{ 'now'|date_modify('+2 day')|date('Y-m-d') }}"{% endif %}>
-          <li class="nav-item ml-2">
-            <a class="nav-link" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
-          </li>            
-          {% endif %}
-          {% if UserId is not null %}
+              <input type="hidden" name="startDate" id="startDate" 
+              {% if UserRole == 'Administrateur' %}value="2018-01-01" {% else %}value="{{ 'now'|date_modify('+2 day')|date('Y-m-d') }}"{% endif %}>
+              <li class="nav-item ml-2">
+                <a class="nav-link" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
+              </li>            
               <li class="nav-item dropdown ml-2">
                 <a  class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" 
                     aria-haspopup="true" aria-expanded="false"
@@ -84,11 +85,11 @@
                   <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                 </div>
               </li>
-            {% else %}
+          {% else %}
               <li class="navbar-nav active">
                 <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}">Se connecter<span class="sr-only bg-Success"></span></a>
               </li>
-            {% endif %}
+          {% endif %}
         </ul>
         <ul class="navbar-right">
             <li class="navbar-nav active">
@@ -114,7 +115,7 @@
         {% endfor %}
     {% endfor %}
     {# <div class=""><h4><strong class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</strong></h4></div> #}
-  </div>
+</div>
 
 {# SHOW RDV MULTI MODAL #}
   {% include("multi/new.html.twig") %}
@@ -173,7 +174,7 @@
   </div>
 </div>
   {% if block("title") is defined %}
-  <div class="container col-{% if block("size") is defined %}{{ block('size') }}{% else %}6{% endif %}">
+  <div class="container mt-5 col-{% if block("size") is defined %}{{ block('size') }}{% else %}6{% endif %}">
     <h5 class="text-left py-4">
       <strong>{{ block('title') }}</strong>
     </h5>
@@ -239,13 +240,13 @@
         {
           height: 800,
           width: 600, 
+          themeSystem: 'bootstrap4',
           defaultView: 'timeGridWeek',
           timezone: 'Europe/Paris',
           //ignoreTimezone: true,
           locale: 'fr',
           // editable: true,
           selectable: ("{{ UserRole }}" == "Administrateur" ? true : false),
-          themeSystem: 'bootstrap',
           selectHelper: true,
           nowIndicator: true,
           validRange: 

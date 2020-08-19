@@ -44,14 +44,14 @@
             </div>
         </div>
     </div>  
-    <button class="btn btn-primary col-12">ENREGISTRER</button>
+    <a class="btn btn-primary collapsed" data-toggle="collapse" href="#infos-client" role="button" aria-expanded="false" aria-controls="infos-client">
+        Mes autres informations clients
+    </a>
+    <button class="btn btn-primary col-12 mt-5">ENREGISTRER</button>
     <div class="text-right">
         <a  class="btn btn-sm btn-link txt-center" href="{{ path('app_forgot') }}" >
             <span class="strong text-center" style="font-weight:bold;">CHANGER DE MOT DE PASSE</span></a>
     </div>
-    <a class="btn btn-primary collapsed" data-toggle="collapse" href="#infos-client" role="button" aria-expanded="false" aria-controls="infos-client">
-        Mes informations clients
-    </a>
     {{ form_row(form._token) }}
     {# <input type="hidden" name="_method" value="UPDATE"> #}
     {# <input type="hidden" name="_token" value="{{ csrf_token('update' ~ app.user.id) }}"> #}
