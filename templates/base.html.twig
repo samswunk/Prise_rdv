@@ -35,8 +35,8 @@
 <body class="container col-12"  
       style="background-color: #EEF2F6; font-family: Roboto,sans-serif;">
   {# <nav class="navbar navbar-expand-lg navbar-light bg-white  border border-gray"> #}
-  <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-white" style="height: 48px;">
-    <a class="color-chauffatec" href="#" style="font-weight: 300; font-size: 1.5rem;"><strong>SARL CHAUFFATEC</strong><!-- <img src="{{ asset('img/logo-chauffatec.jpg') }}" alt=""> -->
+  <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-chauffatec" style="height: 48px;">
+    <a class="color-chauffatec text-white" href="#" style="font-weight: 300; font-size: 1.5rem;"><strong>SARL CHAUFFATEC</strong><!-- <img src="{{ asset('img/logo-chauffatec.jpg') }}" alt=""> -->
     </a>
       <button   class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" 
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -45,28 +45,28 @@
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active ml-2">
-            <a class="nav-link" href="{{ path('app_index') }}">Accueil <span class="sr-only">(current)</span></a>
+            <a class="nav-link text-white" href="{{ path('app_index') }}">Accueil <span class="sr-only">(current)</span></a>
           </li>
         </ul>
         <ul class="navbar-nav navbar-center mr-auto">
           <li class="nav-item ml-5">
-            <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}"><strong class="color-white">Prendre rdv</strong></a>
+            <a class="nav-link btn text-white" href="{{ path('booking_index') }}"><strong class="color-white">Prendre rdv</strong></a>
           </li>
           {% if UserRole == 'Administrateur' %}
             <li class="nav-item dropdown ml-2">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
               <div class="dropdown-menu border rounded">
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ShowRdv">Ouvrir un rdv</a>
-                <a class="dropdown-item" href="{{ path('booking_index') }}">Calendrier</a>
-                <a class="dropdown-item" href="{{ path('booking_valid') }}">Liste des rendez-vous à valider</a>
+                <a class="dropdown-item text-white" href="#" data-toggle="modal" data-target="#ShowRdv">Ouvrir un rdv</a>
+                <a class="dropdown-item text-white" href="{{ path('booking_index') }}">Calendrier</a>
+                <a class="dropdown-item text-white" href="{{ path('booking_valid') }}">Liste des rendez-vous à valider</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{{ path('user_index') }}">Liste des clients</a>
-                <a class="dropdown-item" href="{{ path('booking_list') }}">Liste des rendez-vous</a>
-                <a class="dropdown-item" href="{{ path('marque_index') }}">Liste des marques</a>
-                <a class="dropdown-item" href="{{ path('energie_index') }}">Liste des energies</a>
+                <a class="dropdown-item text-white" href="{{ path('user_index') }}">Liste des clients</a>
+                <a class="dropdown-item text-white" href="{{ path('booking_list') }}">Liste des rendez-vous</a>
+                <a class="dropdown-item text-white" href="{{ path('marque_index') }}">Liste des marques</a>
+                <a class="dropdown-item text-white" href="{{ path('energie_index') }}">Liste des energies</a>
                 <div class="dropdown-divider"></div>
                   {# <a class="dropdown-item" href="{{ path('multi_new') }}">Ouverture de rdv</a> #}
-                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#multi">Ouverture de rdv</a>
+                  <a class="dropdown-item text-white" href="#" data-toggle="modal" data-target="#multi">Ouverture de rdv</a>
               </div>
             </li>
           {% endif %}
@@ -76,23 +76,23 @@
               <input type="hidden" name="startDate" id="startDate" 
               {% if UserRole == 'Administrateur' %}value="2018-01-01" {% else %}value="{{ 'now'|date_modify('+2 day')|date('Y-m-d') }}"{% endif %}>
               <li class="nav-item ml-2">
-                <a class="nav-link" href="{{ path('rdv_profil', { 'id': UserId }) }}">Mes rendez-vous</a>
+                <a class="nav-link text-white-50" href="{{ path('rdv_profil', { 'id': UserId }) }}">Mes rendez-vous</a>
               </li>            
               <li class="nav-item ml-2">
-                <a class="nav-link" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
+                <a class="nav-link text-white" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
               </li>            
               <li class="nav-item dropdown ml-2">
-                <a  class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" 
+                <a  class="nav-link dropdown-toggle text-white" data-toggle="dropdown" href="#" role="button" 
                     aria-haspopup="true" aria-expanded="false"
                     style="font-weight:600;"><i class="far fa-user"></i> {{ app.user.prenom ~ " " ~ app.user.nom }}</a>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="{{ path('booking_index') }}"><i class="far fa-calendar-alt"></i> Calendrier</a>
-                  <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                  <a class="dropdown-item text-white" href="{{ path('booking_index') }}"><i class="far fa-calendar-alt"></i> Calendrier</a>
+                  <a class="dropdown-item text-white" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                 </div>
               </li>
           {% else %}
               <li class="navbar-nav active">
-                <a class="nav-link btn btn-outline-success" href="{{ path('booking_index') }}">Se connecter<span class="sr-only bg-Success"></span></a>
+                <a class="nav-link btn text-white" href="{{ path('booking_index') }}">Se connecter<span class="sr-only bg-Success"></span></a>
               </li>
           {% endif %}
         </ul>
