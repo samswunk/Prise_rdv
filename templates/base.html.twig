@@ -32,12 +32,10 @@
   {% endfor %}
 {% endif %}
 
-<body class="container col-12"  
+<body class="container-fluid"  
       style="background-color: #EEF2F6; font-family: Roboto,sans-serif;">
-  {# <nav class="navbar navbar-expand-lg navbar-light bg-white  border border-gray"> #}
-  <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-chauffatec" style="height: 48px;">
-    <a class="color-chauffatec text-white" href="#" style="font-weight: 300; font-size: 1.5rem;"><strong>SARL CHAUFFATEC</strong><!-- <img src="{{ asset('img/logo-chauffatec.jpg') }}" alt=""> -->
-    </a>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-chauffatec p-0">
+      <a class=" text-white p-0" href="#"><img src="{{ asset('img/logo-chauffatec.jpg') }}" alt=""></a><!--style="font-weight: 300; font-size: 1.5rem;" <strong>SARL CHAUFFATEC</strong>  -->
       <button   class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" 
                 aria-expanded="false" aria-label="Toggle navigation">
         <span   class="navbar-toggler-icon"></span>
@@ -50,44 +48,45 @@
         </ul>
         <ul class="navbar-nav navbar-center mr-auto">
           <li class="nav-item ml-5">
-            <a class="nav-link btn text-white" href="{{ path('booking_index') }}"><strong class="color-white">Prendre rdv</strong></a>
+            {% if UserRole == 'Administrateur' %}
+              <li class="nav-item dropdown ml-2">
+                <a class="nav-link dropdown-toggle text-white bold" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-users-cog"></i> Admin</a>
+                <div class="dropdown-menu border rounded bg-light-gray">
+                  {# <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ShowRdv">Ouvrir un rdv</a> #}
+                  <a class="dropdown-item" href="{{ path('booking_index') }}"><i class="fas fa-calendar-alt"></i>&nbsp;&nbsp;Calendrier</a>
+                  <a class="dropdown-item" href="{{ path('booking_valid') }}"><i class="far fa-calendar-check"></i>&nbsp;&nbsp;Rendez-vous à valider</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{{ path('user_index') }}"><i class="fas fa-users"></i>&nbsp;&nbsp;Liste des clients</a>
+                  <a class="dropdown-item" href="{{ path('booking_list') }}"><i class="far fa-list-alt"></i>&nbsp;&nbsp;Liste des rendez-vous</a>
+                  <a class="dropdown-item" href="{{ path('marque_index') }}"><img width="15px;" height="15px;" src="{{ asset('img/gear.png') }}">&nbsp;&nbsp;Liste des marques</a>
+                  <a class="dropdown-item" href="{{ path('energie_index') }}"><img width="15px;" height="15px;" src="{{ asset('img/gear.png') }}">&nbsp;&nbsp;Liste des energies</a>
+                  <div class="dropdown-divider"></div>
+                    {# <a class="dropdown-item" href="{{ path('multi_new') }}">Ouverture de rdv</a> #}
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#multi">Ouverture de rdv</a>
+                </div>
+              </li>            
+            {% else %}
+              <a class="nav-link btn text-white" href="{{ path('booking_index') }}"><strong class="color-white">Prendre rdv</strong></a>
+            {% endif %}
           </li>
-          {% if UserRole == 'Administrateur' %}
-            <li class="nav-item dropdown ml-2">
-              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
-              <div class="dropdown-menu border rounded">
-                <a class="dropdown-item text-white" href="#" data-toggle="modal" data-target="#ShowRdv">Ouvrir un rdv</a>
-                <a class="dropdown-item text-white" href="{{ path('booking_index') }}">Calendrier</a>
-                <a class="dropdown-item text-white" href="{{ path('booking_valid') }}">Liste des rendez-vous à valider</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item text-white" href="{{ path('user_index') }}">Liste des clients</a>
-                <a class="dropdown-item text-white" href="{{ path('booking_list') }}">Liste des rendez-vous</a>
-                <a class="dropdown-item text-white" href="{{ path('marque_index') }}">Liste des marques</a>
-                <a class="dropdown-item text-white" href="{{ path('energie_index') }}">Liste des energies</a>
-                <div class="dropdown-divider"></div>
-                  {# <a class="dropdown-item" href="{{ path('multi_new') }}">Ouverture de rdv</a> #}
-                  <a class="dropdown-item text-white" href="#" data-toggle="modal" data-target="#multi">Ouverture de rdv</a>
-              </div>
-            </li>
-          {% endif %}
         </ul>
         <ul class="navbar-nav navbar-right">
           {% if UserId is not null %}
               <input type="hidden" name="startDate" id="startDate" 
               {% if UserRole == 'Administrateur' %}value="2018-01-01" {% else %}value="{{ 'now'|date_modify('+2 day')|date('Y-m-d') }}"{% endif %}>
               <li class="nav-item ml-2">
-                <a class="nav-link" href="{{ path('rdv_profil', { 'id': UserId }) }}">Mes rendez-vous</a>
+                <a class="nav-link text-white-50" href="{{ path('rdv_profil', { 'id': UserId }) }}">Mes rendez-vous</a>
               </li>            
               <li class="nav-item ml-2">
-                <a class="nav-link" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
-              </li>            
+                <a class="nav-link text-white" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
+              </li>           
               <li class="nav-item dropdown ml-2">
                 <a  class="nav-link dropdown-toggle text-white" data-toggle="dropdown" href="#" role="button" 
                     aria-haspopup="true" aria-expanded="false"
                     style="font-weight:600;"><i class="far fa-user"></i> {{ app.user.prenom ~ " " ~ app.user.nom }}</a>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item text-white" href="{{ path('booking_index') }}"><i class="far fa-calendar-alt"></i> Calendrier</a>
-                  <a class="dropdown-item text-white" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                  <a class="dropdown-item" href="{{ path('booking_index') }}"><i class="far fa-calendar-alt"></i> Calendrier</a>
+                  <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                 </div>
               </li>
           {% else %}
@@ -110,89 +109,94 @@
           <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
         </form> #}
       </div>
-  </nav>
-  <div class="col-12">
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="flash-notice alert alert-{{ label }}">
-              <h3>{{ message }}</h3>
-            </div>
-        {% endfor %}
-    {% endfor %}
-    {# <div class=""><h4><strong class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</strong></h4></div> #}
-</div>
-
-{# SHOW RDV MULTI MODAL #}
-  {% include("multi/new.html.twig") %}
-{# END RDV MUTLI MDAL #}
-
-{# SHOW RDV MODAL #}
-<div  class="modal fade bg-light" 
-      style="height: 90%; min-width: 80%;"
-      id="ShowRdv" tabindex="-1" role="dialog" aria-labelledby="ModalRdv" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">      
-    <div class="modal-content">
-      <div class="modal-header alert alert-danger">
-          <h4 id="booking_titreShowRdv" class="modal-titlecenter">Ouvrir un Rdv</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </nav>
+      
+      {# MESSAGES #}
+      <div class="col-12">
+          {% for label, messages in app.flashes %}
+              {% for message in messages %}
+                  <div class="flash-notice alert alert-{{ label }}">
+                    <h4>{{ message }}</h4>
+                  </div>
+              {% endfor %}
+          {% endfor %}
+          {# <div class=""><h4><strong class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</strong></h4></div> #}
       </div>
-      <div class="modal-body">
-        <form id="booking" class="col-12 row" action="{{ path('rdv_new') }}" method="POST">
-          <input type="hidden" name="booking[id]" id="booking_id">
-          <input type="hidden" name="booking[iduser]" id="booking_iduser" {% if UserRole != 'Administrateur' %}value="{{ UserId }}" {% endif %}>
-          <div class="m-0 p-0 row col-12" id="divContenu">
-            <div class="row col-12">
-                <label class="col-4" for="booking_title">Titre</label>
-                <input  type="text" class="form-control col-8" 
-                        name="booking[title]" id="booking_title" placeholder="Entrez un titre" 
-                        required="required" maxlength="255">
+      {# END MESSAGES #}
+
+      {# SHOW RDV MULTI MODAL #}
+        {% include("multi/new.html.twig") %}
+      {# END RDV MUTLI MDAL #}
+
+      {# SHOW RDV MODAL #}
+      <div  class="modal fade bg-light" 
+            style="height: 90%; min-width: 80%;"
+            id="ShowRdv" tabindex="-1" role="dialog" aria-labelledby="ModalRdv" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">      
+          <div class="modal-content">
+            <div class="modal-header alert alert-danger">
+                <h4 id="booking_titreShowRdv" class="modal-titlecenter">Ouvrir un Rdv</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="row col-12">
-                <label class="col-4" for="booking_start">Date de début</label>
-                <input  type="text" class="form-control input-inline datetimepicker col-8" 
-                        id="booking_start" name="booking[start]" required="required" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
+            <div class="modal-body">
+              <form id="booking" class="col-12 row" action="{{ path('rdv_new') }}" method="POST">
+                <input type="hidden" name="booking[id]" id="booking_id">
+                <input type="hidden" name="booking[iduser]" id="booking_iduser" {% if UserRole != 'Administrateur' %}value="{{ UserId }}" {% endif %}>
+                <div class="m-0 p-0 row col-12" id="divContenu">
+                  <div class="row col-12">
+                      <label class="col-4" for="booking_title">Titre</label>
+                      <input  type="text" class="form-control col-8" 
+                              name="booking[title]" id="booking_title" placeholder="Entrez un titre" 
+                              required="required" maxlength="255">
+                  </div>
+                  <div class="row col-12">
+                      <label class="col-4" for="booking_start">Date de début</label>
+                      <input  type="text" class="form-control input-inline datetimepicker col-8" 
+                              id="booking_start" name="booking[start]" required="required" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
+                  </div>
+                  <div class="row col-12">
+                      <label class="col-4" for="booking_end">Date de fin</label>
+                      <input  type="text" class="form-control input-inline datetimepicker end col-8" 
+                              id="booking_end" name="booking[end]" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
+                  </div>
+                  <div class="row col-12">
+                      <label class="col-4" for="booking_background_color">Couleur</label>
+                      <input  type="color" class="form-control col-8" 
+                              id="booking_background_color" name="booking[background_color]" placeholder="Selectionnez une couleur">
+                  </div>
+                  <div class="row col-12">
+                      <label    class="col-4" for="booking_description">Description</label>
+                      <textarea class="form-control col-8" id="booking_description" name="booking[description]"></textarea>
+                  </div>
+                  <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
+                </div>
+                <div class="modal-footer row col-12">
+                  <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
+                </div>
+              </form>
             </div>
-            <div class="row col-12">
-                <label class="col-4" for="booking_end">Date de fin</label>
-                <input  type="text" class="form-control input-inline datetimepicker end col-8" 
-                        id="booking_end" name="booking[end]" data-provide="datetimepicker" format="dd/MM/yyyy HH:mm" input="string" input_format="y-M-d HH:mm:ss">
-            </div>
-            <div class="row col-12">
-                <label class="col-4" for="booking_background_color">Couleur</label>
-                <input  type="color" class="form-control col-8" 
-                        id="booking_background_color" name="booking[background_color]" placeholder="Selectionnez une couleur">
-            </div>
-            <div class="row col-12">
-                <label    class="col-4" for="booking_description">Description</label>
-                <textarea class="form-control col-8" id="booking_description" name="booking[description]"></textarea>
-            </div>
-            <input type="hidden" id="booking__token" name="booking[_token]" value="{{ csrf_token('insert') }}">
           </div>
-          <div class="modal-footer row col-12">
-            <button class="btn btn-success"  id="booking_submit_button">Sauvegarder</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal" id="booking_close_button">Fermer</button>
-          </div>
-        </form>
+        </div>
       </div>
-  </div>
-  </div>
-  </div>
-</div>
+      {# END RDV MODAL #}
+
   {% if block("title") is defined %}
-  <div class="container mt-5 col-{% if block("size") is defined %}{{ block('size') }}{% else %}6{% endif %}">
-    <h5 class="text-left py-4">
+  <div class="container-fluid shadow-lg p-3 mt-5 p-0 bg-white rounded col-sm-12 col-md-{% if block("size") is defined %}{{ block('size') }}{% else %}6{% endif %}" >
+    <h5 class="text-left py-4 animated fadeIn">
       <strong>{{ block('title') }}</strong>
     </h5>
-    {% endif %}
+  {% endif %}
 
     {% block body %}
     
     {% endblock %}
 
-    {% if block("title") is defined %}
-        </div>
-      </body>
-    {% endif %}
+  {% if block("title") is defined %}
+      </div>
+  {% endif %}
+      
+</body>
 
 {% block javascripts %}
     <script src="{{ asset('js/jquery.js') }}">   </script>
