@@ -76,10 +76,10 @@
               <input type="hidden" name="startDate" id="startDate" 
               {% if UserRole == 'Administrateur' %}value="2018-01-01" {% else %}value="{{ 'now'|date_modify('+2 day')|date('Y-m-d') }}"{% endif %}>
               <li class="nav-item ml-2">
-                <a class="nav-link text-white-50" href="{{ path('rdv_profil', { 'id': UserId }) }}">Mes rendez-vous</a>
+                <a class="nav-link" href="{{ path('rdv_profil', { 'id': UserId }) }}">Mes rendez-vous</a>
               </li>            
               <li class="nav-item ml-2">
-                <a class="nav-link text-white" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
+                <a class="nav-link" href="{{ path('profil_edit', { 'id': UserId }) }}">Mes informations</a>
               </li>            
               <li class="nav-item dropdown ml-2">
                 <a  class="nav-link dropdown-toggle text-white" data-toggle="dropdown" href="#" role="button" 
