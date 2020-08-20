@@ -14,9 +14,9 @@
 {% endblock %}
 
 
-<body class="container border border-gray" style="font-family: Roboto,sans-serif;">
+<body class="container" style="font-family: Roboto,sans-serif;">
 <div class="container">
-  <nav class="navbar navbar-expand-lg navbar-light bg-white  border border-gray">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
     <a class="navbar-brand" href="#"><img src="{{ asset('img/logo-chauffatec.jpg') }}" alt=""> 
     </a>
     <small>
@@ -158,7 +158,7 @@
 </div>
   {% if block("title") is defined %}
   <div class="container col-{% if block("size") is defined %}{{ block('size') }}{% else %}8{% endif %}">
-    <h5 class="card-header info-color white-text text-center py-4">
+    <h5 class="card-header border rounded text-left py-4">
       <strong>{{ block('title') }}</strong>
     </h5>
     {% endif %}
