@@ -7,6 +7,8 @@ use App\Form\RdvType;
 use App\Entity\Marque;
 use App\Entity\Booking;
 use App\Entity\Energie;
+use App\Form\BookingType;
+use App\Repository\BookingRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -82,6 +84,20 @@ class RdvController extends AbstractController
 
         $this->mailer->send($msg);
 
+    }
+
+    /**
+     * @Route("/mes_rdv/{id}", name="rdv_profil", methods={"GET","POST"})
+     */
+    public function mesRdv(BookingRepository $bookingRepository, $id): Response
+    {
+        $bookings=$bookingRepository->findMesRdv($id);
+        // dd($bookings,count($bookings));
+        return $this->render('rdv/mesrdv.html.twig', [
+            'bookings' => $bookings,
+            'VarBookings' => count($bookings)
+            // ->findAll(),
+        ]);
     }
 
     /**

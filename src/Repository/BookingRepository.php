@@ -42,10 +42,26 @@ class BookingRepository extends ServiceEntityRepository
         ->andWhere('b.start >= :pstart')
         ->andWhere('b.isFree = 0')
         ->setParameter('pstart', $start)
+        ->orderBy('b.start', 'DESC')
         // ->setParameter('pend', $end)
         ->getQuery();
         return $req->getResult();
     }
+    
+    public function findMesRdv($iduser)
+    {
+        $qb = $this->createQueryBuilder('b');
+        $req = $qb  ->addSelect('e')
+                    ->addSelect('m')
+                    ->join('b.energie', 'e')
+                    ->join('b.marque', 'm')
+                    ->andWhere('b.IdUser = :iduser')
+                    ->setParameter('iduser', $iduser)
+                    ->orderBy('b.start', 'DESC')
+                    ->getQuery();
+        return $req->getResult();
+    }
+
     // /**
     //  * @return Booking[] Returns an array of Booking objects
     //  */

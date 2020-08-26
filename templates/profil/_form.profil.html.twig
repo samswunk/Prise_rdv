@@ -1,91 +1,91 @@
-<div class="tab-content" id="v-pills-tabContent">
-    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-            <div class="card-body px-lg-5 pt-0">
-                <div class="text-center " style="color: #757575;">
-                    {{ form_start(form, {'attr': {'class': 'text-center','style':'color: #757575;'}}) }}
-                    <div class="form-group row">
-                        <!-- First name -->
-                        <div class="md-form col-6">        
-                            {{ form_row(form.Nom, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                        <div class="md-form col-6">        
-                            {{ form_row(form.Prenom, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <!-- First name -->
-                        <div class="md-form col-12">        
-                            {{ form_row(form.Adresse, {'attr': {'class': 'form-control col-12'}}) }}
-                        </div>
-                        <div class="md-form col-6">        
-                            {{ form_row(form.CodePostal, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                        <div class="md-form col-6">        
-                            {{ form_row(form.Ville, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="md-form col-8">        
-                            {{ form_row(form.email, {'attr': {'class': 'form-control'}}) }}
-                            <small id="emailHelp" class="form-text text-muted alert alert-info m-0 p-0" style="height: 20px;">Nous ne partageons votre email avec personne.</small>
-                        </div>
-                        <div class="md-form col-4">        
-                            {{ form_row(form.Telephone, {'attr': {'class': 'form-control','type':'password'}}) }}
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <a  class="btn btn-sm btn-link txt-center" href="{{ path('app_forgot') }}" >
-                            <span class="strong text-center">Mot de passe oublié ?</span></a>
-                    </div>
-                    <div class="form-group col-12" style="display: none;">
-                        <div class="md-form">        
-                            {{ form_row(form.password, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                    </div>
-                    <div class="form-group col-12">
-                        <div class="md-form">        
-                            {{ form_row(form.Telephone, {'attr': {'class': 'form-control'}}) }}
-                        </div>
-                    </div>
-                    <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
-                    {{ form_row(form._token) }}
-                    {# <input type="hidden" name="_method" value="UPDATE"> #}
-                    {# <input type="hidden" name="_token" value="{{ csrf_token('update' ~ app.user.id) }}"> #}
-                    
-                    {{ form_end(form, {'render_rest': false}) }}
-                </div> 
-                    {% set VarBookings = form.vars.value.bookings %}
-            </div>
-    </div>
-    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-        <div class="card-body px-lg-5 pt-0">
-            <div class="form-group row">
-                <div class="md-form col- mt-2 text-info">        
-                    Vous avez {{VarBookings|length}} rendez-vous
-                </div>
-            </div>
-            {% for booking in VarBookings|reverse %}
-            {% set DateDebut = booking.start|date('d/m/Y') %}
-            {% set Today = 'now'|date('Y-m-d') %}
-            {% set a = '<div style="opacity:0.6">' %}
-            {% set a_fin = '</div>' %}
-            {% if Today <= DateDebut %}
-                {# {% set a = "<a href=\"../rdv/" ~ booking.id ~ "/edit\" class=\"btn btn-info\">" %} #}
-                {% set a = '<a href="#" class="btn btn-warning">' %}
-                {% set a_fin = '</a>' %}
-            {% endif %}
-            <div class="form-group row">
-                <div class="md-form col-12 border border-light">        
-                        {{ a|raw }}
-                        <p style="font-family: Verdana, sans-serif;"><i class="fas fa-calendar-alt"></i> Le <strong>{{ booking.start|date('d/m/Y') }}</strong> à <strong>{{ booking.start|date('H:i') }}</strong>
-                            <small><i>(Fin estimée à {{ booking.end|date('H:i') }})</i></small>
-                            {# <i>(Tarif estimé à {{ booking.TarifEnergie }})</i> #}
-                            <p><small>Descriptif : {{ booking.description }}</small></p>
-                        {{ a_fin|raw }}
-                    
-                </div>
-            </div>
-            {% endfor %}
+
+{{ form_start(form, {'attr': {'class': 'text-center','style':'color: #757575;'}}) }}
+    <div class="form-group">
+        <div class="md-form text-left">       
+            {{ form_label(form.email, 'Votre adresse Email', { 'label_attr': {'class': 'font-weight-bold mb-0'} }) }}  
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            <small id="emailHelp" class="form-text text-muted text-info m-0 p-0" style="height: 20px;">Nous ne partageons votre email avec personne.</small>
+        </div>
+        <div class="md-form mt-2 text-left">        
+            {{ form_label(form.Telephone, 'Votre N° de téléphone', { 'label_attr': {'class': 'font-weight-bold mb-0'} }) }}  
+            {{ form_widget(form.Telephone, {'attr': {'class': 'form-control','type':'password'}}) }}
         </div>
     </div>
-</div>
+    <button class="btn btn-primary col-12">ENREGISTRER</button>
+    <div class="text-right">
+        <a  class="btn btn-sm btn-link txt-center" href="{{ path('app_forgot') }}" >
+            <span class="strong text-center" style="font-weight:bold;">MODIFIER VOTRE MOT DE PASSE</span></a>
+    </div>
+    <h5 class="text-left py-4">
+        <strong>Mes informations client</strong>
+    </h5>
+      <div class="form-group row text-left">
+        <div class="md-form col-8">
+            <a class="btn border rounded text-left" href="#" data-toggle="modal" data-target="#infos-client">    
+            {# <a class="btn btn-light collapsed border rounded text-left" data-toggle="collapse" href="#infos-client" role="button" aria-expanded="false" 
+                aria-controls="infos-client"> #}
+                <div class="row">    
+                    <div class="col-3 align-self-center">
+                        <h1 class=" align-middle"><i class="far fa-edit"></i></h1>
+                    </div>
+                    <div class="col-9">
+                        <p><strong>{{ form.Nom.vars.value ~ " " ~ form.Prenom.vars.value }}</strong></br>
+                        {{ form.Adresse.vars.value }}</br>
+                        {{ form.CodePostal.vars.value ~ " " ~ form.Ville.vars.value }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div    class="modal fade border rounded" 
+            id="infos-client" tabindex="-1" role="dialog" aria-labelledby="ModalRdv" 
+            aria-hidden="true">
+        <div class="modal-dialog" role="document">      
+        <div class="modal-content">
+            <div class="modal-header">
+                Modifier mes informations<button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <!-- First name -->
+                    <div class="md-form col-6">        
+                        {{ form_row(form.Nom, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="md-form col-6">        
+                        {{ form_row(form.Prenom, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <!-- First name -->
+                    <div class="md-form col-12 mb-3">        
+                        {{ form_row(form.Adresse, {'attr': {'class': 'form-control col-12'}}) }}
+                    </div>
+                    <div class="md-form col-6">        
+                        {{ form_row(form.CodePostal, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="md-form col-6">        
+                        {{ form_row(form.Ville, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group col-12" style="display: none;">
+                    <div class="md-form">        
+                        {{ form_row(form.password, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group col-12">
+                    <div class="md-form">        
+                        {{ form_row(form.Telephone, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer row">
+                <button class="btn btn-primary btn-block ml-1"  id="booking_submit_button">ENREGISTRER</button>
+                {# <button type="button" class="btn btn-danger btn-block ml-1" data-dismiss="modal" id="booking_close_button">Fermer</button> #}
+            </div>
+        </div>
+    </div>  
+    {{ form_row(form._token) }}
+    {# <input type="hidden" name="_method" value="UPDATE"> #}
+    {# <input type="hidden" name="_token" value="{{ csrf_token('update' ~ app.user.id) }}"> #}
+    
+{{ form_end(form, {'render_rest': false}) }}

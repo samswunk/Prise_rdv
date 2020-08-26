@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes rdv{% endblock %}
+
+{% block size %}4{% endblock size %}
+
+{% block body %}
+        <div class="form-group row">
+            <div class="md-form col- mt-2 text-info">        
+                Vous avez {{VarBookings}} rendez-vous
+            </div>
+        </div>
+    {% for booking in bookings %}
+        {% set DateDebut = booking.start|date('d/m/Y') %}
+        {% set Today = 'now'|date_modify("+1 day")|date('d/m/Y') %}
+        {% set a = '<div style="opacity:0.6">' %}
+        {% set a_fin = '</div>' %}
+        {% if Today < DateDebut %}
+            {# {% set a = "<a href=\"../rdv/" ~ booking.id ~ "/edit\" class=\"btn btn-info\">" %} #}
+            {% set a = '<a href="#" class="btn btn-warning">' %}
+            {% set a_fin = '</a>' %}
+        {% endif %}
+        <div class="form-group row">
+            <div class="md-form col-12 border border-light">        
+                    {{ a|raw }}
+                    <p style="font-family: Roboto, sans-serif;"><i class="fas fa-calendar-alt"></i> 
+                        <p class="m-0"></p>Le <strong>{{ booking.start|date('d/m/Y') }}</strong> à <strong>{{ booking.start|date('H:i') }}</strong></p>
+                        <p class="m-0"><strong>Entretien de votre {{ booking.marque.nomMarque }} à {{ booking.energie.nomEnergie }}</strong></p>
+                        <p class="m-0"><i>Tarif estimé : {{ booking.energie.tarifEnergie }}</i></p>
+                        <p class="m-0"><small><i>Fin estimée à {{ booking.end|date('H:i') }}</i></small></p>
+                        <p class="m-0"><small>{{ booking.description ? "Complément d'information : " ~ booking.description : "" }}</small></p>
+                    </p>
+                    {{ a_fin|raw }}
+                
+            </div>
+        </div>
+    {% endfor %}
+{% endblock body %}    
