@@ -42,6 +42,7 @@ class BookingRepository extends ServiceEntityRepository
         ->andWhere('b.start >= :pstart')
         ->andWhere('b.isFree = 0')
         ->setParameter('pstart', $start)
+        ->orderBy('b.start', 'DESC')
         // ->setParameter('pend', $end)
         ->getQuery();
         return $req->getResult();

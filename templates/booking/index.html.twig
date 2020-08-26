@@ -22,7 +22,7 @@
             </thead>
             <tbody>
             {% for booking in bookings %}
-                <tr class="bg bg-{{ (booking.isFree ? '' : (booking.isConfirmed ? 'info' : 'danger')) }}">
+                <tr class="bg bg-{{ (booking.isFree ? '' : (booking.isConfirmed ? 'primary text-white' : 'danger text-white')) }}">
                     <td style="padding: 0; margin: 0;">{{ booking.id }}</td>
                     <td style="padding: 0; margin: 0;">{{ booking.title }}</td>
                     <td style="padding: 0; margin: 0;">{{ booking.start ? booking.start|date('d/m/Y H:i') : '' }}</td>
@@ -30,7 +30,7 @@
                     <td style="padding: 0; margin: 0;">{{ booking.IdUser ? booking.IdUser.Nom ~ ' ' ~ booking.IdUser.Prenom : '' }}</td>
                     <td style="padding: 0; margin: 0;">{{ booking.marque ? booking.marque.nomMarque : '' }}</td>
                     <td style="padding: 0; margin: 0;">{{ booking.energie ? booking.energie.nomEnergie : '' }}</td>
-                    <td style="width: 1px;">{{ booking.isFree ? '<i class="fas fa-lock-open"></i>' : '<i class="fas fa-lock"></i>' }}</td>
+                    <td style="width: 1px;">{{ booking.isFree ? '<i class="fas fa-lock-open text-white"></i>' : '<i class="fas fa-lock"></i>' }}</td>
                     <td style="enable-background:unset; width: 1px;">
                         {% if booking.isConfirmed %}
                             <i class="fas fa-check-circle"></i>
